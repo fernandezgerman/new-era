@@ -13,14 +13,31 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'usuarios';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nombre',
+        'apellido',
+        'usuario',
+        'clave',
         'email',
-        'password',
+        'activo',
     ];
 
     /**
@@ -29,9 +46,29 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'clave',
         'remember_token',
     ];
+
+    /**
+     * The column name for the "username" used for authentication.
+     *
+     * @var string
+     */
+    public function username()
+    {
+        return 'usuario';
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->clave;
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -42,7 +79,6 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
         ];
     }
 }
