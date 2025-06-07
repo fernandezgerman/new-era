@@ -71,6 +71,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the sucursales for the user.
+     */
+    public function sucursales()
+    {
+        return $this->belongsToMany(Sucursal::class, 'usuariossucursales', 'idusuario', 'idsucursal')
+                    ->withPivot('activo')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get the sucursales supervised by the user.
+     */
+    public function sucursalesSupervised()
+    {
+        return $this->hasMany(Sucursal::class, 'idsupervisor');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

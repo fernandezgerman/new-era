@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\DataAccessor\UsuarioDataAccessor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -60,6 +62,37 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        return redirect('/');
+    }
+
+    /**
+     * Show the sucursal selection page.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showSelectionForm()
+    {
+        $usuarioDataAccessor = app(UsuarioDataAccessor::class,['user' => Auth::user()]);
+
+        return view('sucursal.selection', ['sucursales' => $usuarioDataAccessor->getAllowedSucursales()]);
+    }
+
+    /**
+     * Handle the sucursal selection.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function selectSucursal(Request $request)
+    {
+        $request->validate([
+            'sucursal' => ['required', 'exists:sucursales,id'],
+        ]);
+
+        // Store the selected sucursal in the session
+        session(['idSucursalActual' => $request->sucursal]);
+
+        // Redirect to the main page
         return redirect('/');
     }
 }
