@@ -12,8 +12,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Sucursal Selection Routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/select-sucursal', [SucursalSelectionController::class, 'showSelectionForm'])->name('sucursal.selection');
-    Route::post('/select-sucursal', [SucursalSelectionController::class, 'selectSucursal'])->name('sucursal.select');
+    Route::get('/select-sucursal', [AuthController::class, 'showSelectionForm'])->name('sucursal.selection');
+    Route::post('/select-sucursal', [AuthController::class, 'selectSucursal'])->name('sucursal.select');
 });
 
 // Protected Routes
