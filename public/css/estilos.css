@@ -1,0 +1,2291 @@
+input:focus  {
+	background-color:#e0ffe7 !important;
+	color:black;
+}
+select:focus  {
+	background-color:#e0ffe7 !important;
+}
+.filaAdvertencia{
+	background-color: gold;
+	color:black;
+}
+.filaError{
+	background-color: red;
+	color:white;
+}
+.filaActualizacionesPendientes{
+	background-color: blue;
+	color:white;
+}
+.divEdicion_campos_sin_margen{	
+	vertical-align:middle;
+	width:110px;
+	margin-right:5px;
+	float:left;
+	font-weight:bold;
+	color:#cccccc;
+	font-size:14px;
+}
+.filaAnulacionCompraArticulo{
+ 
+	background-color:#EBE8E8;
+	font-size: 14px;
+	line-height: 20px;
+	color: black;
+	vertical-align:top;
+}
+.tblFilaRoja{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: white; 
+	background-color:red;
+	
+}
+.tblFilaTituloSecundario{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: black; 
+	background-color:#EE9A2F;	
+}
+.tblFilaVerdeNegrita{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: bold;
+	color: white; 
+	background-color:green;
+	
+}
+.tblFilaAzulNegrita{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: bold;
+	color: white; 
+	background-color:blue;
+}
+
+.textoSessionVencidaLogin{
+	margin-top:20px;
+	margin-lefT:10px;
+	font-size:14px;
+	text-transform: none;
+	color:black;	
+}
+.sessionVencidaTexto{
+	position: absolute;
+	top: 30%; 
+	left: 50%;
+	transform: translate(-50%, -50%);	
+	font-size: 24px;
+		
+	background-color:#CCCCCC;
+	position:fixed;
+	z-index:101;
+	
+	border: 2px solid #fff;
+	moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;	
+	margin-top:50px;
+	width: 300px;
+	height: 100px;
+	text-transform: uppercase;
+	font-family:'Rockwell bold';
+	color:red;
+	
+}
+
+.sessionVencida{
+	width: 100%;
+	height: 100%;
+	background-color:#CCCCCC;
+	position:fixed;
+	z-index:100;	
+	left:0px;
+	right:0px;
+	opacity: 0.6;
+	filter:alpha(opacity=605);
+}
+
+
+.inputTextoNumerico{
+	width:80px; 
+	moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;
+	background-color:#CCCCCC;
+	text-align:right;
+	padding-right:10px;
+	border:none;
+}
+.divAgregarDestinatario{
+	width:400px; 
+	margin-right:20px;
+	background-color:white;
+	border-radius:5px;
+	clear:both;
+	float:left;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;
+	padding:10px 10px 10px 10px; 	
+}
+.selectAgregarDestinatario{
+	width:200px; 
+	moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;
+}
+.configuracionAgregarDestinatarioRight{
+	float:right;
+	font-size: 14px;
+	margin-right:50px;	
+	
+	
+}
+.configuracionAgregarDestinatarioTitulo {
+	font-family:'Rockwell bold';
+	text-transform: uppercase;
+	font-size:14px;
+	line-height:18px;
+	color:green;
+	margin-bottom:20px;
+	border-bottom: 1px solid green;
+	clear:both;
+}
+.configuracionAgregarDestinatario{
+	float:left;
+	font-size: 14px;
+	margin-right:10px;	
+}
+.errorValidacion2{
+	float:left;
+	font-size:16px;
+	color:gold;
+	clear:both;
+}
+.inicioDescripcionMovimientoImg{
+	float:left;
+	font-size: 16px;
+	margin-right:10px;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;
+	padding:5px 5px 5px 5px; 	
+}
+.inicioMvmSeleccionado{
+	background-color:blue;
+	color:white;
+	height:100px;
+	padding-top: 10px;
+	padding-bottom: 10px; 
+	padding-right: 10px;
+	padding-left: 10px;
+}
+.inicioMvmNoSeleccionado{
+	background-color:white;
+	color:black;
+	height:100px;
+	padding-top: 10px;
+	padding-bottom: 10px; 
+	padding-right: 10px;
+	padding-left: 10px;
+}
+.botonRechazar{
+	background-color:red;
+	height: 30px;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070;
+	overflow:hidden;
+	float:left;
+
+	cursor:hand;
+	color:white;
+	margin-right:10px;
+}
+.botonAceptar{
+	background-color:green;
+	height: 30px;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070;
+	overflow:hidden;
+	float:left;
+	cursor:hand;
+	color:white;
+	margin-right:10px;
+}
+.botonAgregarExcepcion{
+	background-color:gold;
+	height: 30px;
+	border-radius:3px;
+	-moz-border-radius:3px 3px 3px 3px;
+	-webkit-border-radius:3px 3px 3px 3px;
+	border:1px solid black;
+	overflow:hidden;
+	float:left;
+	cursor:hand;
+	color:black;
+	margin-right:10px;
+}
+.divCentralBotonRechazar{
+	font-family: 'Rockwell Bold';
+	font-size:13px;
+	text-transform: uppercase;
+	color:white;	
+	float:left;
+	margin-top: 8px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.botonChicoCancelar{
+	float:left;
+	border-radius:3px;
+	-moz-border-radius:3px 3px 3px 3px;
+	-webkit-border-radius:3px 3px 3px 3px;
+	border:1px solid white;
+	overflow:hidden;
+	float:left;
+	cursor:hand;
+	color:white;
+	background-color:red;
+	margin-right:10px;
+
+	font-size: 12px;
+}
+.botonChicoAceptar{
+	float:left;
+	border-radius:3px;
+	-moz-border-radius:3px 3px 3px 3px;
+	-webkit-border-radius:3px 3px 3px 3px;
+	border:1px solid white;
+	overflow:hidden;
+	float:left;
+	cursor:hand;
+	font-size: 12px;
+	color:white;
+	background-color:green;
+	margin-right:10px;
+}
+.divCentralBotonAceptarPrecioTemporal{
+	font-size: 11px;
+	font-family: 'Rockwell Bold';
+
+	text-transform: uppercase;
+	float:left;
+	margin-right:10px;
+	margin-left:10px;
+	margin-top:3px;
+	margin-bottom:3px;
+}
+.divCentralBotonCancelarPrecioTemporal{
+	font-size: 11px;
+	font-family: 'Rockwell Bold';
+	text-transform: uppercase;
+	float:left;
+	margin-right:10px;
+	margin-left:10px;
+	margin-top:3px;
+	margin-bottom:3px;
+}
+
+.divCentralBotonAgregarExcepcion{
+	font-family: 'Rockwell Bold';
+	font-size:13px;
+	text-transform: uppercase;
+	color:black;
+	float:left;
+	margin-top: 8px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.inicioDescripcionMovimientoObs{
+	float:left;
+	font-size: 16px;
+	margin-right:10px;
+	width:490px;
+	background-color:gold;
+	font-style:italic;
+	margin-left:70px;
+	border: 1px solid #ff9900;	
+	border-radius:5px;
+	padding:5px 5px 5px 5px;
+	margin-top:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;		
+	color:black;
+}
+.movimientosCajaPerteneceLiq{
+	background-color:blue;
+	color:gold;
+}
+.inicioDescripcionMovimiento{
+	float:left;
+	font-size: 16px;
+	margin-right:10px;
+	
+}
+
+.inicioDescripcionMovimientoPerteneceLiq{
+	width:100%;background-color:blue;color:gold;font-weight:bold;
+    border: 1px solid gold;  
+    border-radius:5px;
+    padding:5px 5px 5px 5px;
+    margin-top:5px;
+    -moz-border-radius:5px 5px 5px 5px; 
+    -webkit-border-radius:5px 5px 5px 5px;	
+
+}
+.inicioDescripcionMovimientoCheckDestacado{
+	float:left;
+	margin-right:10px;	
+}
+.inicioDescripcionMovimientoImporte{
+	float:right;
+	font-size: 16px;
+	margin-right:10px;
+	font-weight:bold;
+}
+.inicioDescripcionMovimientoDestacado{
+	float:left;
+	font-size: 16px;
+	margin-right:10px;
+	font-weight:bold;
+}
+.recuadrar {
+	border: 1px solid #ff9900;
+	clear:both;	
+	border-radius:5px;
+	padding:10px 10px 10px 10px;
+	
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;	
+}
+.subtitulo_mayuscuas {
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:14px;
+	color:#ff9900;
+	clear:both;
+}
+
+.titulo_subrayado {
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+}
+.divStockInicialCombo{
+	background-color:#cccccc;
+	margin: auto auto 10px auto;
+	margin-top:5px;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width:220px; 
+	height:20px;
+	
+}
+.cargarStockInicialGuardando
+{
+	background-color: red;
+	color:gold;
+	width:100%;
+	height:100%;	
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;		
+}
+.cargarStockInicialEstablecido
+{
+	background-color: green;
+	color:gold;
+	width:100%;
+	height:100%;	
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;		
+}
+.stockNoEstablecido{
+	width:100%;
+	margin-bottom:7px;
+	float:left;
+	color:gold;
+	font-size:20px;
+}
+.cargarStockInicialNoEstablecido{
+	background-color: blue;
+	color:gold;
+	width:100%;
+	height:100%;	
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;		
+}
+.conStockInicial{
+	background-color: green;
+	color:gold;
+}
+.sinStockInicial{
+	color:gold;
+	float:left;
+	background-color: blue;	
+}
+.sinRegistrosGrilla{
+	color:gold;
+	font-size:14px;
+	float:left;
+	margin-left:20px;
+}
+.stockInicialResultadoCampoArticulo{
+
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	color:#ff9900;
+	padding-bottom:6px;
+	margin-right:20px;
+	float:left;
+	font-weight:bold;		
+}
+.stockInicialResultadoCampo{
+	vertical-align:middle;
+	margin-right:10px;
+	float:left;
+	color:gold;
+	font-size:16px;
+	font-weight:bold;		
+}
+.stockInicialNombreCampo{	
+	vertical-align:middle;
+	margin-right:10px;
+	float:left;
+	color:#cccccc;
+	font-size:16px;
+	font-weight:bold;		
+	clear:both;
+	width:100px;
+}
+.divEdicion_campos_inputs_inicial{
+	background-color:#cccccc;
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width:150px; 
+	height:20px;
+	
+}
+
+.divBuscandoInformacion{
+	opacity: 0.3;
+	filter:alpha(opacity=605);
+	
+		
+}
+.Estilo2 {
+	font-size: 12px;
+	color: #FF0000;
+}
+.valSucImporteSugerido {
+	color:#333333;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	font-weight:bold;
+	font-size:14px;
+}
+.valSucImporteSugeridoDiferenciaRojo {
+	background-color:red;
+	color:white;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	font-weight:bold;
+	font-size:14px;
+}
+.valSucImporteSugeridoDiferenciaVerde {
+	background-color:green;
+	color:white;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	font-weight:bold;
+	font-size:14px;
+}
+.valSucImporteSugeridoDiferenciaAmarillo{
+	background-color:gold;
+	color:black;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	font-weight:bold;
+	font-size:14px;
+}
+.totalRubroSucursalVerde{
+	vertical-align:middle;
+	margin-top:10px;
+	margin-left:10px;
+	width:150px; 
+	margin-right:10px;
+	float:left;
+	color:#13F70E;
+	font-size:16px;
+	font-weight:bold;
+}
+.totalRubroSucursalAmarillo{
+	vertical-align:middle;
+	margin-top:10px;
+	margin-left:10px;
+	width:150px; 
+	margin-right:10px;
+	float:left;
+	color:gold;
+	font-size:16px;
+	font-weight:bold;
+}
+.totalRubroSucursalRojo{
+	vertical-align:middle;
+	margin-top:10px;
+	margin-left:10px;
+	width:150px; 
+	margin-right:10px;
+	float:left;
+	color:#FB4528;
+	font-size:16px;
+	font-weight:bold;
+}
+.columna1{
+	float:left;
+	width:475px;
+}
+.columna2{
+	float:left;
+	width:475px;
+	
+}
+.divABMStockAgregarArticulo{
+	border:1px solid #ff9900; 
+	margin-right:20px;
+	background-color: #373737;
+}
+.abmStockInputText {
+	width: 100%;
+	text-align: right;
+	background-color: #cccccc;
+	border: none;
+	height: 40px;
+	padding: 10px;
+	margin: 3px;
+	float: left;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+}
+.inicioRbrImporteVerde {
+	color:white;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:14px;
+	float:right;
+	width:20px;
+	background-color: green;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 	
+}
+.inicioRbrImporteRojo {
+	color:white;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:14px;
+	float:right;
+	width:20px;
+	background-color: red;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 	
+}
+.inicioRbrImporteAmarillo {
+	color:blue;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:14px;
+	float:right;
+	width:20px;
+	background-color: yellow;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 	
+}
+.valSucDivContenedorTablas{
+	float:left; margin-left:13px;margin-top:10px;
+}
+.inicioTituloRecuadro{
+	text-transform: uppercase;
+	text-size:18px;
+	color:#A75127;
+	font-weight:bold;
+}
+.valSucTotal {
+	color:#333333;
+	display: block;	
+	float:left;	
+	font-weight:bold;
+	vertical-align: middle;
+	font-size:14px;
+}
+.valSucImporteTotal {
+	color:#333333;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	border-top: 1px solid;
+	font-weight:bold;
+	font-size:14px;
+}
+.valSucNombreSucursal {
+	color:#333333;
+	display: block;	
+	float:left;	
+	vertical-align: middle;
+	font-weight:bold;
+ 	border-bottom: 1px solid;
+ 	font-size:14px;
+	text-transform: uppercase;
+	background-color: black;
+	color: white;
+	width: 270px;
+}
+.valSucDescripcion {
+	color:#333333;
+	display: block;	
+	float:left;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:14px;
+}
+.valSucImporte {
+	color:#333333;
+	display: block;	
+	text-align: right;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:14px;
+}
+
+.diasConfiguracionUsuarios {
+	width: 100%;
+	text-align: right;
+	background-color: #cccccc;
+	border: none;
+	height: 20px;
+	padding: 10px;
+	margin: 3px;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+}
+.descripcionUtilidadCampos{
+	font-size:10px;
+	color:gold;
+	margin-left:5px;
+}
+.descripcionArticuloRendicionSeleccionado{ 
+	margin-right:80px;
+	margin-left:20px;
+	width:100%;
+	background-color:green;
+	color:white;
+	font-weight:bold;
+	font-size:16px;
+}
+.descripcionArticuloRendicionAtencion{ 
+	margin-right:80px;
+	margin-left:20px;
+	width:100%;
+	background-color:red;
+	color:white;
+	font-weight:bold;
+	font-size:16px;
+}
+
+.liquidacionSeleccionada{
+	background-color:#000070;
+}
+.divLiquidado{
+	width:100%;
+	height:105px;
+	background-color:#B2C801 ;
+	z-index:4;
+	opacity: 0.3;
+	filter:alpha(opacity=605);
+	vertical-align:middle;
+	position:absolute;	
+}
+.textoGirado{
+	-webkit-transform: rotate(312deg);
+	-moz-transform: rotate(312deg);
+	-o-transform: rotate(312deg);
+	writing-mode: lr-tb;
+	color:black;
+	margin-top:40px;
+	margin-left:10px;
+	font-size:16px;	
+}
+.celdaLiquidacionDescripcion
+{
+	color:burlywood;
+	font-size:12px;
+	float:left;
+	margin-left:5px;
+	margin-right:5px;			
+}
+.celdaLiquidacion
+{
+	color:burlywood;
+	font-size:12px;
+	float:right;
+	margin-left:5px;
+	margin-right:5px;	
+	clear:both;
+}
+.celdaLiquidacionTotal
+{
+  	border-top-width: 1px;
+  	border-top: solid #EE9A2F;
+	color:gold;
+	font-size:14px;
+	float:right;
+	margin-left:5px;
+	margin-right:5px;	
+	clear:both;
+	font-weight:bold;
+}
+.edicion_campos_titulos_desc_ext18
+{
+	color:#cccccc;
+	font-size:18px;
+	float:left;
+	margin-left:20px;
+	margin-top:3px;
+	
+	
+}
+.verDetalle a {
+	color:blue ;
+	font-size:12px;
+	text-decoration:underline;
+	
+}
+.destacadoSubTitulo {
+	font-family:'Rockwell';
+	font-size:16px;
+	color:#ff9900;
+	margin-left:20px;
+	margin-right:20px;
+	line-height:18px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+	
+}
+.destacadoSubTituloGris {
+	font-family:'Rockwell';
+	font-size:16px;
+	color:#cccccc;
+
+	clear:both;
+	
+}
+.destacadoSaldoBalance {
+	font-family:'Rockwell';
+	font-size:16px;
+	color:#ff9900;
+	margin-left:20px;
+	margin-right:20px;
+	line-height:18px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+}
+
+.tblFilaParVerde{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	background-color:green;	
+}
+
+.tblFilaParNaranja{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: white;
+	background-color:#fc7f02;
+}
+.tblFilaParAzul{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: gold; 
+	background-color:blue;	
+}
+.tblFilaParAzulBis{
+	color: gold;
+	background-color:blue;
+}
+.tblFilaParRojo{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc;  
+	background-color:red;
+}
+.tblFilaParRojoSuave{
+    vertical-align:top;
+    font-size: 14px;
+    line-height: 20px;
+    color: red;  
+    background-color:#f9e8e8;
+}
+.tblFilaImparVerde{
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	vertical-align:top;	
+	background-color:green;
+}
+.tblFilaImparRojo{
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	background-color: red;
+	vertical-align:top;
+}
+.tblFilaImparAmarillo{
+    font-size: 14px;
+    line-height: 20px;
+    color: blue; 
+    background-color: #f8f998;
+    vertical-align:top;
+}
+
+
+.listasColorDiasModificadoRojo{
+height:10px;
+width:10px;
+background-color:red;
+text-align: right;
+border: none;
+padding: 5px;
+margin: 3px;
+float: left;
+border-radius:5px;
+-moz-border-radius:5px 5px 5px 5px; 
+-webkit-border-radius:5px 5px 5px 5px; 
+}
+.listasColorDiasModificadoVerde{
+height:10px;
+width:10px;
+background-color:green;
+text-align: right;
+border: none;
+padding: 5px;
+margin: 3px;
+float: left;
+border-radius:5px;
+-moz-border-radius:5px 5px 5px 5px; 
+-webkit-border-radius:5px 5px 5px 5px; 
+}
+.descripcionPeque�a{
+	color:#cccccc;
+	font-size:12px;
+	float:left;
+	margin-right:10px;
+	margin-top:3px;	
+}
+.divDetalleComprobante
+{
+	float:left;
+	width:220px;
+	height: 250px;;
+	overflow-y: scroll;
+
+	margin-left:20px;
+}
+.divGraficos
+{
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	padding-left:10px;
+	padding-right:10px;
+	margin-bottom:20px;
+
+}
+
+.celdaReporte{
+	margin-right:5px;
+}
+.subTituloAuxiliar
+{
+	color:#cccccc;
+	font-size:18px;
+	float:left;
+	margin-right:10px;
+	
+}
+.divLabelDescripcionSubTitulo
+{
+	font-weight:bold;
+	font-size: 15px;
+	line-height: 20px;
+	color: #cccccc;
+	float:left;
+	margin-left: 20px;
+	
+}
+.botonPieABM{
+	background-color:#EE9A2F;
+	height: 30px;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070;
+	overflow:hidden;
+	float:left;
+	cursor:hand;
+}
+.divCentralBotonPieABM{
+	font-family: 'Rockwell Bold';
+	font-size:13px;
+	text-transform: uppercase;
+	color:#323232;	
+	float:left;
+	margin-top: 8px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.ocultarMostrarDisposicion{
+	color:gold;
+	font-size:14px;
+	float:left;
+	cursor:hand;
+}
+.listaDePrecioSucursalAgregadaDescripcion
+{
+	vertical-align: top;
+	font-size:10px;
+	color:gold;
+	margin-left:10px;
+}
+.edicion_campos_titulos_desc_ext
+{
+	color:#cccccc;
+	font-size:14px;
+	float:left;
+	margin-right:10px;
+	margin-top:3px;
+	
+}
+.edicionCampoSuplementarioNumero
+{
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	text-align:right;
+	width: 80px;
+	margin-right: 10px;
+}
+.edicionCampoSuplementarioTexto
+{
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	text-align:left;
+	width: 150px;
+	margin-right: 10px;
+}
+.edicionCampoSuplementarioSelect
+{
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	text-align:right;
+	margin-right: 10px;
+}
+.listaDePrecioSucursalAgregadaSubTitulo{
+	font-family:'Rockwell';
+	font-size:14px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	border-bottom: 1px solid #ff9900;
+}
+.listaDePrecioSucursalAgregadaTitulo{
+	text-transform: uppercase;
+	font-family:'Rockwell';
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	
+	border-bottom: 1px solid #ff9900;
+}
+.listaDePrecioSucursalAgregadaContenedor
+{
+	float:left;
+}
+.listaDePrecioSucursalListaTitulo
+{
+	width:85px;
+	 float:left;
+	
+}
+.listaDePrecioSucursalListaTituloSuc
+{
+    width:85px;
+     
+    
+}
+
+.listaDePrecioSucursalLista
+{
+	margin-left:20px;
+	float:right;
+}
+
+.listaDePrecioSucursalAgregadaContenedorPar
+{
+	float:left;
+	width:100%;
+	font-size: 14px;
+	color: #cccccc; 
+	background-color:#666666;
+}
+.listaDePrecioSucursalAgregadaContenedorImpar
+{
+	float:left;
+	width:100%;
+	font-size: 14px;
+	color: #cccccc;
+}
+.listaDePrecioSucursalAgregada
+{
+	float:left;
+}
+.listaDePrecioSucursalAgregadaImg
+{
+	float:right;
+	margin-left:10px;
+	margin-top:2px;
+}
+.divTexto
+{
+	float: left;
+	position: relative;
+	margin-right:10px;
+}
+.divCentrado
+{
+	width:100%;
+	height:100%;
+	text-align:center;
+	margin: 0 auto;
+}
+.pagosErrorCargaFacturas
+{	
+	max-width: 300px;
+	margin: 50px auto; 
+	text-align: center;
+	vertical-align:center;
+}
+.totalFacturasAfectadas
+{
+	float:left;  
+	width:580px;
+	position:absolute; 
+	margin-top:210px; 
+	background-color:#EE9A2F;  
+	margin-left:20px;	
+	text-align:right;
+	
+}
+
+.fondoRubroNoRendido{
+	background-color: rgb(229, 80, 60);
+	text-align:right;
+	color:#cccccc;
+	font-size:14px;	
+}
+.fondoRubroPendienteRendir{
+	background-color: yellow;
+	text-align:right;
+	color:black;
+	font-size:14px;
+	cursor:hand;	
+}
+.fondoRubroRendidoNeutro
+{
+	text-align:right;
+	color:#cccccc;
+	font-size:14px;	
+	cursor:hand;
+	
+}
+.fondoRubroRendido{
+	background-color: #6FC16D;
+	text-align:right;
+	color:#cccccc;
+	font-size:14px;
+	cursor:hand;	
+}
+.everyCheckbox{
+	
+	color:#CCCCCC;
+	
+	text-align: center;
+	font-size: 20px;
+	width: 80px;	
+}
+.diaDeLaSemana{
+	border:3px solid #CCCCCC;
+	color:#CCCCCC;
+	text-align: center;
+	font-size: 17px;
+	float:left;
+	margin-left:5px;
+	width: 33px;
+	cursor:hand;
+}
+.diaDeLaSemanaSeleccion{
+	border:3px solid #172333;
+	color:#172333;
+	text-align: center;
+	font-size: 17px;
+	float:left;
+	margin-left:5px;
+	width: 33px;
+	background-color:#EE9A2F;
+	cursor:hand;
+}
+.divLabelDescripcion
+{
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc;
+	float:left;
+	margin-left: 20px;
+}
+.titularsubDivision	
+{
+	font-family:'Rockwell';
+	font-size:16px;
+	color:#ff9900;
+	padding-bottom:6px;	
+}
+.cuadroBusqueda{
+	width:200px; 
+	margin: auto auto 15px auto;
+	padding-bottom:12px;
+	background-color:rgba(0,0,0,0.5);
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	position:absolute	
+	
+}
+.columnaImporte{
+	text-align: right;
+	margin-right:20px;
+}
+/* general*/
+.errorValidacion {
+	font-size:18px;
+	margin-left:20px;
+	margin-bottom:20px;
+	color:gold;
+}
+#buscar{
+	margin-bottom:15px;
+}
+.campoExcepcionPrecio {
+color: #ff9900;
+font-size: 15px;
+text-transform: uppercase;
+}
+.divFilaBotonoLista{
+	margin-top:20px;
+	margin-left:20px;
+}
+.divFilaBotonos
+{
+	margin-top:10px;
+}
+.codigArticuloExcepcion {
+width: 100%;
+text-align: right;
+background-color: #cccccc;
+border: none;
+height: 20px;
+padding: 10px;
+margin: 3px;
+float: left;
+border-radius:5px;
+-moz-border-radius:5px 5px 5px 5px; 
+-webkit-border-radius:5px 5px 5px 5px; 
+}
+.quitarSeleccionados{
+	 width:100%;
+	 float: right;
+	margin-right: 20px; 	
+	}
+.divAgregarExcepcion{
+	border:1px solid #ff9900; 
+	margin-left:20px;
+	margin-right:20px;
+	background-color: #373737;
+}
+.agregarExcepcion{
+	color: #cccccc;
+	font-size: 14px;
+	margin-left:20px;
+	margin-bottom: 7px;
+}
+ #bsqNombreArticulo{
+	color: #cccccc;
+	font-size:13px;
+	padding-left:5px;
+}
+.fuerzaClave{
+	vertical-align:middle; 
+	margin:3px;  
+	height:22px;
+	padding-left:3px;
+	padding-top:2px; 
+}
+.tabla_datos{
+	margin-left:20px;
+}
+.divTituloEditarDescripcion{
+	float:left; 
+}
+.imagenTituloEdicion{
+	margin-left:20px;
+	height:52px;
+	width:52px;
+}
+.divTituloEdicion{
+	height:50px; 
+	width:100%;
+}
+.divImagenTituloEdicion{
+	float:left; 
+	
+}
+.panelDescripcionNombre{
+	margin-left:10px; 
+	margin-top:10px;	
+}
+.panelDescripcionEmpresa{
+	margin-left:10px; 
+	margin-top:8px; 
+}
+.panelDescripcionSucursal{
+	margin-left:10px; 
+	margin-top:5px;
+}
+.panelDescripcionCerrarSesion{
+	margin-left:0px; 
+	margin-top:10px;
+	
+} 
+
+.bodyLOCAL{
+	/* background-image:url(images/bg_pattern_repetir.jpg); */
+	background-repeat:repeat;
+	font-family: Trebuchet MS;	
+	margin:0px; padding:0px;
+	background-color:red;
+}
+
+
+.body{
+	background-image:url(images/bg_pattern_repetir.jpg);
+	background-repeat:repeat;
+	font-family: Trebuchet MS;
+	margin:0px; padding:0px;
+}
+
+
+.cuadroInfoLogin {
+	width:200px; 
+	margin: auto auto 15px auto;
+	padding-bottom:12px;
+	background-color:rgba(0,0,0,0.5);
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;
+}
+
+.barralogin{
+	background-image:url(images/bg_frame_repetir.png);
+	background-repeat:repeat;
+}
+.datoeditar {
+	line-height:25px;
+	color:#323232;
+	background: inherit;
+	background-color:transparent;
+	border:none;
+	padding:5px;
+}
+
+/* Login */
+
+.fondoListas{
+	float:left; 
+	margin-left:30px; 
+	height:100%; 
+	width:730px; 
+	/*background-image:url(images/bg_frame_repetir.jpg);*/
+	background-color:rgba(0,0,0,0.5);
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px;  
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;
+	
+}
+
+@font-face {
+	font-family: 'Rockwell';
+	src: url(../fonts/rockwell.ttf);
+}
+
+@font-face {
+	font-family: 'Rockwell Bold';
+	src: url(../fonts/rockwell_bold.ttf);
+}
+
+.bienvenidos {
+	font-family:'Rockwell Bold';
+	font-size:35px;	
+	color:#ff9900;
+}
+
+.acceso {
+	font-family:'Rockwell';
+	font-size:35px;	
+	color:#cccccc;
+}
+
+.campos {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:14px;	
+	color:#cccccc;
+	text-transform:uppercase;
+}
+
+.campos_input {
+	color:#333333;
+	height:40px;
+	width:250px;
+	margin: auto auto 15px auto;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	
+}
+
+.recordarme {
+	color:#cccccc;
+	font-size:14px;
+}
+
+.recuperar a {
+	color:#ff9900;
+	font-size:11px;
+	text-decoration:underline;
+}
+
+.recuperar a:hover, .cerrarSesion a:hover {
+	opacity:0.5;
+	text-decoration:none;
+}
+
+.cerrarSesion a {
+	color:#ff9900;
+	font-size:12px;
+	text-decoration:underline;
+	cursor:hand;
+}
+
+#mensajeLogin {
+	color:#ff9900;
+	font-size:13px;
+	padding-bottom:7px;
+}
+
+/* Datos Usuario */
+
+.imgTitulo {
+    width:52px;
+    height:52px;
+    float:left;
+    margin-left:20px;
+}
+
+.datosusuario {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:13px;
+	line-height:15px;	
+	color:#cccccc;
+}
+
+
+/* Menú Lateral */
+
+.categoria a {
+	font-family:'Rockwell Bold';
+	font-size:15px;	
+	color:#cccccc;
+}
+
+.categoria a:hover, a:active {
+	color:#ff9900;
+}
+
+.subcategoria a {
+	font-family:'Rockwell';
+	font-size:14px;
+	line-height:22px;	
+	color:#333333;
+}
+
+.subcategoria a:hover {
+	background-color:#ff9900;
+}
+
+
+/* Tabla*/
+
+.divtituloSeccion {
+	float:left;
+	margin-bottom:35px;
+}
+.titulos_secciones {
+	font-family:'Rockwell';
+	font-size:28px;	
+	color:#cccccc;
+	float:left;
+    padding-top:17px;
+	padding-left:6px;
+	min-width:500px;
+}
+
+.tabla {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+.tabla_titulo {
+	font-size:15px;
+	line-height:24px;
+	font-weight:bold;
+	color:#333333;
+}
+
+.tabla_campos {
+	font-size:14px;
+	line-height:24px;
+	color:#cccccc;
+}
+
+.tabla_bg_campos {
+	background-color:#666666;
+}
+
+.tabla_txt_menu {
+	font-size:12px;
+	color:#cccccc;
+}
+
+.tabla_links a {
+	font-size:12px;
+	color:#ff9900;
+	text-decoration:none;
+}
+
+.tabla_links a:hover {
+	opacity:0.5;
+	text-decoration:none;
+}
+
+.tabla_imputs, .tabla_combos {
+	font-size:12px;
+	color:#333333;
+}
+
+.tabla_btn a {
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:14px;
+	color:#333333;
+	background-color:#ff9900;
+	border: solid 2px #ff9900;
+	/* BORDES REDONDEADOS*/
+	border-radius:11px;
+	-moz-border-radius:11px;
+	-webkit-border-radius:11px;
+	/* SOMBRA*/
+	box-shadow: 3px 3px 3px #222222;
+	-webkit-box-shadow: 3px 3px 3px #222222;
+	-moz-box-shadow: 3px 3px 3px #222222;	
+}
+
+.tabla_btn a:hover {
+	color:#ff9900;
+	background-color:#333333;
+}
+
+
+/* Alta y Edición*/
+.divEdicion_campos_mov_cajas{	
+	vertical-align:middle;
+	width:160px;
+	margin-right:10px;
+	float:left;
+	color:#cccccc;
+	font-size:16px;
+	font-weight:bold;		
+}
+.edicion_campos {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:14px;
+	line-height:16px; 
+	vertical-align:middle;
+	float:left;	
+	color:#333333;
+	
+}
+.divEdicion_campos{	
+	vertical-align:middle;
+	width:110px;
+	margin-right:10px;
+	float:left;
+	color:#cccccc;
+	font-size:16px;
+	font-weight:bold;		
+}
+.edicion_campos_titulos {
+	color:#cccccc;
+	font-size:14px;
+	float:left;
+}
+.edicion_campos_titulos_numero {
+	color:#cccccc;
+	font-size:14px;
+	text-align:right;
+}
+.edicion_campos_titulos_rojo {
+	color:gold;
+	font-size:14px;
+	float:left;
+}
+.edicion_campos_imputs_numero
+{
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width: 100%;
+	height:100%;
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+	text-align:right;
+}
+.edicion_campos_imputs {
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width: 100%;
+	height:100%;
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+}
+.edicion_campos_imputs_area {
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+}
+.edicion_campos_imputs_impuestos {
+	color:#333333;
+	background-color:#cccccc;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width: 100%;
+	height:100%;
+	text-align:right;
+	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.divEdicion_campos_inputs{
+	background-color:#cccccc;
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width:300px; 
+	height:30px;
+}
+.divEdicion_campos_inputs_fecha{
+	background-color:#cccccc;
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width:100px; 
+	height:30px;
+}
+.divEdicion_campos_inputs_area{
+	background-color:#cccccc;
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;	
+	float:left;	
+	width:300px; 
+}
+.divEdicion_campos_inputs_impuestos{
+	background-color:#cccccc;
+	margin: auto auto 10px auto;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+	display: block;
+		
+	float:left;	
+	width:100px; 
+	height:30px;
+}
+.edicion_campos_clave {
+	color:#333333;
+	font-weight:bold;
+}
+
+.edicion_titulos {
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	margin-bottom:6px;
+	border-bottom: 1px solid #ff9900;
+}
+
+.tabla_excepciones {
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	margin-left:20px;
+	margin-right:20px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+}
+.tituloDivisor2 {
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	margin-right:20px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+}
+.subTituloDivisor {
+	font-family:'Rockwell';
+	font-size:15px;
+	color:#ff9900;
+	text-transform: uppercase;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+}
+.destacadoSeccion {
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	
+	margin-right:20px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+}
+
+.edicion_campos_bold {
+	color:#cccccc;
+	font-weight:bold;
+}
+
+#articulosAgregar{
+	padding-left:20px;
+	padding-right:20px;
+	width:100%;
+} 
+
+.tblTitulo{
+	vertical-align:center; 
+	background-color:#CCCCCC; 
+	color:#333333;
+	font-size:15px;
+	font-weight:bold;
+	line-height:17px;
+	height:28px;
+	
+}
+.tblTituloPeque�o{
+	vertical-align:center; 
+	background-color:#CCCCCC; 
+	color:#333333;
+	font-size:11px;
+	font-weight:bold;
+	line-height:17px;
+	
+	
+}
+.tbl{
+	border:1px;
+	margin-left:2px; 
+	margin-top:2px; 
+	border-color:#CCCCCC; 
+	border:1px; 
+	border-spacing:0px; 	
+}
+.tblFilaImpar{
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc;
+	vertical-align:top;
+}
+.tblFilaImparPeque�a{
+	font-size: 10px;
+	line-height: 20px;
+	color: #cccccc;
+	vertical-align:top;
+}
+.tblFilaImparConFondo{
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc;
+}
+.tblFilaPar{
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	background-color:#666666;
+	
+}
+.tblFilaParPeque�a{
+	vertical-align:top;
+	font-size: 10px;
+	line-height: 20px;
+	color: #cccccc; 
+	background-color:#666666;
+	
+}
+.divAjaxTapon{
+	position:fixed;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	background-color:#999999;
+	z-index:4;
+	opacity: 0.6;
+	filter:alpha(opacity=605);
+	vertical-align:middle;
+	visibility:hidden;
+}
+.divAjaxVentana{
+	z-index:99;
+	position:fixed;
+	position: absolute; 
+	top: 50%; left: 50%; 
+	transform: translate(-20%, -50%);
+	margin-left:-350px;
+	margin-top:0px;
+	width:900px;
+	height:700px;
+	background-color:#999999;
+	visibility:hidden;
+
+}
+.divAjaxCerrarVentana{
+	width:100%;
+	background-color:#ff9900;
+}
+divAjaxTextoCerrar{
+	margin-left:20px;
+	float:right;
+}
+.divAjaxContenido{
+	width:100%;
+	height:680px;
+	background-color:rgba(0,0,0,0.5);
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px; 
+	border:0px solid #707070; 
+}
+.Estilo2{
+	font-weight:bold;
+	float:left;
+}
+.tooltip {
+   display: inline;
+   position: relative;
+ }
+ .tooltip:hover:after {
+   bottom: 26px;
+   content: attr(title); /* este es el texto que ser� mostrado */
+   left: 20%;
+   position: absolute;
+   z-index: 98;
+   /* el formato gr�fico */
+    background: rgba(255,255,255, 0.2); /* el color de fondo */
+   border-radius: 5px;
+   color: #FFF; /* el color del texto */
+   font-family: Georgia;
+   font-size: 12px;
+   padding: 5px 15px;
+   text-align: center;
+   text-shadow: 1px 1px 1px #000;
+   width: 150px;
+ }
+ .tooltip:hover:before {
+   bottom: 20px;
+   content: "";
+   left: 50%;
+   position: absolute;
+   z-index: 99;
+   /* el tri�ngulo inferior */
+   border: solid;
+   border-color: rgba(255,255,255, 0.2) transparent;
+   border-width: 6px 6px 0 6px;
+  }
+  .divErrorGrande {
+    float: left;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-left: 20px;
+    width: 95%;
+    background-color: red;
+    font-style: italic;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    margin-top: 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: white;
+}
+  .divNoErrorGrande {
+    float: left;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-left: 20px;
+    width: 95%;
+    background-color: yellow;
+    font-style: italic;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    margin-top: 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;
+}
+.divSubDescripcionNueva{
+    font-size:16px;color:gold; font-weight:bold;margin-bottom:5px;
+}
+
+.rptVtsAgrpContenedorDivisor{
+    float: left;
+    font-size: 16px;
+    margin-right: 10px;
+    font-style: italic;
+    padding: 5px 5px 5px 5px;
+    border: 1px solid #ff9900;
+    border-radius: 5px;    
+    margin-top: 5px;
+    margin-bottom: 10px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;   
+}
+.divSubSubDescripcionNueva {
+    float: left;
+    color: #cccccc;
+}
+.divPantallaCompleta{
+    position: fixed !important;
+    top: -38px !important;
+    left: 0px !important;
+    width: 99% !important;
+    height: 95% !important;	
+}
+
+.divMensajeDeError {
+    float: left;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-left: 20px;
+    width: 95%;
+    background-color: red;
+    font-style: italic;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    margin-top: 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: white;
+}
+.dtlleMovimientosOtrosGral{
+	width:930px; margin-left:20px; margin-right:20px;background-color:white;
+	float:left;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px;
+	-webkit-border-radius:5px 5px 5px 5px;
+}
+.dtlleMovimientosOtrosLineaDivisora{
+	width: 100%;
+	clear: both;
+	float: left;
+	border: 1px solid #ff9900;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+.dtlleMovimientosOtrosContenedorMov {
+	clear: both;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.dtlleMovimientosOtrosContenedorFecha{
+	float: left;
+	width: 120px;
+	width: 140px;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+.dtlleMovimientosOtrosContenedorDescripcion{
+	float: left;
+	width: 600px;
+	margin-top: 5px;
+}
+.dtlleMovimientosOtrosContenedorImporte {
+	float: left;
+	width: 120px;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: right;
+}
+.divAvisoPequeño{
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px;
+	-webkit-border-radius:5px 5px 5px 5px;
+	padding:3px 3px 3px 3px;
+	font-size:10px;
+	font-weight:bold;
+	clear:both;
+	border: 1px solid black;
+	line-height:10px;
+	color:white;
+}
+
+.tblFilaDestacadaPorDebajoCosto{
+	color: white !important;
+	background-color: red !important;
+}
+
+.tblFilaDestacadaPorDebajoDelMinimo{
+	color: white !important;
+	background-color: #EC7063 !important;
+}
+
+.tblFilaDestacadaInactivo{
+	color: white !important;
+	background-color:#BFC9CA !important;
+}
+
+.tblFilaEditada{
+	color: white !important;
+	background-color: blue !important;
+}
+.redondearBordes{
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px;
+	-webkit-border-radius:5px 5px 5px 5px;
+	padding:3px 3px 3px 3px;
+}
+
+.mostrarBordes{
+	border: 1px solid black;
+	line-height:10px;
+}
+.tblFilaParNaranjaClaro{
+	color: black;
+	background-color:#f4c06b;
+}
+.tblFilaParAzulEspecial1{
+	color: white;
+	background-color:#005b93;
+}
+.blink {
+	animation: blink-animation 1s steps(5, start) infinite;
+	-webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+	to {
+		visibility: hidden;
+	}
+}
+@-webkit-keyframes blink-animation {
+	to {
+		visibility: hidden;
+	}
+}
+.negrita{
+	font-weight: bold;
+}
+
+/* Liquidacion inicio */
+
+.iniLiqContenedorGeneral{
+	float: left;
+	padding: 10px 10px 10px 10px;
+	margin-right: 20px;
+	min-width: 410px;
+	margin-bottom: 15px;
+	border: 1px solid #F18A00;
+	border-radius: 5px;
+}
+
+.divBordesRedondeado{
+	width:95%;
+	height:100%;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px;
+	-webkit-border-radius:5px 5px 5px 5px;
+	border:1px solid black;
+	padding:2px 2px 2px 2px;
+	background-color: yellow;
+	font-weight: bold;
+	color:black;
+}
+
+.cuadroInfoAdicionalIzq {
+	font-size:11px;
+	width:195px;
+	margin-bottom:10px;
+	padding-left:5px;
+	padding-bottom:10px;
+	padding-top:10px;
+	background-color:rgba(0,0,0,0.5);
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px;
+	-webkit-border-radius:5px 5px 5px 5px;
+	border:0px solid #707070;
+	display: block;
+	float:left;
+}
+.botonSecundarioRojo{
+	color: red;
+	background-color: white;
+	width: auto;
+	padding: 2px;
+	border-color: red;
+	border-width: 1px;
+	padding-right: 6px;
+	border: 1px solid red;
+	cursor: hand;
+	float:left;
+	margin-right:7px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	font-size:11px;
+}
+.botonSecundarioVerde{
+	color: green;
+	background-color: white;
+	width: auto;
+	padding: 2px;
+	border-color: red;
+	border-width: 1px;
+	padding-right: 6px;
+	border: 1px solid green;
+	cursor: hand;
+	float:left;
+	margin-right:7px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	font-size:11px;
+}
+
+.botonSecundarioAzul{
+	font-size:11px;
+	color: blue;
+	background-color: white;
+	float:left;
+	margin-right:7px;
+	width: auto;
+	padding: 2px;
+	border-color: red;
+	border-width: 1px;
+	padding-right: 6px;
+	border: 1px solid blue;
+	cursor: hand;
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+
+
+.botonSecundarioNegro{
+	font-size:11px;
+	color: black;
+	background-color: white;
+	float:left;
+	margin-right:7px;
+	width: auto;
+	padding: 2px;
+	border-color: black;
+	border-width: 1px;
+	padding-right: 6px;
+	border: 1px solid black;
+	cursor: hand;
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+.bordesRedondeados2{
+	moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border: 1px solid black;
+}
+.clearBoth{
+	clear:both;
+}
+
+.registroInactivo{
+	color:red !important;
+	text-decoration: line-through !important;
+}
+.registroSeleccionado{
+	background-color: blue !important;
+	color:white;
+	font-weight: bold;
+}

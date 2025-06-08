@@ -1,0 +1,826 @@
+.liqPrdDivContenedorPeriodoCerrado {
+	clear: both;
+	margin-left: 20px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 900px;
+	background-color: grey;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+}
+
+.liqPrdDivContenedorPeriodoAbierto {
+	clear: both;
+	margin-left: 20px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 900px;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+}
+
+.liqError {
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	margin-left: 20px;
+	width: 95%;
+	background-color: red;
+	font-style: italic;
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: white;
+}
+
+.liqDescripcionCampos {
+	vertical-align: middle;
+	width: 110px;
+	float: left;
+	color: #cccccc;
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 10px;
+	clear: both;
+}
+
+.liqEtiquetas {
+	vertical-align: middle;
+	float: left;
+	color: #cccccc;
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 10px;
+	clear: both;
+}
+
+.liqFilaArticuloObservaciones {
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 800px;
+	background-color: gold;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+	clear: both;
+}
+
+.liqTablaTitulo {
+	vertical-align: center;
+	background-color: white;
+	color: #333333;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 17px;
+	height: 28px;
+}
+
+.liqCeldaNumero {
+	text-align: right;
+	padding-right: 5px;
+}
+
+.liqCeldaCadena {
+	align: left;
+	padding-left: 5px;
+}
+
+.liqTablaFilaImpar {
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc;
+	vertical-align: top;
+}
+
+.liqTablaFilaPar {
+	vertical-align: top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc;
+	background-color: #666666;
+}
+
+.liqDetalleDivPendiente {
+	clear: both;
+	margin-left: 20px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 700px;
+	background-color: blue;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: yellow;
+}
+
+.liqDetalleDivRechazado {
+	clear: both;
+	margin-left: 20px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 700px;
+	background-color: blue;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: yellow;
+}
+
+.liqDetalleDivAprobado {
+	clear: both;
+	margin-left: 20px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 800px;
+	background-color: green;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: yellow;
+}
+
+.liqDetalleDivRechazado {
+	clear: both;
+	margin-left: 20px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 800px;
+	background-color: red;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: white;
+}
+
+.liqDetalleDivPendiente {
+	clear: both;
+	margin-left: 20px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 800px;
+	background-color: red;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: white;
+}
+
+.liqDetalleDivInternoIzq {
+	float: left;
+	width: 500px;
+	margin-top: 10px;
+}
+
+.liqDetalleDivSucursal {
+	float: left;
+	font-size: 18px;
+	font-weight: bold;
+	max-width: 300px;
+}
+
+.liqDetalleDivTituloSugerido {
+	float: left;
+	width: 80px;
+	text-align: right;
+	text-decoration: underline;
+	font-size: 14px;
+}
+
+.liqDetalleDivTituloReal {
+	float: right;
+	width: 120px;
+	text-align: right;
+	text-decoration: underline;
+	font-size: 14px;
+}
+
+.liqDetalleDivContenidoSugerido {
+	float: left;
+	width: 80px;
+	text-align: right;
+	font-size: 17px;
+	height: 25px;
+	padding-top: 5px;
+}
+
+.liqDetalleDivContenidoReal {
+	float: right;
+	width: 120px;
+	text-align: right;
+	font-size: 24px;
+	height: 25px;
+	font-weight: bold;
+}
+
+.liqDetalleDivEstado {
+	float: right;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 250px;
+	font-style: italic;
+	border: 1px solid white;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.liqDetalleDescripcionEstado {
+	float: left;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.liqDetalleDescripcionEstadoFecha {
+	float: right;
+}
+
+.liqDetalleDescripcionEstadoUsuario {
+	float: left;
+	margin-top: 10px;
+}
+
+.liqDetalleDescripcionEstadoObservaciones {
+	float: left;
+	margin-top: 10px;
+	clear: both;
+}
+
+.liqCerrarDiferenciaMenorCero {
+	font-weight: bold;
+	background-color: red;
+	color: white;
+}
+
+.liqCerrarDiferenciaMayorCero {
+	font-weight: bold;
+	background-color: green;
+	color: white;
+}
+
+.liqCerrarDiferenciaMayor40 {
+	font-weight: bold;
+	background-color: yellow;
+	color: white;
+}
+
+.liqCerrarAviso {
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 600px;
+	background-color: gold;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+}
+
+.liqCerrartitulo {
+	font-size: 22px;
+	color: #cccccc;
+	clear: both;
+}
+
+.liqCerrarTotalesSeleccionados {
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 860px;
+	background-color: gold;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+}
+
+.liqCerrarSeleccionarFila {
+	font-weight: bold;
+	color: gold;
+}
+
+.liqCerrarSeleccionarFilaDiferencia {
+	font-size: 16px;
+}
+
+.liqDetalleFilaAprobado {
+	background-color: green;
+	color: yellow;
+}
+
+.liqDetalleFilaPendiente {
+	background-color: blue;
+	color: yellow;
+}
+
+.liqDetalleFilaRechazado {
+	background-color: red;
+	color: white;
+}
+
+.liqDetalleTotalGeneral {
+	background-color: gold;
+	color: black;
+	font-size: 16;
+	font-weight: bold;
+}
+
+.liqCerrarSubTitulo {
+	font-size: 20px;
+	color: #cccccc;
+	clear: both;
+}
+
+.liqCerrarSubTituloAlerta {
+	font-size: 18px;
+	color: #383838;
+	margin-left: 40px;
+	margin-top: 10px;
+}
+
+.cbLiSubTitulo {
+	font-family: 'Rockwell';
+	text-transform: uppercase;
+	font-size: 16px;
+	color: #ff9900;
+}
+
+.cbContenedorGralCabecera {
+	float: left;
+	width: 900px;
+	float: left;
+	padding: 10px 10px 10px 10px;
+	font-size: 16px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	height: 100px;
+	font-style: italic;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+	clear: both;
+}
+
+.cbContenedorGralCabeceraTitulo {
+	clear: both;
+	float: left;
+	margin-bottom: 20px;
+}
+
+.cbContenedorGralNombreCampo {
+	clear: both;
+	float: left;
+	width: 120px;
+	clear: both;
+	color: #cccccc;
+}
+
+.cbContenedorGralValorCampo {
+	float: left;
+	width: 280px;
+	font-weight: bold;
+	color: white;
+}
+
+.cbContenedorGralNombreCampoFecha {
+	float: left;
+	width: 120px;
+	color: #cccccc;
+}
+
+.cbContenedorGralValorCampoFecha {
+	float: left;
+	width: 170px;
+	font-weight: bold;
+	color: white;
+}
+
+.cbContenedorIzquierdaGral {
+	float: left;
+	width: 120px;
+	float: left;
+	font-size: 14px;
+	margin-right: 10px;
+	width: 200px;
+	height: 500px;
+	font-style: italic;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	padding: 10px 10px 10px 10px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: white;
+	clear: both;
+}
+
+.cbContenedorIzqGralStckValLbl {
+	clear: both;
+	float: left;
+}
+
+.cbContenedorIzqGralCapCajaLbl {
+	clear: both;
+	float: left;
+}
+
+.cbContenedorIzqGralSubrayado {
+	width: 200px;
+	float: left;
+	border-bottom: 1px solid white;
+}
+
+.cbContenedorIzqGralTotalliqLbl {
+	clear: both;
+	float: left;
+	font-weight: bold;
+	margin-top: 3px;
+}
+
+.cbContenedorIzqGralTotalliqValor {
+	font-size: 17px;
+	font-weight: bold;
+	float: right;
+	font-size: 17px;
+}
+
+.cbContenedorCentralGral2 {
+	float: left;
+	width: 670px;
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	height: 500px;
+	font-style: italic;
+	border: 1px solid #CCCCCC;
+	padding: 10px 10px 10px 10px;
+	margin-top: 5px;
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+}
+
+.cbContenedorCentralGralMov {
+	float: left;
+	width: 670px;
+	float: left;
+	background-color: #473b3b;
+	clear: both;
+	font-size: 16px;
+	margin-top: 20px;
+	height: 360px;
+	width: 630px;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	padding: 10px 10px 10px 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	overflow-y: auto;
+	color: black;
+}
+
+.cbContenedorCentralGralMovMostrar {
+	clear: both;
+	float: left;
+	margin-left: 5px;
+	clear: both;
+	color: #cccccc;
+	margin-top: 10px;
+}
+
+.cbContenedorCentralGralCmb {
+	border-radius: 3px;
+	font-style: italic;
+	-moz-border-radius: 3px 3px 3px 3px;
+	-webkit-border-radius: 3px 3px 3px 3px;
+}
+
+.cbContenedorCentralTablaMov {
+	float: left;
+	width: 620px;
+	float: left;
+	margin-left: 5px;
+	margin-top: 10px;
+	margin-right: 10px;
+	clear: both;
+	font-size: 15px;
+	height: 230px;
+	overflow-y: auto;
+	color: black;
+}
+
+.cbContenedorCentralTablaFila {
+	background-color: white;
+	color: black;
+	line-height: 17px;
+}
+
+.cbContenedorCentralTablaFilaSel {
+	background-color: blue;
+	color: white;
+	line-height: 17px;
+}
+
+.cbContenedorCentralPieTotal {
+	clear: both;
+	float: left;
+	margin-left: 5px;
+	clear: both;
+	color: #cccccc;
+	margin-top: 10px;
+}
+
+.cbContenedorCentralPieTotalImp {
+	margin-top: 10px;
+	float: right;
+	margin-right: 10px;
+	font-weight: bold;
+	color: white;
+}
+
+.cbContenedorPieGral {
+	float: left;
+	width: 900px;
+	float: left;
+	padding: 10px 10px 10px 10px;
+	font-size: 16px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	height: 100px;
+	font-style: italic;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+	clear: both;
+}
+
+.cbLIqObservaciones {
+	color: black;
+	background-color: white;
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border: 0px solid #707070;
+	display: block;
+	float: left;
+	width: 100%;;
+	height: 50px;;
+	vertical-align: middle;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.cbContenedorGralBordeado {
+	float: left;
+	width: 920px;
+	float: left;
+	margin-left: 20px;
+	padding: 10px 10px 10px 10px;
+	font-size: 16px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	height: auto;
+	font-style: italic;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+	clear: both;
+	padding-bottom: 20px;
+}
+
+
+.cbContenedorGralDescripcionesCampo {
+	margin-left: 10px;
+	float: left;
+	width: 200px;;
+	color: #cccccc;
+	float: left;
+}
+
+.cbContenedorGralDescripcionesCampoNegro {
+	margin-left: 10px;
+	float: left;
+	width: 200px;;
+	color: black;
+	float: left;
+}
+
+.cbInputGral {
+	float: left;
+	margin-left: 5px;
+	margin-right: 5px;
+	height: auto;
+	border: 1px solid #CCCCCC;
+	border-radius: 2px;
+	padding-left: 5px;
+	-moz-border-radius: 2px 2px 2px 2px;
+	-webkit-border-radius: 2px 2px 2px 2px;
+	color: black;
+	font-size: 15px;
+	font-style: italic;
+}
+
+.cbValorCampoNoEditable {
+	float: left;
+	font-weight: bold;
+	color: white;
+	min-width: 120px;
+}
+
+.lepRenglonDetalle {
+	background-color: #CCCCCC;
+	margin-bottom: 2px;
+	color: black;
+	width: 880px;
+	float: left;
+	padding-left: 5px;
+	padding-right: 10px;
+}
+
+.lepRenglonDetalleTotal {
+	background-color: #FFD700;
+	margin-bottom: 2px;
+	font-weight: bold;
+	color: black;
+	width: 880px;
+	float: left;
+	padding-left: 5px;
+	padding-right: 10px;
+}
+
+.lepRenglonDetalleDivision {
+	background-color: green;
+	margin-bottom: 2px;
+	font-weight: bold;
+	color: yellow;
+	width: 850px;
+	float: left;
+	padding-left: 5px;
+	padding-right: 10px;
+}
+
+.lepRenglonDetalleTotalObservaciones {
+	color: black;
+	background-color: white;
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border: 0px solid #707070;
+	display: block;
+	float: left;
+	padding-left: 10px;
+	padding-right: 10px;
+	float: left;
+	width: 400px;
+	height: 100px;
+	font-size: 15px;
+	font-style: italic;
+	margin-left: 4px;
+}
+
+.cbLiDescCamposPeriodoCerrar {
+	font-family: 'Rockwell';
+	text-transform: uppercase;
+	font-size: 16px;
+	color: #C3C3C3;
+}
+
+.liqPrmoediosOtrosValores {
+	color: #84e0a7;
+	float: right;
+	clear: both;
+	margin-bottom: 10px;
+}
+
+.liqDetalleMovimientosPendientesDiv {
+	float: left;
+	background-color: white;
+	margin-left: 20px;
+	clear: both;
+	padding: 10px 10px 10px 10px;
+	width: 740px;
+	margin-bottom: 10px;
+}
+
+.liqDetalleMovimientosPendientesImgPendiente {
+	width: 50px;
+	clear: both;
+	float: left;
+	margin-right: 10px;
+}
+
+.liqDetalleMovimientosPendientesTituloLiq {
+	float: left;
+	clear: both;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.liqDetalleMovimientosPendientesNombre {
+	float: left;
+	clear: both;
+}
+
+.liqDetalleMovimientosPendientesImporte {
+	font-size: 18px;
+	font-weight: bold;
+	float: right;
+}
+
+.cbContenedorGralBordeadoDetalle {
+	float: left;
+
+
+
+	padding: 10px 10px 10px 10px;
+	font-size: 16px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	height: auto;
+	font-style: italic;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+
+	padding-bottom: 20px;
+
+	float:left;width:860px; clear:both;margin-left:10px;margin-top:10px;background-color:#72c143;border-color:green;color:white;
+}

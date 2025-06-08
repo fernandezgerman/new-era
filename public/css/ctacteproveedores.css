@@ -1,0 +1,274 @@
+.ccpDivFilaImpuestoDescripcion {
+	width:120px;float:left;
+}
+
+.ccpDivFilaImpuestoImporte {
+	width:60px;float:left;text-align:right;
+}
+.ccpDivGrilla {
+	margin-left: 20px;
+	margin-right: 40px;
+}
+
+.ccpSucursalProveedorTitulo {
+	margin-bottom: 10px;
+	font-size: 16px;
+	color: #ee9a2f;
+}
+
+.ccpColumnaDescripcion {
+	background-color: #B9B9B9;
+	width: 20px;
+}
+
+.ccpDivColumnaDescripcion {
+	font-size: 14px;
+	width: 10px;
+	margin-left: 5px;
+	float: left;
+	word-wrap: break-word;
+	text-align: center;
+	color: black;
+	text-transform: uppercase;
+}
+
+.ccpDivLineaTitular {
+	float: left;
+	width: 810px;
+	background-color: #B9B9B9;
+	height: 30px;
+	color: black;
+	size: 16px;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-right: 10px;
+}
+
+.ccpDivLupa {
+	float: left;
+	width: 10px;
+	padding-top: 4px;
+	padding-right: 5px;
+}
+
+.ccpColumnaFecha {
+	float: left;
+	width: 80px;
+}
+
+.ccpColumnaComprobante {
+	float: left;
+	width: 130px;
+}
+
+.ccpColumnaNumero {
+	float: left;
+	width: 90px;
+	text-align: right;
+	margin-right: 5px;
+}
+
+.ccpColumnaUsuario {
+	float: left;
+	width: 180px;
+	margin-left: 10px;
+}
+
+.ccpColumnaDebe {
+	float: left;
+	width: 100px;
+}
+
+.ccpColumnaHaber {
+	float: left;
+	width: 90px;
+}
+
+.ccpColumnaSaldo {
+	float: left;
+	width: 90px;
+}
+
+.ccpLupa {
+	width: 10px;
+	cursor: hand;
+}
+
+.ccpContenedorLinea {
+	float: left;
+	width: 810px;
+	size: 14px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-top: 2px;
+}
+
+.ccpColorLineaFactura {
+	background-color: #718bf2;
+	color: white;
+}
+
+.ccpColorLineaFacturaAnulada {
+	background-color: #718bf2;
+	color: #fcb0b0;
+}
+
+.ccpColorLineaNotaDeCredito {
+	background-color: #718bf2;
+	color: #b4f7b4;
+}
+
+.ccpColorLineaPago {
+	background-color: #14a7fc;
+	color: white;
+}
+
+.ccpAlineacionRight {
+	text-align: right;
+	float: right;
+}
+
+.ccpAlineacionCenter {
+	text-align: center;
+}
+
+.ccpLineaTotal {
+	float: left;
+	width: 810px;
+	background-color: #EE9A2F;
+	color: black;
+	font-weigth: bold size:16px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-top: 2px;
+	height: 25px;
+	padding-top: 5px;
+}
+
+.ccpDescrripcionTotal {
+	float: left;
+	width: 440px;
+	text-align: right
+}
+
+.ccpDivVisor {
+	width: 100%;
+	visibility: hidden;
+	height: 0px;
+	float: left;
+	clear: both;
+	font-size: 10px;
+}
+
+.ccpDivCargando {
+	
+	width: 790px;;
+	visibility: hidden;
+	padding-left: 20px;
+	height: 0px;
+
+	clear: both;
+	font-size: 10px;
+}
+
+.ccpDivLabelDetalleCompra {
+	font-size: 14px;
+	font-weight: bold;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+.ccpDivTituloArticulosCodigo {
+	width: 83px;
+	background-color: white;
+	color: black;
+	float: left;
+	
+}
+
+.ccpDivTituloArticulosNombre {
+	width: 190px;
+	background-color: white;
+	color: black;
+	float: left;
+	
+}
+
+.ccpDivTituloArticulosRubro {
+	width: 140px;
+	background-color: white;
+	color: black;
+	float: left;
+}
+
+.ccpDivTituloArticulosCantidad {
+	width: 70px;
+	background-color: white;
+	color: black;
+	float: left;
+	text-align: right;
+}
+
+.ccpDivTituloArticulosImporte {
+	width: 70px;
+	background-color: white;
+	color: black;
+	float: left;
+	text-align: right;
+}
+
+.ccpDivFilaArticulo {
+	font-size: 12px;
+	clear: both;
+	margin-right:3px;
+}
+
+.ccpDivColumnaCodigo {
+	width: 80px;
+	float: left;
+	margin-right:3px;
+}
+
+.ccpDivColumnaNombre {
+	width: 190px;
+	float: left;
+}
+
+.ccpDivColumnaRubro {
+	width: 140px;
+	float: left;
+}
+
+.ccpDivColumnaCantidad {
+	width: 70px;
+	float: left;
+	text-align: right;
+}
+
+.ccpDivColumnaImporte {
+	width: 70px;
+	float: left;
+	text-align: right;
+}
+
+.ccpDivFilaImpuesto {
+	font-size: 12px;
+	clear: both;
+}
+
+.ccpDivFilaDescripcionImpuestoNombre{
+	width:120px;background-color:white;color:black;float:left;
+	
+}
+.ccpDivFilaDescripcionImpuestoImporte{
+	width:60px;background-color:white;color:black;float:left;
+	
+}
+.ccpDivFilaTotal{
+	font-size: 12px;
+	clear: both;
+	margin-right:3px;
+	background-color:#EE9A2F;
+	color: black;
+	height:13px;
+}

@@ -1,0 +1,483 @@
+.opDivGenerarOP {
+	font-size: 14px;
+	float: right;
+	clear: both;
+	margin-top: 5px;
+	text-align: left;
+}
+
+.opDivSeleccionadoSeleccionada {
+	background-color: blue !important;
+	color: yellow !important;
+}
+
+.opDetalleTotalSeleccionadoImporte {
+	float: right;
+	text-align: right;
+}
+
+.opDetalleTotalSeleccionado {
+	font-size: 14px;
+	width: 260px;
+	clear: both;
+	margin-top: 5px;
+	text-align: left;
+	background-color: gold;
+	font-weight: bold;
+}
+
+.opDetalleLupaDeudaGeneradaOP {
+	margin-left: 3px;
+	width: 10px;
+	cursor: hand;
+}
+
+.opDetalleChkFila {
+	height: 14px;
+	width: 14px;
+}
+
+.opDetalleLupaImporteDeuda {
+	float: left;
+	width: 12px;
+	cursor: hand;
+}
+
+.opDetalleAlignRight {
+	text-align: right;
+}
+
+.opDetalleDiasVencida {
+	color: red;
+	float: left;
+}
+
+.opDetalleColumnaNumero {
+	width: 15px;
+	text-align: right;
+}
+
+.opDetalleColumnaCheck {
+	width: 15px;
+}
+
+.opDetalleFilaDeudaSel {
+	background-color: blue !important;
+	color: gold !important;
+}
+
+.opDetalleFilaDeuda {
+	background-color: #98CBE2;
+	color: white;
+}
+
+.opDetalleFilaDeudaVencida {
+	color: red;
+	background-color: #f9d9d9;
+}
+
+.opDetalleFilaDeudaOrdenGenerada {
+	color: green;
+	background-color: white;
+	font-weight: bold;
+}
+
+.opImporteOrdenado {
+	margin-top: 4px;
+	float: right;
+	color: green;
+	width: 80px;
+	font-weight: bold;
+}
+
+.opImporteSeleccionado {
+	margin-top: 4px;
+	float: right;
+	height: 18px;
+	border: 1px solid white;
+	background-color: blue;
+	color: gold;
+	font-weight: bold;
+	border-radius: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	display: none;
+}
+
+.opImporteVencido {
+	margin-top: 4px;
+	float: right;
+	width: 80px;
+	color: red;
+	font-weight: bold;
+}
+
+.opImporteDuda {
+	margin-top: 4px;
+	float: right;
+	width: 80px;
+}
+
+.opLupa12 {
+	float: right;
+	width: 13px;
+	cursor: hand;
+	margin-left: 3px;
+	margin-right: 3px;
+	margin-top: 2px;
+}
+
+.opFilaImpar {
+	clear: both;
+	float: left;
+	margin-left: 20px;
+	padding-bottom: 2px;
+	background-color: #FFD700;
+	color: black;
+}
+
+.opFilaSubTotal {
+	clear: both;
+	float: left;
+	color: black;
+	background-color: yellow;
+	margin-left: 20px;
+	padding-bottom: 2px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.opFilaPar {
+	clear: both;
+	float: left;
+	background-color: orange;
+	margin-left: 20px;
+	padding-bottom: 2px;
+	color: black;
+}
+
+.opFilaSel {
+	clear: both;
+	float: left;
+	background-color: blue;
+	color: gold;
+	margin-left: 20px;
+	padding-bottom: 2px;
+}
+
+.opColumnaTotal {
+	min-height: 19px;
+	margin-left: 2px;
+	float: left;
+	width: 93px;
+	display: inline-block;
+	text-align: right;
+	border: 1px solid black;
+	padding-top: 4px;
+	padding-right: 5px;
+}
+
+.opColumnaDerechaDato {
+	min-height: 23px;
+	margin-left: 2px;
+	float: left;
+	width: 350px;
+	display: inline-block;
+	text-align: right;
+	border: 1px solid black;
+}
+
+.opColumnaIzquierdaDato {
+	min-height: 23px;
+	margin-left: 2px;
+	float: left;
+	width: 270px;
+	display: inline-block;
+	border: 1px solid black;
+}
+
+.opTotalCabecera {
+	height: 30px;
+	width: 100px;
+	background-color: white;
+	display: inline-block;
+	margin-left: 2px;
+	float: left;
+}
+
+.opColumnaSemanaCabecera {
+	height: 30px;
+	width: 352px;
+	background-color: white;
+	display: inline-block;
+	margin-left: 2px;
+	float: left;
+}
+
+.opColumnaSucursalCabecera {
+	height: 30px;
+	width: 272px;
+	background-color: white;
+	display: inline-block;
+	margin-left: 2px;
+	float: left;
+}
+
+.opCabeceraTablaGeneral {
+	clear: both;
+	float: left;
+	margin-left: 20px;
+	padding-bottom: 2px;
+	color: #EE9A2F;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.opchkProveedor {
+	height: 20px;
+	width: 20px;
+	margin-top: 15px;
+}
+
+.opDivProveedor {
+	clear: both;
+	float: left;
+	margin-top: 15px;
+	font-size: 16px;
+	margin-right: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-bottom: 15px;
+}
+
+.opDivReferencias {
+	float: left;
+	width: 390px;
+}
+
+.opDivInterno {
+	clear: both;
+	width: 1800px;
+	float: left;
+	margin-bottom: 20px;
+	paddin-right: 5px;
+	padding-left: 10px;
+	margin-top: 10px;
+}
+
+.opContenedorGeneral {
+	height: 500px;
+	clear: both;
+	margin-left: 0px;
+	width: 850px;
+	background-color: gold;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+	font-size: 14px;
+	margin-bottom: 15px;
+	clear: both;
+	float: left;
+	overflow: scroll;
+	margin-top: 40px;
+	width: 900px;
+	z-index: 999;
+}
+
+.opTituloSubrayado {
+	font-family: 'Rockwell';
+	text-transform: uppercase;
+	font-size: 16px;
+	line-height: 18px;
+	color: black;
+	margin-top: 60px;
+	padding-bottom: 6px;
+	text-align: left;
+	border-bottom: 1px solid black;
+	clear: both;
+}
+
+.opPosicionReferencias {
+	background-color: efe6b8;
+	padding-bottom: 20px;
+	border: 1px solid gold;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	float: left;
+}
+
+.opPosicionReferenciasFijo {
+	position: fixed;
+	background-color: efe6b8;
+	padding-bottom: 20px;
+	border: 1px solid gold;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.opMAximizar {
+	clear: both;
+	float: left;
+	margin-top: 3px;
+	margin-right: 10px;
+}
+
+.opTitularTotalPendiente {
+	font-size: 18px;
+	background-color: blue;
+	color: gold;
+	margin-top: 5px;
+	padding-left: 8px;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.opTotalSeleccionadoMax {
+	position: fixed;
+	top: 100px;
+	left: 610px;
+	margin-left: 0px !important;
+}
+
+.opContenedorTransparente {
+	float: left;
+	clear: both;
+	margin-top: 20px;
+	margin-left: 0px;
+	width: 100%;
+	background-color: transparent;
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	margin-bottom: 15px;
+}
+
+.opPagarContenedorPdfs {
+	height: 80px;
+	float: left;
+	margin-right: 20px;
+	padding-right: 8px;
+	overflow-y: auto;
+	background-color: transparent;
+	border: 1px solid black;
+	width: 450px;
+	display: none;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.opFlechaAzulDerecha {
+	height: 12px;
+	cursor: hand;
+}
+
+.opFlechaAzulIzquierda {
+	height: 12px;
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	rotation: 180deg;
+	cursor: hand;
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+
+.opContenedorFlechas {
+	width: 100%;
+	float: left;
+	clear: both;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	margin-top: 5px;
+}
+.spColumnaSemanaCabecera {
+	background-color: white;
+}
+.spColumnaSemana{
+	padding:6px;
+	width: 312px;
+	display: inline-block;
+	margin-left: 1px;
+}
+.spColumnaProveedorCabecera {
+	background-color: white;
+}
+.spColumnaProveedor{
+	padding:6px;
+	width: 272px;
+	display: inline-block;
+	margin-left: 1px;
+}
+.spColumnaProveedorDato {
+	min-height: 23px;
+	margin-left: 2px;
+	float: left;
+	width: 274px;
+	display: inline-block;
+	padding:5px;
+	margin-right:2px;
+}
+.spColumnaDerechaDato {
+	min-height: 23px;
+	margin-left: 2px;
+	width: 325px;
+	display: inline-block;
+	text-align: right;
+	vertical-align: top;
+
+}
+.spDivInterno {
+	clear: both;
+
+	float: left;
+	margin-bottom: 20px;
+	paddin-right: 5px;
+	padding-left: 10px;
+	margin-top: 10px;
+}
+
+
+
+.spBordeado {
+	margin-top:1px;
+	border: 1px solid black;
+	width:3593px;
+}
+.spBordeadoSolo {
+	margin-top:1px;
+	border: 1px solid black;
+
+}
+.spFacturaSeleccionada{
+	background-color:blue !important;
+	color: yellow !important;
+
+}
+.sdpProveedorMuestra{
+	clear:both;
+	font-size: 8px;
+	float: left;
+	top: -23px;
+	position: relative;
+	/*opacity: 0.7;*/
+	visibility:hidden;
+}
+
+.sdpImporteMuestra{
+	position: relative;
+	top: 4;
+}

@@ -1,0 +1,323 @@
+.revSucDivContenedorSucursalFila {
+	margin-left: 20px;
+	margin-right: 20px;
+	background-color: white;
+	float: left;
+	width: 910px;
+	padding: 10px 10px 10px 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	margin-top: 5px;
+	height: auto;
+}
+
+.revSucDivContenedorSucursalFilaSeleccionada {
+	background-color: blue;
+	color: white;
+}
+
+.revSucDivContenedorCheck {
+	float: left;
+	margin-right: 10px;
+}
+
+.revSucDivSucursal {
+	float: left;
+	width: 350px;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.revSucDivTotalRev {
+	float: left;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.revSucDivUltimaRevalorizacionVacia {
+	float: left;
+	clear: both;
+	margin-top: 15px;
+	font-size: 13px;
+	font-style: italic;
+	color: red;
+}
+
+.revSucDivUltimaRevalorizacion {
+	float: left;
+	clear: both;
+	margin-top: 15px;
+	font-size: 13px;
+	font-style: italic;
+	color: #EE9A2F;
+	widht: 200px;
+}
+
+.revSucDivPorcentajeRevalorizacion {
+	float: left;
+	font-size: 62px;
+	margin-left: 15px;
+	margin-top: -13px;
+}
+
+.revSucDivContenedorCuentaRevaloricaion {
+	float: right;
+	width: 250px;
+	font-size:15px;
+}
+
+.revSucDivCuentaRevalorizacionDescripcion {
+	float: left;
+	clear: both;
+}
+
+.revSucDivCuentaRevalorizacionDescripcionTotal {
+	float: left;
+	border-top: 2px;
+	border-top: solid #EE9A2F;
+	border-top-width: 1px;
+	width: 100%;
+}
+
+.revSucDivCuentaRevalorizacionDescripcionTotalBold {
+	font-weight: bold;
+}
+
+.revSucDivDescripcionArticulos {
+	float: left;
+	clear: both;
+	margin-top: 20px;
+	margin-left: 0px;
+	width: 850px;
+	background-color: gold;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+	font-size: 14px;
+	margin-bottom: 15px;
+}
+.revSucDivDescripcionRubro {
+	float: left;
+	clear: both;
+	margin-top: 20px;
+	margin-left: 0px;
+	width: 880px;
+	background-color: #48B7EA;
+	border: 1px solid blue;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+	font-size: 14px;
+	margin-bottom: 15px;
+}
+
+.revSucDivDescripcionArticulosTitulo {
+	float: left;
+	font-weight: bold;
+	font-style: underline;
+	margin-bottom: 15px;
+	margin-top: 5px;
+}
+
+.revSucDivDescripcionArticulosTitulo {
+	float: left;
+	font-weight: bold;
+	font-style: underline;
+	margin-bottom: 15px;
+	margin-top: 5px;
+}
+
+.revSucDivDescripcionArticulosCerrar {
+	width: 15px;
+	margin-top: 5px;
+	cursor: hand;
+}
+
+.revSucDivDescripcionArticulosTabla {
+	font-size: 14px;
+	width: 840px;
+}
+
+.revSucDivDescripcionArticulosTablaTitulo {
+	vertical-align: center;
+	background-color: white;
+	color: #EE9A2F;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 17px;
+	height: 28px;
+}
+.revSucDivDescripcionRubrosTablaTitulo {
+	vertical-align: center;
+	background-color: white;
+	color: blue;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 17px;
+	height: 28px;
+}
+
+.revSucDivDescripcionArticulosTablaFilaPar {
+	background-color: #EE9A2F;
+}
+.revSucDivDescripcionArticulosTablaFilaParRubro {
+	background-color: #98CBE2;
+}
+
+.revSucDivDescripcionArticulosTablaFilaTotal {
+	background-color: yellow;
+}
+
+.revSucDivDescripcionArticulosTablaDifMenorCero {
+	color: red;
+}
+
+.revSucDecComprasDivGeneral {
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	clear: both
+}
+
+.revSucDecComprasFilaGeneral {
+	clear: both;
+	width: 500px;
+	height: 15px;
+}
+
+.revSucDecComprasFilaTitulo {
+	background-color: white;
+	color: #EE9A2F;
+	font-weight: bold;
+	clear: both;
+	width: 500px;
+	background-color: white;
+	height: 15px;
+	color: #EE9A2F;
+	font-weight: bold;
+}
+
+.revSucDecComprasFilaDatoPar {
+	background-color: #EE9A2F;
+	clear: both;
+	width: 500px;
+	height: 15px;
+}
+
+.revSucDecComprasFilaDatoImpar {
+	clear: both;
+	width: 500px;
+	height: 15px;
+	background-color: #FFD700;
+}
+
+.revSucDecComprasColumnaDatoFecha {
+	float: left;
+	width: 80px;
+	text-align: right
+}
+
+.revSucDecComprasColumnaDatoNumero {
+	float: left;
+	width: 80px;
+	text-align: right
+}
+
+.revSucDecComprasColumnaDatoNombre {
+	float: left;
+	margin-left: 5px;
+}
+
+}
+.revSucDecComprasColumnaDatoImporte {
+	float: right;
+	width: 70px;
+	text-align: left;
+	margin-left: 10px;
+}
+
+.revSucDecComprasColumnaDatoCantidad {
+	float: right;
+	width: 80px;
+	text-align: left
+}
+
+.revSucDecComprasColumnaCabeceraFecha {
+	float: left;
+	width: 70px;
+	text-align: left
+}
+
+.revSucDecComprasColumnaCabeceraNumero {
+	float: left;
+	width: 80px;
+	text-align: left
+}
+
+.revSucDecComprasColumnaCabeceraNombre {
+	float: left;
+	margin-left: 5px;
+}
+
+}
+.revSucDecComprasColumnaCabeceraImporte {
+	float: right;
+	width: 70px;
+	text-align: left;
+	margin-left: 10px;
+}
+
+}
+.revSucDecComprasColumnaCabeceraCantidad {
+	float: right;
+	width: 80px;
+	text-align: left
+}
+
+.revSucDecComprasDescripcion {
+	float: left;
+	clear: both;
+	font-weight: bold;
+	font-style: underline;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	margin-left: 10px;
+}
+
+.revSucDecCalificacionNoSuma {
+	text-decoration: line-through;
+	font-weight: bold;
+}
+
+.revSucDivContenedorSeleccionarTodos {
+	margin-left: 20px;
+	margin-right: 20px;
+	color: #373737;
+	background-color: #EE9A2F;
+	float: left;
+	width: 910px;
+	padding: 10px 10px 10px 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	margin-top: 5px;
+	height: auto;
+}
+
+.revSucDivContenedorConfiguracionDetalleTitulo {
+	float: left;
+	clear: both;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 18px;
+	padding-bottom: 6px;
+	margin-right: 20px;
+	border-bottom: 1px solid;
+	margin-bottom: 10px;
+	clear: both;
+}

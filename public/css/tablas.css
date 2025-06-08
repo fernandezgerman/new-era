@@ -1,0 +1,205 @@
+
+.divContenedorGeneralEnmarcado {
+    float: left;
+    clear: both;
+    margin-top: 20px;
+    margin-left: 0px;
+    width: 850px;
+    background-color: gold;
+    border: 1px solid #ff9900;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.tblCabeceraTabla {
+    font-size: 14px;
+    margtin-left:10px;
+    margtin-left:10px;
+    clear:both;
+    width:100%;
+    
+}
+.tblCabeceraTabla3 {
+    font-size: 14px;
+    margtin-left:10px;
+    margtin-left:10px;
+    clear:both;
+
+
+}
+.tblCabeceraTabla2 {
+    font-size: 14px;
+    margtin-left:10px;
+    margtin-left:10px;
+    clear:both;
+    width:100%;
+    
+}
+.tblFilaCabecera {
+    vertical-align: center;
+    background-color: white;
+    color: #EE9A2F;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 17px;
+    height: 28px;
+    text-transform:uppercase;
+}
+.tblFilaParA{
+    background-color: #EE9A2F;
+}
+.tblFilaImParA{
+    background-color: #FFD700;
+}
+
+.tblFilaParRoja{
+    background-color: red;
+    color:white;
+}
+.tblFilaTotalPie{
+    background-color: yellow;
+    font-weight:bold;
+}
+.contGeneralAzul {
+    float: left;
+    clear: both;
+    margin-top: 20px;
+    margin-left: 0px;
+    width: 95%;
+    background-color: #48B7EA;
+    border: 1px solid blue;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.tblFilaCabeceraAzul {
+    vertical-align: center;
+    background-color: white;
+    color:blue;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 17px;
+    height: 28px;
+}
+.tblFilaParAAzul{
+    background-color: #98CBE2;
+}
+.tblFilaTotalPieAzul{
+    background-color: blue;
+    color:white;
+}
+.contGeneralVerde {
+    float: left;
+    clear: both;
+    margin-top: 20px;
+    margin-left: 0px;
+    width: 100%;
+    background-color: #a3ffac;
+    border: 1px solid green;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.tblFilaCabeceraVerde {
+    vertical-align: center;
+    background-color: white;
+    color:green;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 17px;
+    height: 28px;
+}
+.tblFilaParAVerde{
+    background-color: #40c959;
+}
+.tblFilaTotalPieVerde{
+    background-color: green;
+    color:white;
+}
+
+.contGeneralVioleta {
+    float: left;
+    clear: both;
+    margin-top: 20px;
+    margin-left: 0px;
+    width: 100%;
+    background-color: #b658f4;
+    border: 1px solid #8e088e;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.contGeneralGris {
+    float: left;
+    clear: both;
+    margin-top: 20px;
+    margin-left: 0px;
+    width: 100%;
+    background-color: #d8d8d8;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.tblFilaCabeceraVioleta {
+    vertical-align: center;
+    background-color: white;
+    color:#8e088e;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 17px;
+    height: 28px;
+}
+
+
+.tblFilaCabeceraGris {
+    vertical-align: center;
+    background-color: white;
+    color:black;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 17px;
+    height: 28px;
+}
+.tblFilaParAVioleta{
+    background-color: #eba4f4;
+}
+
+.tblFilaParAGris{
+    background-color: #c4c4c4;
+}
+
+.tblFilaTotalPieVioleta{
+    background-color: #8e088e;
+    color:white;
+}
+.tblFilaTotalPieGris{
+    background-color: black;
+    color:white;
+}
+.inputTransparente{
+
+    background-color: transparent;
+    border-style: double;
+}

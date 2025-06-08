@@ -1,0 +1,164 @@
+.gastosNuevoDivPrincipal {
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	background-color: white;
+	margin-left: 20px;
+	width: 900px;
+	margin-bottom: 5px;
+	float: left;
+	font-weight: bold;
+	height: auto;
+	padding: 10 10 10 10;
+	font-size: 14px;
+}
+
+.gastosNuevoDivInterno {
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	background-color: blue;
+	width: 880px;
+	margin-bottom: 5px;
+	float: left;
+	font-weight: bold;
+	height: auto;
+	padding: 5 5 5 5;
+	font-size: 14px;
+	color: white;
+}
+
+.gastosNuevoDivInternoFinal {
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	background-color: blue;
+	width: 880px;
+	margin-bottom: 5px;
+	float: left;
+	font-weight: bold;
+	margin-top: 5px;
+	height: 5px;
+	font-size: 14px;
+	color: white;
+}
+
+.gastosNuevoDivPrincipalColorGris {
+	background-color: #373737;
+}
+
+.gastoNuevoDivAgregarDescripcion {
+	float: left;
+	margin-left: 10px;
+}
+
+.gastoNuevoDivAgregarAlineacionDerecha {
+	text-align: right;
+}
+
+.gastoNuevoDivAgregarDescripcion2 {
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.gastoNuevoDivInicioFila {
+	clear: both;
+}
+
+.gastoNuevoDivAgregarDescripcionExtra {
+	float: left;
+	margin-left: 20px;
+	font-size: 12px;
+	font-style: italic;
+	color: #EE9A2F
+}
+
+.gastoNuevoDivSeparador {
+	font-family: 'Rockwell';
+	text-transform: uppercase;
+	font-size: 16px;
+	line-height: 18px;
+	margin-bottom: 10px;
+	color: #000070;
+	padding-bottom: 6px;
+	margin-right: 20px;
+	border-bottom: 1px solid #000070;
+	clear: both;
+}
+
+.gastoNuevoDivObservaciones {
+	float: left;
+	font-size: 16px;
+	background-color:#79B3FB;
+	font-style: italic;
+	border: 1px solid blue;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: white;
+	clear: both;
+	width: 880px;
+}
+
+.gastosNuevoDivCancelar {
+	float: right;
+	border-radius: 5px;
+	border: solid;
+	margin-top: 5px;
+	width: 80px;
+	border-width: 1px 1px 1px 1px;
+	border-color: white;
+	padding: 5 5 5 5;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	font-size: 12px;
+	padding-left: 30px;
+	cursor: hand;
+	background-color: red;
+	color: white;
+	margin-right: 10px;
+}
+
+.gastoNuevoDivArticuloNombreAgregado {
+	clear: both;
+	float: left;
+	font-size: 20px;
+	margin-top: 7px;
+	color: black;
+}
+
+.gastoNuevoDivArticuloImporteAgregado {
+	float: right;
+	margin-right: 40px;
+	font-size: 20px;
+	margin-top: 7px;
+	color: black;
+}
+
+.gastoNuevoDivSucursalAgregado {
+	clear: both;
+	float: left;
+	margin-top: 5px;
+	color: black;
+}
+.gastosNuevoDivSinDatos {
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	background-color: #A1A1A1;
+	margin-left: 20px;
+	width: 900px;
+	margin-bottom: 5px;
+	float: left;
+	font-weight: bold;
+	height: auto;
+	padding: 10 10 10 10;
+	font-size: 14px;
+}
+
+.nuevoGastoNoCargado{
+	color:red;
+}

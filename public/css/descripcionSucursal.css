@@ -1,0 +1,131 @@
+.descripcionSucursalParrafo{
+	clear:both;
+	margin-bottom:10px;
+	margin-right:20px;
+}
+.descripcionSucursalSucursal{
+	font-family:'Rockwell';
+	font-size:28px;	
+	color:#cccccc;
+	float:left;	
+	clear:both;
+	margin-bottom:15px;
+}
+.descripcionSucursalSucursalExtra{
+	font-family:'Rockwell';
+	font-size:18px;	
+	color:#cccccc;
+	float:left;	
+	clear:both;	
+	margin-left:10px;
+}
+
+.descripcionSucursalSubTitulo{
+	padding-top:20px;
+	margin-top:20px;
+	margin-bottom:20px;
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;
+	
+}
+.encolumnado{
+	float:left;
+	width:430px;
+	margin-right:20px;
+}
+.descSucTituloPrefil{
+	float:left;
+	color: #cccccc;
+	
+}
+.descSucNombreUsuario{
+	color:white;
+	clear:both;
+}
+.descSucContenedorPrefil{
+	float:left;
+	margin-left:15px;
+	max-width:200px;
+	width:200px;
+	margin-top:10px;
+}
+
+.descSucDivFiltroFecha{
+	background-color:#373737;
+	color:white;
+	width:85%;}
+.descSucFiltroFecha{
+	width:100px;
+	padding-left:3px;
+	padding-right:3px;
+	background-color:#000000;
+	color:white;
+    border: 2px solid white;
+    moz-border-radius:5px 5px 5px 5px; 
+    -webkit-border-radius:5px 5px 5px 5px;    
+    margin-left:5px;  
+    top:-2px;
+}
+.descSucArreglosGral{
+	margin-top:15px;
+    background-color:#EE9A2F;
+    border: 2px solid orange;
+    moz-border-radius:5px 5px 5px 5px; 
+    -webkit-border-radius:5px 5px 5px 5px;	
+    padding: 10px 10px 10px 10px;
+}
+.descripcionSucursalLupa{
+	width:17px;
+	cursor: hand;
+}
+.descSucRecargar{
+    float: right;
+    margin-right: 20px;
+    cursor:hand;	
+}
+
+.descSucursalCampoPromocion{
+	 background-color: black;
+    color: gold;
+    font-weight: bold;
+    font-size: 14;
+    float:left;
+    width:14px;
+    text-align: center;
+    border: 1px solid orange;
+    moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.descSucursalCampoPromocionDiaPuntual{
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    float:left;
+    text-align: center;
+    border: 1px solid white;
+    moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+    float:left;width:20px;height:20px;font-size:16    
+}
+.descSucNoSeEncontraronRegistros{
+    margin-top:15px;
+    background-color:#4ea8c9;
+    border: 2px solid #5b8ead;
+    moz-border-radius:5px 5px 5px 5px; 
+    -webkit-border-radius:5px 5px 5px 5px;  
+    padding: 10px 10px 10px 10px;
+    width:400px;
+    height:150px;	
+}

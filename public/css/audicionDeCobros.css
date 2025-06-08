@@ -1,0 +1,128 @@
+.addRenglonDiv{
+    margin-left: 20px;
+    margin-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 850px;
+    float: left;
+    clear: both;
+}
+
+.addColorTotal{
+    background-color: gold;
+    color: black;
+}
+
+.addColorRechazado{
+    background-color: red;
+    color: white;
+}
+.addColorAprobado{
+    background-color: green;
+    color: gold;
+}
+.addColorPendiente{
+    background-color: #373737;
+    color: white;
+}
+.addColorCaducado{
+    background-color: #a220f9;
+    color: white;
+}
+.addColorSeleccionado{
+    background-color: blue;
+    color: white;
+}
+
+.addColorRechazadoNeg{
+    background-color: white;
+    color: red;
+}
+.addColorAprobadoNeg{
+    background-color: gold;
+    color: green;
+}
+.addColorPendienteNeg{
+    background-color: white;
+    color: #373737;
+}
+.addColorCaducadoNeg{
+    background-color: white;
+    color: #a220f9;
+}
+.addColorSeleccionadoNeg{
+    background-color: white;
+    color: blue;
+}
+
+.addDatoDivFechaHora {
+    clear: both;
+    float: right;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.addDatoDivModoDeCobro {
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.addDatoDivImporte {
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: -10px;
+}
+
+.addDatoDivEstado {
+    width: 400px;
+    clear: both;
+    float: left;
+}
+.addCancelarEdicion{
+    float:right;
+    font-size: 8px;
+    font-weight: bold;
+    border-radius:5px;
+    border: solid;
+    margin-top:5px;
+    width:120px;
+    border-width:1px 1px 1px 1px;
+    border-color:white;
+    margin-right:10px;
+    padding:3px 3px 3px 3px;
+    -moz-border-radius:5px 5px 5px 5px;
+    -webkit-border-radius:5px 5px 5px 5px;
+    cursor: hand;
+    background-color:red;
+    color:white;
+
+}
+
+.addCabeceraColorCaducado{
+    color: #a220f9;
+    background-color: white;
+}
+.addCabeceraColorRechazado{
+    color: red;
+    background-color: white;
+}
+.addCabeceraColorTotal{
+    color: gold;
+    background-color: black;
+}
+.addCabeceraColorAprobado{
+    color: green;
+    background-color: gold;
+}
+.addCabeceraColorPendiente{
+    color: #373737;
+    background-color: white;
+}
+.addCabeceraColorSeleccionado{
+    color: blue;
+    background-color: white;
+}

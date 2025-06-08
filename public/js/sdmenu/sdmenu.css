@@ -1,0 +1,92 @@
+/* Letra menu principal*/
+.noSeleccionada{
+	background-color:rgba(204,204,204,0.8);	
+}
+div.sdmenu {
+	font-family:'Rockwell Bold';
+	font-size:15px;	
+	color:#cccccc;
+	width: 200px;
+	height:30px;
+	vertical-align:middle;
+	/*background-color:#0000FF; /*azul*/
+	/*font-family: Arial, sans-serif;
+	font-size: 12px;
+	color: #fff;
+	*/
+	padding-bottom: 10px;
+/*	background: url(bottom.gif) no-repeat  right bottom;*/
+	
+}
+/*Fondo sub menu*/
+div.sdmenu div {
+	background: url(title.gif) repeat-x;
+	/*background-color:#BCBCBC;*/
+
+	overflow: hidden;
+	/*background-color:#FF0000; /*rojo*/
+
+}
+div.sdmenu div:first-child {
+	background: url(toptitle.gif) no-repeat;
+	/*background-color:#009933; /*verde*/
+	
+}
+/*Tamaño que queda visible al colapsar un menú*/
+div.sdmenu div.collapsed {
+	height: 41px;
+	margin-top:8px;
+	margin-bottom:8px;
+}
+
+div.sdmenu div.expanded {
+	height: 41px;
+	margin-top:8px;
+	margin-bottom:8px;
+}
+/* */
+div.sdmenu div span {
+	color:#ff9900;
+	vertical-align: middle;
+	display: block;
+	padding: 5px 15px;
+	font-weight: bold;
+	background: url(expanded.gif) no-repeat 0px ;
+	cursor: default;
+	/*border-bottom: 1px solid #ddd;*/
+	background-position:95% 20%;
+	/*height:40px;*/	
+	height:25px;	
+	/*background-color:#FFFF00; /*amarillo*/
+}
+div.sdmenu div.collapsed span {
+	background-image: url(collapsed.gif);
+	background-position:95% 20%;
+	
+	height:40px;
+	/*background-color:#00FFFF ; /*celeste*/	
+	color:#cccccc;
+}
+div.sdmenu div a {
+	padding: 5px 10px;
+	/*
+	background: #eee;
+	color: #066; */
+	display: block;
+	/*border-bottom: 1px solid #ddd;*/
+
+	font-family:'Rockwell';
+	font-size:14px;
+	/*background-color:#FF00FF; /*rosa*/		
+	color:#333333;	
+	height:18px;
+}
+div.sdmenu div a.current {
+	background-color:rgba(255,153,0,0.5);
+}
+/* al colocar el mouse sobre un subitem*/
+div.sdmenu div a:hover {
+	background-color:#ff9900;
+	text-decoration: none;
+	/*background-color:#333333; /*gris*/
+}

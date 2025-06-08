@@ -1,0 +1,83 @@
+.baDivGeneral{
+	width: 840px;
+	height: 400px;
+	padding: 20px 20px 20px 20px;
+	float: left;
+}
+.baDivFiltros {
+	width: 800px;
+	margin-bottom: 20px;
+	height: 110px;
+	padding: 10px 10px 10px 10px;
+}
+.baDivFiltrosField{
+	width: 320px;
+	float: left;
+	margin-bottom:10px;
+}
+.baDivFiltrosFieldDescripcion {
+	width: 80px;
+	margin-right: 10px;
+	float: left;
+	text-align: right;
+	color: #cccccc;
+	font-size: 14px;
+}
+.baDivFiltrosFieldContenedorInput {
+	width: 200px;
+	float: left;
+}
+.baDivFiltrosFieldInput {
+	width: 100%;
+	height: 20px;
+	float: left;
+	color: #333333;
+	background-color: #cccccc;
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border: 0px solid #707070;
+	vertical-align: middle;
+	padding-left: 10px;
+	padding-right: 10px
+}
+.baDivFiltrosFieldInputCheck {
+	float: left;
+	color: #333333;
+	background-color: #cccccc;
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border: 0px solid #707070;
+	vertical-align: middle;
+	padding-left: 10px;
+	padding-right: 10px
+}
+.baDivFiltrosBotonera {
+	/*background-color: red;
+	float: left;
+	margin-left: 10px;
+	width: 120px;
+	height: 85px;
+
+	 */
+	float:left;
+	celar:both;
+	margin-top:50px;
+}
+@media (max-device-width: 250px) {
+	.divAjaxVentana {
+		position:absolute;
+		margin-left:0px !important;
+		top:0px !important;
+		left:0px !important;
+		background-color:red !important;
+		transform: none !important;
+	}
+}
+
+/*
+W: 217
+H: 250
+
+ */

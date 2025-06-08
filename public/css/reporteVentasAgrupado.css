@@ -1,0 +1,14 @@
+.rbragrDivFiltros{
+	clear:both;
+	
+	float:left;
+	margin-left:10px;
+	margin-right:20px;
+	margin-bottom:10px;
+}
+
+.rbragrDivPromedio{
+    float:left;
+    width:80px;
+    color:#005932;
+}

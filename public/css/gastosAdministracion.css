@@ -1,0 +1,112 @@
+.gastosAdminDivFila {
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	background-color: white;
+	margin-left: 20px;
+	width: 900px;
+	margin-bottom: 5px;
+	float: left;
+	font-weight: bold;
+	height:70px;
+}
+.gastosAdminDivFilaInactivo {
+	background-color: red;
+	color: white;
+	
+}
+.gastosAdminDivFilaEditado{
+	background-color: blue;
+	color: gold;
+}
+.gastosAdminDivArticulo {
+	font-size: 20px;
+	font-size: 20px;
+	margin-left: 10px;
+	float: left;
+}
+.gastosAdminDivArticuloCodigo{
+	margin-left:50px;
+	float:left;
+}
+.gastosAdminDivArticuloNombre{
+	float:left;
+	width:350px;
+}
+.gastosAdminDivStatus{
+	float:right;
+	border-radius:5px;
+	border: solid; 
+	margin-top:5px;
+	width:120px; 
+	border-width:1px 1px 1px 1px; 
+	border-color:black;
+	margin-right:10px; 
+	padding:5 5 5 5;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;  
+	font-size:12px; 
+}
+.gastosAdminDivStatusCancelarEdicion{
+	float:right;
+	border-radius:5px;
+	border: solid; 
+	margin-top:5px;
+	width:120px; 
+	border-width:1px 1px 1px 1px; 
+	border-color:white;
+	margin-right:10px; 
+	padding:5 5 5 5;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;  
+	font-size:12px; 
+	cursor: hand;
+	background-color:red;
+	color:white;
+}
+.gastosAdminDivStatusNormal{ 
+	background-color:green; 
+	color:gold
+}
+.gastosAdminDivStatusEditado{ 
+	background-color:blue; 
+	color:gold
+}
+.gastosAdminDivNormal{ 
+	background-color:white; 
+	color:black;
+}
+.gastosAdminDivFilaReferencia
+{
+	background-color:#A1A1A1;
+	color:white;
+	padding-bottom:10px;
+	height:auto;
+}
+.gastosAdminDivContenedorReferencia{
+	margin:10 10 10 10;
+}
+.gastosAdminDivTituloReferencia{
+	font-weight:bold;
+	margin-bottom:10px;
+}
+.gastosAdminDivReferenciaSigular
+{
+	clear:both;
+	margin-bottom:3px;
+}
+.gastosAdminDivCuadradoReferencia
+{
+	
+	width:20px; 
+	height:20px;
+	float:left;
+	margin-right:10px;
+	border-radius: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;	
+}
+.gastosAdminDivInvisible
+{
+	visibility:hidden;	
+}

@@ -1,0 +1,158 @@
+.vsrContenedor {
+	float: left;
+	width: 95%;
+	background-color: transparent;
+	border: 1px solid #DF922E;
+	border-radius: 5px;
+	padding: 10px 10px 10px 10px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: white;
+	margin-left: 10px;
+}
+
+.vsrRubroMarca {
+	width: 360px;
+	margin-top: 5px;
+	float: left;
+	margin-right: 10px;
+}
+
+.vsrLabelCosto {
+	font-size: 15px;
+	width: 90px;
+	margin-top: 5px;
+	text-align: right;
+	float: left;
+	margin-right: 10px;
+}
+
+.vsrCantidad {
+	-moz-border-radius: 5px 5px 5px 5px;
+	padding-right: 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	width: 50px;
+	border: 0px solid #707070;
+	text-align: right;
+}
+
+.vsrPorcentaje {
+	-moz-border-radius: 5px 5px 5px 5px;
+	padding-right: 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	width: 50px;
+	border: 0px solid #707070;
+	text-align: right;
+}
+
+.vsrImporte {
+	-moz-border-radius: 5px 5px 5px 5px;
+	padding-right: 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	width: 80px;
+	border: 0px solid #707070;
+	text-align: right;
+}
+
+.vsrDivInputCantidad {
+	float: left;
+	margin-top: 5px;
+	padding-right: 10px;
+}
+
+.vsrLabelCantidad {
+	font-size: 15px;
+	width: 60px;
+	margin-top: 5px;
+	text-align: right;
+	float: left;
+	padding-right: 10px;
+}
+
+.vsrFilaPar {
+	clear: both;
+	float: left;
+	background-color: #707070;
+	width: 910px;
+}
+
+.vsrFilaImPar {
+	clear: both;
+	float: left;
+	width: 910px;
+}
+
+.vrsPorcentajeColorNaranja {
+	background-color: orange;
+	-moz-border-radius: 5px 5px 5px 5px;
+	
+	-webkit-border-radius: 5px 5px 5px 5px;
+	padding-left: 5px;
+	font-size: 14px;
+}
+.vrsPorcentajeColorAmarillo {
+    background-color: yellow;
+    -moz-border-radius: 5px 5px 5px 5px;
+    
+    -webkit-border-radius: 5px 5px 5px 5px;
+    padding-left: 5px;
+    font-size: 14px;
+}
+.vrsPorcentajeColorRojo {
+    background-color: red;
+    -moz-border-radius: 5px 5px 5px 5px;
+    
+    -webkit-border-radius: 5px 5px 5px 5px;
+    font-weight:bold;
+    color:white;
+    padding-left: 5px;
+    font-size: 14px;
+}
+.vrsPorcentajeColorNegro {
+    background-color: black;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    font-weight:bold;
+    color:white;
+    padding-left: 5px;
+    font-style: italic;
+    font-size: 14px;
+}
+.vrsPorcentajeColorBlanco {
+    background-color: white;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    font-weight:bold;
+    color:black;
+    padding-left: 5px;
+    font-style: italic;
+    font-size: 14px;
+}
+.vrsPorcentajeColorVerde {
+    background-color: #0dd821;
+    -moz-border-radius: 5px 5px 5px 5px;
+    padding-left: 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    
+    font-size: 14px;
+}
+.vrsPorcentajeColorVerdeExagerado {
+    background-color: #083f08;
+    -moz-border-radius: 5px 5px 5px 5px;
+
+    -webkit-border-radius: 5px 5px 5px 5px;
+    padding-left:5px;
+    color:white;
+    font-weight:bold;
+    font-size: 14px;
+}
+.vrsPorcentajeColorVerdeSoft {
+    background-color: #cdf7b4;
+    -moz-border-radius: 5px 5px 5px 5px;
+    padding-left:5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    
+    font-weight:bold;
+    font-size: 14px;
+}

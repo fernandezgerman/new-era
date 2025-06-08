@@ -1,0 +1,49 @@
+.contenedorGeneralResultado{
+	style:width:930px;
+	padding-right:10px;
+	padding-top:10px;
+	padding-bottom:10px; 
+	margin-left:0px; 
+	margin-right:20px;
+	background-color:white;
+	border-radius:5px;
+	-moz-border-radius:5px 5px 5px 5px; 
+	-webkit-border-radius:5px 5px 5px 5px;
+}
+.balanceTotalDivInterno{
+	margin-left:10px;
+	margin-top:20px;
+}
+.balanceTotaltblFila{
+	font-size: 14px;
+	line-height: 20px;
+	vertical-align:top;
+}
+.balanceTotaltblFilaPar{
+	font-size: 14px;
+	line-height: 20px;
+	vertical-align:top;
+	background-color:#ECECEC;
+}
+.balanceTotaltblFilaNegativo{
+	font-size: 14px;
+	line-height: 20px;
+	vertical-align:top;
+	background-color:#ECECEC;
+	color: white; 
+	background-color:red;	
+}
+.balanceTotalColumnaSucursal{
+	padding-right:15px;
+	width: 250px;
+	
+}
+.balanceTotalColumnaImporte{
+	text-align:right;
+	width: 90px;
+	padding-right:5px;
+}
+.balanceTotalFilaTotal{
+	background-color:#EE9A2F; 
+	 font-weight: bold;
+}

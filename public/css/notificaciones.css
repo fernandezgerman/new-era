@@ -1,0 +1,333 @@
+.ntfDivTrasero {
+    background-color: transparent;
+    width: 970px;
+    height: auto;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 1215px) {
+    .ntfDivFrontalFix {
+        position: relative;
+        margin-left: 25px;
+
+    }
+    .ntfDivTrasero{
+        display:none;
+    }
+}
+@media (min-width: 1215px) {
+    .ntfDivFrontalFix {
+        position: fixed;
+        float: left;
+        margin-left: 230px;
+    }
+    .ntfDivTrasero{
+        display:block;
+    }
+}
+.ntfDivFrontalFix {
+    z-index: 10;
+    overflow: auto;
+    width: 970px;
+    min-height: 50px;
+    margin-bottom: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border: 0px solid #707070;
+    display: block;
+}
+
+.ntfDivAlertaTipo {
+    padding-left: 10px;
+    float: left;
+}
+
+.ntfDivAlertaTipoInterior {
+    border: 1px solid #EC9908;
+    moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    margin-left: 0px;
+    padding: 7px 7px 7px 7px;
+    padding-right: 10px;
+    margin-top: 10px;
+    color: #EC9908;
+    cursor: hand;
+    font-weight: bold;
+    background-color: #373737;
+}
+
+.ntfDivAlertaTipoInteriorInverso {
+    border: 1px solid #373737;
+    moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    margin-left: 0px;
+    padding: 7px 7px 7px 7px;
+    padding-right: 10px;
+    margin-top: 10px;
+    color: #373737;
+    cursor: hand;
+    font-weight: bold;
+    background-color: #EC9908;
+}
+
+.ntfDivAlertaCantidadNotificaciones {
+    margin-top: 5px;
+    margin-left: -5px;
+    z-index: 10;
+    margin-top: -42px;
+}
+
+.ntfDivCantidadNotificacionesRojo {
+    border: 1px solid #fff;
+    moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    background-color: red;
+    height: 15px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 13px;
+    width: auto;
+    font-weight: bold;
+    float: left;
+    color: white;
+}
+
+.ntfDivCantidadNotificacionesAzul {
+    border: 1px solid #fff;
+    moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    background-color: blue;
+    height: 15px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 13px;
+    width: auto;
+    font-weight: bold;
+    float: left;
+    color: white;
+}
+
+.ntfDivCantidadNotificacionesVerde {
+    border: 1px solid #fff;
+    moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    background-color: green;
+    height: 15px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 13px;
+    width: auto;
+    font-weight: bold;
+    float: left;
+    color: white;
+}
+
+.ntfDivCantidadNotificacionesNegro {
+    border: 1px solid #fff;
+    moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    background-color: black;
+    height: 15px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 13px;
+    width: auto;
+    font-weight: bold;
+    float: left;
+    color: white;
+}
+
+.ntfDivCantidadNotificacionesAmarillo {
+    border: 1px solid #fff;
+    moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    background-color: #EE9A2F;
+    height: 15px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 13px;
+    width: auto;
+    font-weight: bold;
+    float: left;
+    color: white;
+}
+
+.ntfAlertaDetallesDivContenedor {
+    float: left;
+    clear: both;
+    width: 510px;
+    margin-top: 50px;
+    max-height: 520px;
+    overflow: auto;
+    height: auto;
+
+    position: fixed;
+    margin-left: 220px;
+    z-index: 10;
+    overflow: auto;
+
+    float: left;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border: 0px solid black;
+    display: block;
+
+}
+
+.ntfAlertaDetallesDivContenedorInterno {
+    float: left;
+    clear: both;
+    width: 500px;
+    overflow: auto;
+    height: auto;
+    z-index: 10;
+    display: block;
+    max-height: 400px;
+
+}
+
+.ntfAlertaDetallesDivDetalle {
+    background-color: white;
+    float: left;
+    clear: both;
+    margin-top: 10px;
+    min-height: 50px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 20px;
+    width: 450px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.ntfAlertaDetallesTipo {
+    float: left;
+    font-size:12px;
+    width: 445px;
+    font-weight: bold;
+    text-align: left;
+    margin-left:-5px;
+}
+
+.ntfAlertaDetallesDescripcion {
+    float: left;
+    width: 400px;
+    text-align: left;
+    margin-top: 5px;
+    clear:both;
+    font-size:12px;
+    margin-bottom: 5px;
+}
+
+.ntfAlertaDetallesFecha {
+    float: left;
+    width: 150px;
+    font-size:12px;
+}
+
+.ntfAlertaDetallesImagen {
+    float: right;
+    margin-right: 30px;
+}
+
+.ntfAlertaDetallesLeyenda {
+    width: 100%;
+    clear: both;
+    float: left;
+    text-align:left;
+    font-size: 12px;
+}
+.ntfAlertasVerTodas{
+    z-index:99;
+    float:left;
+    clear:both;cursor:hand;
+    color:white;
+    width:100%;
+    height:20px;
+    margin-bottom:5px;
+    text-decoration: underline
+
+}
+.ntfAlertasCerrar {
+    background-color: red;
+    float: left;
+    clear: both;
+    cursor: hand;
+    z-index: 99;
+    color: white;
+    width: 100%;
+    height: 20px;
+}
+.ntfMarcadoComoVisto{
+    font-style: italic;
+    font-style: italic;
+    font-size: 10px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 4px;
+    color: lightskyblue;
+}
+.ntfSolicitudesEstadosPendiente{
+    width:160px;
+    background-color:white;
+    color:black;
+    padding-left:7px;
+    clear:both;
+    cursor:hand;
+    float:left;
+}
+.ntfSolicitudesEstadosNeutral{
+    margin-left:5px;
+    clear:both;
+    cursor:hand;
+    padding:3px 7px 3px 3px;
+    font-size:10px;
+    font-weight:bold;
+    clear:both;
+    line-height:10px;
+    color:white;
+    float:left;
+}
+.ntfSolicitudesEstadosCaducadasDesc{
+    width:110px;
+    float:left;
+}
+.ntfSolicitudesEstadosCaducadasValor{
+    width: 40px;
+    text-align: right;
+    float: left;
+}
+
+.ntfSolicitudesEstadosAprobada{
+    width:160px;
+    background-color:green;
+    color:yellow;
+    padding-left:7px;
+    clear:both;
+    cursor:hand;
+    float:left;
+}
+
+.ntfSolicitudesEstadosRechazada{
+    width:160px;
+    background-color:red;
+    color:white;
+    padding-left:7px;
+    clear:both;
+    cursor:hand;
+    float:left;
+}
+.ntfSolicitudesEstadosCaducada{
+    width:160px;
+    background-color:#a220f9;
+    color:white;
+    padding-left:7px;
+    clear:both;
+    cursor:hand;
+    float:left;
+}

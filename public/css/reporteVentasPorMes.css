@@ -1,0 +1,47 @@
+.rbragrDivFiltros{
+	clear:both;
+	float:left;
+	margin-left:10px;
+	margin-right:20px;
+	margin-bottom:10px;
+}
+.rptvtssemContenedorGeneral {
+    width:98%;overflow:auto;
+    min-width:900px;
+    height:500px;
+    clear: both;
+    margin-top: 40px;
+    margin-left: 0px;
+    width: 850px;
+    background-color: gold;
+    border: 1px solid #ff9900;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    color: black;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.rptvtssemGraficos
+{
+	margin-top:5px;
+    color:#333333;
+    background-color:white;
+    border-radius:5px;
+    -moz-border-radius:5px 5px 5px 5px; 
+    -webkit-border-radius:5px 5px 5px 5px; 
+    border:0px solid #707070; 
+    display: block; 
+    float:left; 
+    padding-left:10px;
+    padding-right:10px;
+    margin-bottom:20px;
+
+}
+.filaInvisible{
+	display:none;
+}
+.filaVisible{
+    display:block;
+}

@@ -1,0 +1,210 @@
+.extractoFilaArreglo{
+	background-color:#9E47A1;
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	height:45px;	
+}
+
+.extractoFilaABMStock{
+	background-color:#EE9A2F;
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #2C2628; 
+	height:45px;		
+}
+.extractoFilaTransferenciaStock{
+    background-color:#93c4ed;
+    vertical-align:top;
+    font-size: 14px;
+    line-height: 20px;
+    color: black; 
+    height:45px;        
+}
+.extractoFilaStockInicial{
+    background-color:#008000;
+    vertical-align:top;
+    font-size: 14px;
+    line-height: 20px;
+    color: white; 
+    height:45px;        
+}
+.extractoFilaCompraEditada{
+    background-color:blue;
+    vertical-align:top;
+    font-size: 14px;
+    line-height: 20px;
+    color: white; 
+    height:45px;        
+}
+.extractoFilaCompra{
+	background-color:#B2C801;
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #2C2628; 
+	height:45px;		
+}
+.extractoFilaCompraA{
+    background-color:#B2C801;
+    vertical-align:top;
+    font-size: 14px;
+    line-height: 20px;
+    color: #2C2628; 
+    text-decoration: line-through;
+    height:45px;        
+}
+.extractoFilaCompraAnulada{
+    background-color:#f9b1b1;
+    vertical-align:top;
+    font-size: 14px;
+    line-height: 20px;
+    color: red; 
+    height:45px;        
+}
+.extractoFilaVenta{
+	background-color:#2C2628;
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	height:45px;		
+}
+.extractoFilaNC{
+	background-color:#0000FF;
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	height:45px;		
+}
+.extractoFilaCompraCompuesto{
+	background-color:#6FC16D;
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	height:45px;		
+}
+.extractoFilaVentaCompuesto{
+	background-color:#359944;
+	vertical-align:top;
+	font-size: 14px;
+	line-height: 20px;
+	color: #cccccc; 
+	height:45px;		
+}
+.extractoCantidadActual{
+	width:40px;
+	height:30px;
+	font-size:22px;
+	color:black;
+	background-color:white;
+	vertical-align:middle;
+	padding-right:5px;
+	text-align:right;
+}
+.extractoCantidadResta{
+	width:40px;
+	height:30px;
+	font-size:22px;
+	color:white;
+	background-color:red;
+	vertical-align:middle;
+	padding-right:5px;
+	text-align:right;
+}
+.extractoCantidadSuma{
+	width:40px;
+	height:30px;
+	font-size:22px;
+	color:white;
+	background-color:green;
+	vertical-align:middle;
+	padding-right:5px;
+	text-align:right;
+}
+.extractoTablaResultado{
+	border:1px;
+	margin-left:2px; 
+	margin-top:2px; 
+	border-color:none; 
+	border:1px; 
+	border-spacing:0px; 
+	width:800px;
+	
+}
+.extractoSucursalSinStock{
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:18px;
+	color:#FCC021;
+}
+.extractoArticuloSeleccionado{
+	
+	font-family:'Rockwell';
+	text-transform: uppercase;
+	font-size:16px;
+	line-height:18px;
+	color:#ff9900;
+	padding-bottom:6px;
+	margin-right:20px;
+	border-bottom: 1px solid #ff9900;
+	clear:both;	
+}
+.extractoSucursalSeleccionado
+{
+	color:#cccccc;
+	font-size:17px;
+	margin-bottom:20px;
+	margin-top:3px;
+	clear:both;
+	
+}
+.extractoArticuloDudosaMal{
+	font-size: 10px;
+	background-color: red;
+	padding-left: 5px;
+	float: right;
+	border-radius:  5px;
+	border:1px solid white;
+	color: white;
+	padding-right: 5px;
+	z-index: 99;
+}
+.extractoArticuloDudosaNoAuditada{
+	font-size: 10px;
+	background-color: blue;
+	padding-left: 5px;
+	float: right;
+	border-radius:  5px;
+	border:1px solid white;
+	color: white;
+	padding-right: 5px;
+	z-index: 99;
+}
+.extractoArticuloDudosaExcepcion{
+	font-size: 10px;
+	background-color: yellow;
+	padding-left: 5px;
+	float: right;
+	border-radius:  5px;
+	border:1px solid black;
+	color: black;
+	padding-right: 5px;
+	z-index: 99;
+}
+
+.extractoArticuloDudosaBien{
+	font-size: 10px;
+	background-color: green;
+	padding-left: 5px;
+	float: right;
+	border-radius:  5px;
+	border:1px solid white;
+	color: white;
+	padding-right: 5px;
+	z-index: 99;
+}

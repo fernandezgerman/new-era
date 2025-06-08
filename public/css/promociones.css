@@ -1,0 +1,38 @@
+.promoSucursalSeleccionada {
+	margin-bottom: 2px;
+	clear: both;
+	background-color: green;
+	color: white;
+	border: 1px solid #fff;
+	moz-border-radius: 2px 2px 2px 2px;
+	-webkit-border-radius: 2px 2px 2px 2px;
+}
+
+.promoDescripcionFecha {
+	font-size: 10px;
+	color: gold;
+	margin-right: 2px;
+	margin-top: 2px;
+	float: right;
+}
+
+.promoSucursalNoSeleccionada {
+	margin-bottom: 2px;
+	clear: both;
+	background-color: #666666;
+	color: #CCCCCC;
+	border: 1px solid #CCCCCC;
+	moz-border-radius: 2px 2px 2px 2px;
+	-webkit-border-radius: 2px 2px 2px 2px;
+}
+
+.promoSucursalModificada {
+	margin-bottom: 2px;
+	clear: both;
+	background-color: blue;
+	color: gold;
+	font-weight: bold;
+	border: 1px solid gold;
+	moz-border-radius: 2px 2px 2px 2px;
+	-webkit-border-radius: 2px 2px 2px 2px;
+}

@@ -1,0 +1,203 @@
+.icdTituloSucursal {
+	float: left;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	width: 100%;
+	line-height: 18px;
+	padding-bottom: 6px;
+	font-size: 20px;
+	border-bottom: 1px solid;
+	clear: both;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.icdContenedorFila {
+	float: left;
+	width: 800px;
+	clear: both;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+
+.icdFilaUsuario {
+	float: left;
+	margin-right: 20px;
+	width: 300px;
+}
+
+.icdFilaNumero {
+	float: right;
+	margin-right: 20px;
+}
+
+.icdFilaFecha {
+	float: right;
+	margin-right: 20px;
+}
+
+.icdFila2Articulo {
+	clear: both;
+	width: 600px;
+}
+
+.icdFilaArticuloCodigo {
+	float: left;
+	width: 150px;
+	font-weight: bold;
+}
+
+.icdFilaArticuloNombre {
+	float: left;
+	margin-right: 20px;
+	width: 290px;
+	font-weight: bold;
+}
+
+.icdFilaArticuloCosto {
+	float: right;
+	font-weight: bold;
+}
+
+.icdFilaArticuloCostoNuevo {
+	float: right;
+	font-weight: bold;
+	margin-right: 20px;
+}
+
+.icdFilaArticuloObservaciones {
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 600px;
+	background-color: gold;
+	font-style: italic;
+	border: 1px solid #ff9900;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: black;
+}
+
+.icdError {
+	float: left;
+	font-size: 16px;
+	margin-right: 10px;
+	width: 95%;
+	background-color: red;
+	font-style: italic;
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	color: white;
+}
+
+.icdPorcentajeDiferencia {
+	float: right;
+	font-size: 36px;
+}
+
+.icdBarraDivisora {
+	width: 800px;
+	clear: both;
+	border: 1px solid #ff9900;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+
+.icdTablaCabecera {
+	vertical-align: center;
+	background-color: #CCCCCC;
+	color: #333333;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.icdTablaFilaPar {
+	vertical-align: top;
+	font-size: 13px;
+	line-height: 18px;
+	color: white;
+	background-color: #515151;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+.icdTablaFilaNeutral {
+	vertical-align: top;
+	font-size: 13px;
+	line-height: 18px;
+	color: black;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+
+.icdTablaFilaImpar {
+	font-size: 13px;
+	line-height: 18px;
+	background-color: #EE9A2F;
+	color: white;
+	vertical-align: top;
+	padding-bottom: 0px;
+}
+
+.icdDescExtLabel {
+	clear: both;
+	float: left;
+	width: 150px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.icdTituloAudicion {
+	font-family: 'Rockwell';
+	text-transform: uppercase;
+	font-size: 14px;
+	line-height: 18px;
+	padding-bottom: 3px;
+	margin-bottom: 8px;
+	border-bottom: 1px solid;
+	clear: both;
+}
+
+.icdAudicionDivGeneral {
+	float: left;
+	margin-top: 20px;
+	background-color: #FFD700;
+	padding: 10px 10px 10px 10px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.icdAudicionDivNombreCampo {
+	float: left;
+	width: 120px;
+	clear: both;
+	margin-top: 10px;
+}
+
+.icdAudicionAuditor {
+	float: left;
+	font-style: italic;
+	font-weight: bold;
+	margin-top: 10px;
+}
+
+.icdAudicionMotivo {
+	width: 200px;
+	margin-top: 10px;
+	background-color:white;
+	-moz-border-radius: 2px 2px 2px 2px;
+	-webkit-border-radius: 2px 2px 2px 2px;
+}
+
+.icdAudicionDivObservaciones {
+	float: left;
+	margin-top: 10px;
+	width: 200px;
+}
