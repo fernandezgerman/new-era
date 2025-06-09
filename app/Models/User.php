@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Empresa;
+use App\Models\Perfil;
 
 class User extends Authenticatable
 {
@@ -86,6 +88,22 @@ class User extends Authenticatable
     public function sucursalesSupervised()
     {
         return $this->hasMany(Sucursal::class, 'idsupervisor');
+    }
+
+    /**
+     * Get the empresa that the user belongs to.
+     */
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'idempresa');
+    }
+
+    /**
+     * Get the perfil that the user belongs to.
+     */
+    public function perfil()
+    {
+        return $this->belongsTo(Perfil::class, 'idperfil');
     }
 
     /**

@@ -14,9 +14,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/select-sucursal', [AuthController::class, 'showSelectionForm'])->name('sucursal.selection');
     Route::post('/select-sucursal', [AuthController::class, 'selectSucursal'])->name('sucursal.select');
+
+    Route::any('/principal.php',[DefaultController::class, 'defaultView'])->name('legacy.principal');
+
+    Route::get('/', [DefaultController::class, 'defaultView']);
 });
 
 // Protected Routes
 Route::middleware(['auth', \App\Http\Middleware\EnsureSucursalIsSelected::class])->group(function () {
-    Route::get('/', [DefaultController::class, 'defaultView']);
+
 });
+
+
+
