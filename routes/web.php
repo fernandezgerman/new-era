@@ -25,5 +25,8 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureSucursalIsSelected::class]
 
 });
 
-
-
+// Route for handling all .php files (except principal.php which is handled separately)
+Route::any('/{path}.php', [\App\Http\Controllers\Legacy\LegacyPhpController::class, 'handlePhpFile'])
+    ->where('path', '(?!principal).*') // Negative lookahead to exclude 'principal'
+    ->middleware('auth')
+    ->name('legacy.php-file');
