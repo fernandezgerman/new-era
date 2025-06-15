@@ -26,7 +26,7 @@ return [
     'get_db_error' => E_ALL ^ E_NOTICE,
     'get_directorio_boot_strap' => base_path().'/mtihweb/paginas/bootstrap/',
     'get_report_error_web_services' => E_ERROR,
-    'host_pagina' => 'http://localhost:8080/',
+    'host_pagina' => 'http://localhost/',
     'get_archivo_log' => base_path().'/mtihweb/info/log/web.log',
     'get_archivo_log_apache' => '/Users/germanfernandez/mtih/mtihweb/paginas/error.log',
     'get_archivo_consultas_lentas' => base_path().'/mtihweb/info/log/consultas_lentas',

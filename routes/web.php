@@ -29,4 +29,5 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureSucursalIsSelected::class]
 Route::any('/{path}.php', [\App\Http\Controllers\Legacy\LegacyPhpController::class, 'handlePhpFile'])
     ->where('path', '(?!principal).*') // Negative lookahead to exclude 'principal'
     ->middleware('auth')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
     ->name('legacy.php-file');
