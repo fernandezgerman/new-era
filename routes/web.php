@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\SucursalSelectionController;
 use App\Http\Controllers\Legacy\DefaultController;
 use Illuminate\Support\Facades\Route;
+//\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
