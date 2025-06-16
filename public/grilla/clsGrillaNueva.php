@@ -1,7 +1,7 @@
 <?php
 
 
-error_reporting(config('legacy.get_report_error'));	
+error_reporting(config('legacy.get_report_error'));
 include_once(config('legacy.get_directorio_utiles').'vector.php');
 include_once(config('legacy.get_directorio_grilla').'clsGrillaAbstracta.php');
 include_once(config('legacy.get_directorio_utiles').'clsNumeraciones.php');
@@ -52,8 +52,8 @@ class clsGrilla extends clsGrillaAbstracta
             grillaConfiguracion = <?php echo $num->fn_json_encode($configuracion); ?>;
         </script>
         <?php
-        include_once('../template/grillaCrudTemplate.php');
-        include_once('../template/filtrosGeneralesTemplate.php');
+        include_once(config('legacy.get_directorio_template').'grillaCrudTemplate.php');
+        include_once(config('legacy.get_directorio_template').'filtrosGeneralesTemplate.php');
 	}
 }
 ?>
