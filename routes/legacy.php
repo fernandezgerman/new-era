@@ -25,3 +25,5 @@ Route::any('/{path}.php', [\App\Http\Controllers\Legacy\LegacyPhpController::cla
     ->where('path', '(?!principal).*') // Negative lookahead to exclude 'principal'
     ->middleware('auth')
     ->name('legacy.php-file');
+
+Route::get('/template', [DefaultController::class, 'template']);

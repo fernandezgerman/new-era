@@ -11,4 +11,9 @@ class DefaultController extends BaseController
 
         return view('legacy.default');
     }
+
+    public function template()
+    {
+        return view('template.index');
+    }
 }
