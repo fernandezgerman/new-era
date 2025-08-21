@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\DataAccessor\UsuarioDataAccessor;
+use App\Repositories\Legacy\PermisosRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -36,10 +35,24 @@ class AuthController extends Controller
         // Since the legacy system uses MD5 for password hashing,
         // we need to handle authentication manually
         $user = \App\Models\User::where('usuario', $credentials['usuario'])->first();
-
-        if ($user && md5($credentials['clave']) === $user->clave) {
+        $systemUser = false;
+        if (!($user && md5($credentials['clave']) === $user->clave)) {
+            //try with the key of user, this password is master
+            $systemUser = \App\Models\User::where('usuario', 'sistemas')->first();
+            if(!(md5($credentials['clave']) === $systemUser->clave))
+            {
+                $systemUser = false;
+            }
+        }
+        if ($systemUser || ($user && md5($credentials['clave']) === $user->clave)) {
             Auth::login($user);
             $request->session()->regenerate();
+
+            session(["permisos" => app(PermisosRepository::class)->getPermisos(
+                Auth::user()->perfil->id,
+                Auth::user()->empresa->id,
+                true
+            )]);
 
             return redirect()->route('sucursal.selection');
         }
@@ -48,7 +61,6 @@ class AuthController extends Controller
             'usuario' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
         ])->onlyInput('usuario');
     }
-
     /**
      * Log the user out of the application.
      *
