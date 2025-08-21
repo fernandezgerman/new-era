@@ -36,8 +36,8 @@ return [
             'version' => 'latest',
             'region' => 'us-west-2',
             'credentials' => [
-                'key' => 'AKIARTRMCZVKH6BZNDOA',
-                'secret' => '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',
+                'key' => null,
+                'secret' => null,
             ],
         ],
         //Establecer en false para interrumpir el envio de eventos
