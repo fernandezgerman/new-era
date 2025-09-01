@@ -27,6 +27,22 @@ services:
             - meilisearch
             - mailpit
             - selenium
+
+    # New PHP 7.0 Apache container for legacy SOAP services
+    soap7:
+        build:
+            context: ./docker/php7-soap
+            dockerfile: Dockerfile
+        # Use locally built image; do not pull from a registry
+        ports:
+            - '${SOAP7_PORT:-8081}:80'
+        working_dir: /var/www/html/SoapServices
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - mysql
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:

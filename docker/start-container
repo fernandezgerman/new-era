@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [ "$SUPERVISOR_PHP_USER" != "root" ] && [ "$SUPERVISOR_PHP_USER" != "sail" ]; then
+    echo "You should set SUPERVISOR_PHP_USER to either 'sail' or 'root'."
+    exit 1
+fi
+
+# Only attempt to change UID if WWWUSER is set and differs from current UID of sail
+if [ -n "${WWWUSER:-}" ]; then
+    CURRENT_UID=$(id -u sail)
+    if [ "$CURRENT_UID" != "$WWWUSER" ]; then
+        # If PID 1 is running as sail, usermod will fail with "user is currently used by process 1".
+        # In Sail, PID 1 is this script; we can safely change UID only before switching users.
+        # Use usermod only if no process is using sail's login (except this script running as root).
+        if ! pgrep -u sail >/dev/null 2>&1; then
+            usermod -u "$WWWUSER" sail || true
+        else
+            echo "Skipping usermod: user 'sail' currently in use."
+        fi
+    fi
+fi
+
+# Prefer /home/sail/.composer to avoid writing to root directory
+COMPOSER_DIR="/home/sail/.composer"
+mkdir -p "$COMPOSER_DIR"
+# Use the 'sail' group by name to avoid relying on WWWGROUP env var.
+chown -R sail:sail "$COMPOSER_DIR" 2>/dev/null || true
+chmod -R ugo+rw "$COMPOSER_DIR" || true
+
+if [ $# -gt 0 ]; then
+    if [ "$SUPERVISOR_PHP_USER" = "root" ]; then
+        exec "$@"
+    else
+        # Use gosu only if running as root; otherwise, we're already non-root
+        if [ "$(id -u)" -eq 0 ]; then
+            exec gosu ${WWWUSER:-1337} "$@"
+        else
+            exec "$@"
+        fi
+    fi
+else
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+fi
