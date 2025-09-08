@@ -37,8 +37,17 @@ services:
         ports:
             - '${SOAP7_PORT:-8081}:80'
         working_dir: /var/www/html/SoapServices
+        environment:
+            DB_CONNECTION: '${DB_CONNECTION}'
+            DB_HOST: '${DB_HOST}'
+            DB_PORT: '${DB_PORT}'
+            DB_DATABASE: '${DB_DATABASE}'
+            DB_USERNAME: '${DB_USERNAME}'
+            DB_PASSWORD: '${DB_PASSWORD}'
         volumes:
             - '.:/var/www/html'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
         networks:
             - sail
         depends_on:

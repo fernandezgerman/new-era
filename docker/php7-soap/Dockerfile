@@ -11,12 +11,16 @@ RUN set -eux; \
     echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid;
 RUN apt-get update; \
     apt-get install -y --no-install-recommends libxml2-dev; \
-    docker-php-ext-install soap mbstring; \
+    docker-php-ext-install mysqli soap mbstring; \
+    docker-php-ext-enable mysqli; \
     a2enmod rewrite; \
     rm -rf /var/lib/apt/lists/*
 
 # Configure Apache to serve from SoapServices/paginas/webservices
 COPY soap-vhost.conf /etc/apache2/sites-available/000-default.conf
+
+# Add PHP configuration overrides
+COPY php-memory.ini /usr/local/etc/php/conf.d/zz-memory.ini
 
 # Expose Apache port (container internal). Host will map to a custom port in docker-compose
 EXPOSE 80
