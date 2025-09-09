@@ -29,3 +29,5 @@ Route::any('/{path}.php', [\App\Http\Controllers\Legacy\LegacyPhpController::cla
     ->name('legacy.php-file');
 
 Route::get('/template', [DefaultController::class, 'template']);
+
+

@@ -13,6 +13,38 @@ export const Login = () =>
     const darkMode = useSystemTheme();
     const [usuario, setUsuario] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        if (!usuario || !password) {
+            setError('Por favor complete usuario y clave.');
+            return;
+        }
+        try {
+            setLoading(true);
+            // Laravel expects fields: usuario, clave (see AuthController::login)
+            const response = await window.axios.post('/login', {
+                usuario: usuario,
+                clave: password,
+            });
+            // If login succeeds, backend redirects to sucursal.selection.
+            // In SPA context, follow redirect by reloading to let Laravel route handle it.
+            if (response && (response.status === 200 || response.status === 204)) {
+                window.location.href = '/select-sucursal';
+            } else {
+                // Some Laravel setups respond with 302; let browser follow
+                window.location.reload();
+            }
+        } catch (err) {
+            // On validation/auth failure Laravel returns 422 or 302 with errors
+            setError('Credenciales inválidas. Intente nuevamente.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (<>
         <DivCenterContentHyV className="md:items-center">
@@ -23,26 +55,18 @@ export const Login = () =>
                 </div>
 
                 <div className="flex-auto p-6">
-                    <form role="form">
+                    <form role="form" onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <Input type={'text'} placeHolder="Usuario" value={usuario} setValue={setUsuario} />
                         </div>
                         <div className="mb-4">
                             <Input type={'password'} placeHolder="Clave" value={password} setValue={setPassword} />
                         </div>
-                        {/*
-                        <div className="min-h-6 mb-0.5 block pl-12 text-left">
-                            <input id="rememberMe"
-                                   className="mt-0.5 rounded-10 duration-250 ease-soft-in-out after:rounded-circle after:shadow-soft-2xl after:duration-250 checked:after:translate-x-5.3 h-5 relative float-left -ml-12 w-10 cursor-pointer appearance-none border border-solid border-gray-200 bg-slate-800/10 bg-none bg-contain bg-left bg-no-repeat align-top transition-all after:absolute after:top-px after:h-4 after:w-4 after:translate-x-px after:bg-white after:content-[''] checked:border-slate-800/95 checked:bg-slate-800/95 checked:bg-none checked:bg-right"
-                                   type="checkbox"/>
-
-
-                            <label className="mb-2 ml-1 font-normal cursor-pointer select-none text-sm"
-                                htmlFor="rememberMe">Remember me</label>
-                        </div>
-                    */}
+                        {error && (
+                            <div className="text-red-600 text-sm mb-4">{error}</div>
+                        )}
                         <div className="text-center">
-                            <ButtonSuccess>Ingresar</ButtonSuccess>
+                            <ButtonSuccess type="submit" disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</ButtonSuccess>
                         </div>
                     </form>
                 </div>
