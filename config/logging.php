@@ -73,6 +73,13 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'spTakesTooLong' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sp-takes-too-long.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
