@@ -46,3 +46,47 @@
     color: white; /* Optional: Adjust text color for readability against the background */
     padding: 20px; /* Optional: Add some padding for content */
 }
+
+/*** SELECT CLASS ****/
+
+@layer utilities {
+
+    .choices__inner{
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 5px 7.5px 3.75px !important;
+        border-radius: 8px !important;
+        background-color: transparent!important; /* Optional: Scale the image to cover the entire div */
+    }
+    .choices__list--dropdown{
+        background-color: var(--bg-color) !important;
+        color: var(--font-color) !important;
+    }
+
+    .is-highlighted{
+        color: var(--dark-font-color)!important;
+        background-color: pink!important; /* Optional: Scale the image to cover the entire div */
+    }
+
+    .choices__input {
+        background-color: var(--bg-color) !important;
+        color: var(--font-color) !important;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .choices__input {
+            background-color: var(--dark-bg-color) !important;
+            color: var(--dark-font-color) !important;
+        }
+        .choices__list--dropdown{
+            background-color: var(--dark-bg-color) !important;
+            color: var(--dark-font-color) !important;
+        }
+
+        .is-highlighted{
+            color: var(--font-color)!important;
+            background-color: pink!important; /* Optional: Scale the image to cover the entire div */
+        }
+
+    }
+}

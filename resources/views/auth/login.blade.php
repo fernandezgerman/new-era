@@ -9,6 +9,6 @@
     <title>Login</title>
 </head>
 <body class="m-0 font-sans antialiased font-normal text-left leading-default text-base ne-body dark:ne-dark-body text-slate-500 ">
-    <div id="react-login-container"></div>
+    <div id="react-login-container" data-message="{{ session('auth_result') }}"></div>
 </body>
 </html>

@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\ApiResources;
 
 use App\DataAccessor\UsuarioDataAccessor;
 use App\Repositories\Legacy\PermisosRepository;
+use App\Services\Authentication\AuthenticationService;
+use App\Services\Authentication\Exceptions\InvalidCredentialsException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 
-class AuthController extends Controller
+class Authentication extends AbstractApiHandler
 {
     /**
      * Show the login form.
@@ -24,40 +27,24 @@ class AuthController extends Controller
      * Handle an authentication attempt.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
 
-        // Since the legacy system uses MD5 for password hashing,
-        // we need to handle authentication manually
-        $user = \App\Models\User::where('usuario', $credentials['usuario'])->first();
-        $systemUser = false;
-        if (!($user && md5($credentials['clave']) === $user->clave)) {
-            //try with the key of user, this password is master
-            $systemUser = \App\Models\User::where('usuario', 'sistemas')->first();
-            if(!(md5($credentials['clave']) === $systemUser->clave))
-            {
-                $systemUser = false;
-            }
+        try
+        {
+            return $this->sendResponse(
+                app(AuthenticationService::class)->login(
+                    $credentials['usuario'],
+                    $credentials['clave']
+                ),
+            );
+        }catch(InvalidCredentialsException $invalidCredentialsException)
+        {
+            return $this->sendResponseValidationError('Las credenciales proporcionadas no coinciden con nuestros registros.');
         }
-        if ($systemUser || ($user && md5($credentials['clave']) === $user->clave)) {
-            Auth::login($user);
-            $request->session()->regenerate();
-
-            session(["permisos" => app(PermisosRepository::class)->getPermisos(
-                Auth::user()->perfil->id,
-                Auth::user()->empresa->id,
-                true
-            )]);
-
-            return redirect()->route('sucursal.selection');
-        }
-
-        return back()->withErrors([
-            'auth_result' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('usuario');
     }
     /**
      * Log the user out of the application.
@@ -67,10 +54,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        app(AuthenticationService::class)->logout();
 
         return redirect('/');
     }

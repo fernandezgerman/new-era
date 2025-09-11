@@ -50,6 +50,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ]
         );
 
+        $middleware->statefulApi();
         // Modify the 'api' middleware group
         $middleware->api(
             // Append middleware to the end of the api group

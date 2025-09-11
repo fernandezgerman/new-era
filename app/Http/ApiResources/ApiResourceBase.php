@@ -6,7 +6,7 @@ use App\Http\Requests\Api\ApiResourceBaseGetEntity;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
-class ApiResourceBase
+class ApiResourceBase extends AbstractApiHandler
 {
     public function index(ApiResourceBaseGetEntity $request): JsonResponse
     {
@@ -27,16 +27,14 @@ class ApiResourceBase
         if ($id) {
             $data = $query->find($id);
             if (! $data) {
-                return response()->json(['message' => 'Not Found'], 404);
+                return $this->sendResponsePageNotFound();
             }
         } else {
             $data = $query->get();
         }
 
-        return response()->json([
-            'request' => request()->all(),
-            'response' => $data,
-        ]);
+        return $this->sendResponse($data);
+
     }
 
     private function resolveModelClass(string $entity): string

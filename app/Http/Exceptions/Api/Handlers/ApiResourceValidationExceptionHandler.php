@@ -12,10 +12,10 @@ class ApiResourceValidationExceptionHandler implements ExceptionHandlers
     public function response(): \Illuminate\Http\JsonResponse
     {
         $payload = [
-            'message' => 'page not found',
+            'message' => $this->throwable->getMessage(),
         ];
 
         Log::error($this->throwable->getMessage(), $this->throwable->getTrace());
-        return response()->json($payload, 404);
+        return response()->json($payload, 400);
     }
 }
