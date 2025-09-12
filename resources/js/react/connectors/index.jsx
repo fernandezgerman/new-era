@@ -1,8 +1,8 @@
-import renderTest from './testConnector';
-import renderTest2 from './test2Connector';
 import loginConnector from "./loginConnector.jsx";
+import dashboardConnector from "./dashboardConnector.jsx";
 
 export default () =>
 {
     loginConnector();
+    dashboardConnector();
 }

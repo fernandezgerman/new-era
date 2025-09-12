@@ -12,7 +12,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::any('/principal.php',[DefaultController::class, 'defaultView'])->name('legacy.principal');
 
-    Route::get('/', [DefaultController::class, 'defaultView']);
+    //Route::get('/', [DefaultController::class, 'defaultView']);
 });
 
 // Protected Routes

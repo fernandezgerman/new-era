@@ -16,7 +16,6 @@ export default class ResourcesBase{
     {
         if(errorResponse.status === 400)
         {
-
             throw new ValidationError(
                 errorResponse?.response.data?.message ?? 'Revise los datos, estos no son validos',
                 errorResponse?.response.data?.extra ?? ''

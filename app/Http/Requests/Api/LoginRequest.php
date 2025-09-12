@@ -7,22 +7,8 @@ use App\Http\Exceptions\Api\Exceptions\ApiValidationException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class LoginRequest extends AbstractApiRequest
 {
-    protected $exception = ApiValidationException::class;
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw (new ApiResourceValidationException($validator))
-            ->errorBag($this->errorBag)
-            ->redirectTo($this->getRedirectUrl());
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [

@@ -2,7 +2,9 @@
 
 namespace App\DataAccessor;
 
+use App\Models\Funcion;
 use App\Models\User;
+use App\Models\Modulo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 class UsuarioDataAccessor extends DataAccessorBase
@@ -21,4 +23,34 @@ class UsuarioDataAccessor extends DataAccessorBase
             ->where('usuariossucursales.idusuario', $this->user->id)
             ->get();
     }
+
+    public function getMenu(): Collection
+    {
+        $empresaId = $this->user->idempresa ?? null;
+        $perfilId = $this->user->idperfil ?? null;
+
+        $menues = collect([]);
+
+        $modulos = Modulo::query()->orderBy('descripcion', 'asc')->get();
+
+        foreach ($modulos as $modulo) {
+            $modulo->funciones = Funcion::query()
+                ->join('perfilfuncion', 'funciones.id', '=', 'perfilfuncion.idfuncion')
+                ->join('empresafuncion', 'funciones.id', '=', 'empresafuncion.idfuncion')
+                ->where('empresafuncion.activo',1)
+                ->where('perfilfuncion.idperfil', $perfilId)
+                ->where('menu',1)
+                ->where('idempresa',$empresaId)
+                ->where('idmodulo',$modulo->id)
+                ->orderBy('funciones.nombre', 'asc')
+                ->get();
+
+            if ($modulo->funciones->count() > 0) {
+                $menues->push($modulo);
+            }
+        }
+
+        return $menues;
+    }
+
 }
