@@ -26,6 +26,10 @@
 
 <body class="m-0 font-sans antialiased font-normal text-left leading-default text-base ne-body dark:ne-dark-body text-slate-500 ">
 <div id="react-dashboard-container"></div>
+<script>
+    window.__POST__ = @json(request()->post());
+    window.__CSRF__ = '{{ csrf_token() }}';
+</script>
 </body>
 <script src="../../assets/js/plugins/chartjs.min.js"></script>
 <script src="../../assets/js/plugins/threejs.js"></script>

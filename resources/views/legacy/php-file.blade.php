@@ -3,7 +3,7 @@
     include_once(config('legacy.get_directorio') . 'clsIndicePaginas.php');
     include_once(config('legacy.get_directorio').'clsIni.php');
     include_once(config('legacy.get_directorio_coneccion').'clsConnection.php');
-
+    include_once(config('legacy.get_directorio_utiles').'clsNumeraciones.php');
     $objIni = new clsIni();
     $objIndice = new clsIndicePaginas();
 
