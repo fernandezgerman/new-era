@@ -6,7 +6,7 @@ function editarCaja(idusuario,idsucursal,numerocaja)
     $('#numeroCaja').val(numerocaja);
 
     form = document.getElementById('formulario');
-    form.action ="principal.php?pagina=cjaactual&token="+$('#mToken').val();
+    form.action ="principal.php?withFrame=1&pagina=cjaactual&token="+$('#mToken').val();
     form.target = "_blank";
 
     form.submit();
