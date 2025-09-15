@@ -2289,3 +2289,10 @@ divAjaxTextoCerrar{
 	color:white;
 	font-weight: bold;
 }
+.divTitulo{
+    display: none !important;
+}
+
+.divTituloEdicion{
+    display: none !important;
+}

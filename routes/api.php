@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/user', function (Request $request) {
-    return $request->user();
+    $user = $request->user();
+    $user->load('perfil');
+    return $user;
 })->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {

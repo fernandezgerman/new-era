@@ -56,4 +56,11 @@ class UsuarioSucursal extends Pivot
     {
         return $this->belongsTo(Sucursal::class, 'idsucursal');
     }
+
+    public function perfil()
+    {
+        return $this->belongsTo(Sucursal::class, 'idperfil');
+    }
+
+
 }
