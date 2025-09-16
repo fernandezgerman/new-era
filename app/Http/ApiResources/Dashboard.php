@@ -14,4 +14,13 @@ class Dashboard extends AbstractApiHandler
 
         return $this->sendResponse($usuarioDataAccessor->getMenu()->toArray());
     }
+
+    public function getAlertas(): JsonResponse
+    {
+        $user = auth()->user();
+
+        $usuarioDataAccessor = app(\App\DataAccessor\UsuarioDataAccessor::class, ['user' => $user]);
+
+        return $this->sendResponse($usuarioDataAccessor->getAlertas()->toArray());
+    }
 }

@@ -14,7 +14,8 @@
 
     /* LIGHT THEME*/
     --bg-color: white;
-    --font-color: black;
+    --font-color: rgb(103 116 142 / var(--tw-text-opacity));
+
 }
 
 @utility ne-dark-body{
@@ -23,7 +24,7 @@
 }
 @utility ne-body{
     background-color: var(--bg-color);
-    color: var(--font-color);
+    color: rgb(103 116 142 / var(--tw-text-opacity));
 }
 
 @utility ne-dark-input{
@@ -35,7 +36,6 @@
     background-color: var(--bg-color);
     color: var(--bg-color)
 }
-
 
 @utility ne-aux{
     width: 600px; /* Set a width for the div */
@@ -88,5 +88,16 @@
             background-color: pink!important; /* Optional: Scale the image to cover the entire div */
         }
 
+    }
+
+    /* Hide scrollbar for Chrome, Safari, and Opera */
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    .scrollbar-hidden {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;     /* Firefox */
     }
 }

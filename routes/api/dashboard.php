@@ -8,6 +8,7 @@ use App\Http\ApiResources\ApiResourceBase;
 
 route::prefix('dashboard')->group(function () {
     Route::get('left-menu', [Dashboard::class, 'getUserMenu']);
+    Route::get('alertas', [Dashboard::class, 'getAlertas']);
 });
 
 

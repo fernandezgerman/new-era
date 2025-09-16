@@ -24,9 +24,11 @@ const Select = ({
                     id,
                     name,
                     isLoading = false,
+                    onChange = () => {}
                 }) => {
     const selectRef = useRef(null);
     const choicesRef = useRef(null);
+    const localClassName = className + " " + (isLoading ? "opacity-50 !color-gray cursor-not-allowed" : "");
 
     // Initialize Choices.js
     useEffect(() => {
@@ -36,6 +38,7 @@ const Select = ({
             removeItemButton: allowRemove,
             searchEnabled: allowSearch,
             placeholder: !!placeholder,
+            itemSelectText: '',
             placeholderValue: placeholder,
             shouldSort: false,
         });
@@ -92,16 +95,18 @@ const Select = ({
             id={id}
             name={name}
             ref={selectRef}
+            onChange={onChange}
+            disabled={isLoading}
             multiple={multiple}
-            className={`focus:shadow-soft-primary-outline dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none ${className}`}
+            className={`focus:shadow-soft-primary-outline dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none ${localClassName}`}
         >
             {/* Render plain options initially for non-JS and initial hydration; Choices.js will take over */}
-            {! isLoading && placeholder && !multiple && (
+            {placeholder && !multiple && (
                 <option value="" disabled={true} selected={value === undefined || value === null || value === ""}>
                     {placeholder}
                 </option>
             )}
-            {! isLoading && options.map((opt) => (
+            {options.map((opt) => (
                 <option key={String(opt.value)} value={String(opt.value)} disabled={!!opt.disabled} selected={
                     value !== undefined && value !== null
                         ? String(value) === String(opt.value)

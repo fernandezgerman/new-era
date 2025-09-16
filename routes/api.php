@@ -12,6 +12,7 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/sucursal/{sucursalId}/establecer-actual', [\App\Http\ApiResources\Authentication::class, 'selectSucursal']);
+    Route::get('/sucursal/actual', [\App\Http\ApiResources\Authentication::class, 'getSucursalActual']);
 
     foreach (Storage::disk('routes')->allFiles('api') as $file) {
         require_once $file;

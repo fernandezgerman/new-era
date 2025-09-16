@@ -29,6 +29,17 @@ export default class Authentication extends ResourcesBase
         }
     }
 
+    async getSucursalActual()
+    {
+        try{
+            return this.processResponse(
+                await window.axios.get('/api/sucursal/actual')
+            );
+        }catch(err)
+        {
+            this.handleError(err)
+        }
+    }
     async establecerSucursalActual(sucursalId)
     {
         try{

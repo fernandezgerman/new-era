@@ -16,6 +16,13 @@ import {
 import {useLeftMenu} from "@/dataHooks/dashboard/useLeftMenu.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {get} from "lodash";
+import {useAuthUsuario} from "@/dataHooks/useAuthUsuario.jsx";
+import {useSucursalActual} from "@/dataHooks/useSucursalActual.jsx";
+import {useUsuarioSucursales} from "@/dataHooks/useUsuarioSucursale.jsx";
+import {Select} from "@/components/Select.jsx";
+import Authentication from "@/resources/Authentication.jsx";
+import ErrorBoundary from "@/components/ErrorBoundary.jsx";
+
 const icons = {
     server: faServer,
     suitcase: faSuitcase,
@@ -139,12 +146,63 @@ export const Logo = () => {
         </div>);
 }
 
+const SucursalActual = ({}) => {
+
+    const {data: authUser} = useAuthUsuario();
+    const {data: sucursal, refetch: refetchSucursalActual} = useSucursalActual();
+    const {data: sucursales} = useUsuarioSucursales({usuarioId: authUser?.id});
+    const [loadingSucursal, setLoadingSucursal] = useState(false);
+    const [error, setError] = React.useState('');
+
+    const saveSelectedSucursal = async (sucursalId) => {
+        if (!sucursalId) {
+            return;
+        }
+        setError('');
+
+        try {
+            setLoadingSucursal(true);
+            const authenticationResource = new Authentication();
+            await authenticationResource.establecerSucursalActual(sucursalId);
+
+            await refetchSucursalActual();
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoadingSucursal(false);
+        }
+    };
+
+    return (
+        <div className="ml-5 mt-11 mb-4 mr-2">
+            {sucursal && sucursales && (
+                <ErrorBoundary>
+                    <span className={'dark:ne-dark-body dark:ne-dark-color'}>
+                        <Select
+                            options={sucursales?.map((sucursal) => ({value: sucursal.id, label: sucursal.nombre}))}
+                            value={sucursal.id}
+                            className={'z-10'}
+                            setValue={saveSelectedSucursal}
+                            isLoading={loadingSucursal}
+                            placeholder="Seleccione una sucursal"
+                        />
+                    </span>
+                    {error && (
+                        <div className="text-red-600 text-sm mb-4">{error}</div>
+                    )}
+                </ErrorBoundary>
+            )}
+        </div>
+    );
+}
 export const LeftMenuBar = ({onMenuSelected}) => {
 
     return (
         <div className="block h-auto shrink-0 w-full max-w-[250px] ml-[20px] mt-[20px]"
              id="sidenav-collapse-main">
             <Logo/>
+            <SucursalActual />
             <Inicio onMenuSelected={onMenuSelected}/>
             <Menu onMenuSelected={onMenuSelected}/>
         </div>);

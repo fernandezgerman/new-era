@@ -4,6 +4,7 @@ namespace App\Http\ApiResources;
 
 use App\DataAccessor\UsuarioDataAccessor;
 use App\Http\Requests\Api\SelectSucursalRequest;
+use App\Models\Sucursal;
 use App\Repositories\Legacy\PermisosRepository;
 use App\Services\Authentication\AuthenticationService;
 use App\Services\Authentication\Exceptions\InvalidCredentialsException;
@@ -64,5 +65,12 @@ class Authentication extends AbstractApiHandler
         session(['idSucursalActual' => $validated['sucursalId']]);
 
         return $this->sendResponse();
+    }
+
+    public function getSucursalActual(): JsonResponse
+    {
+        $sucursalActual = Sucursal::query()->findOrFail(session('idSucursalActual'));
+
+        return $this->sendResponse($sucursalActual);
     }
 }
