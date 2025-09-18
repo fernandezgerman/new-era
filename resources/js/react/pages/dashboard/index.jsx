@@ -14,7 +14,7 @@ export const Dashboard = () => {
         }
     };
 
-    const [iframeHrefs, setIframeHrefs] = React.useState(() => ({url: `principal_iframe.php?pagina=${getInitialPagina()}`}));
+    const [iframeHrefs, setIframeHrefs] = React.useState(() => ({url: `iframe-content.php?pagina=${getInitialPagina()}`}));
     const [flag, setFlag] = useState(0);
     const [breadcrumb1, setBreadcrumb1] = useState('Inicio');
     const [breadcrumb2, setBreadcrumb2] = useState('');
@@ -22,10 +22,20 @@ export const Dashboard = () => {
     const onMenuSelected = (codigo, nbreadcrumb1, nbreadcrumb2, method = 'get', postData =[]) => {
         setBreadcrumb1(nbreadcrumb1);
         setBreadcrumb2(nbreadcrumb2);
+
+        // Split incoming postData into GET and POST arrays/objects
+        const getData = Array.isArray(postData)
+            ? postData.filter((item) => (item?.type || item?.method || '').toString().toUpperCase() === 'GET')
+            : [];
+        const remainingPostData = Array.isArray(postData)
+            ? postData.filter((item) => (item?.type || item?.method || '').toString().toUpperCase() !== 'GET')
+            : postData;
+
         setIframeHrefs({
-            url: 'principal_iframe.php?f=' + flag + '&pagina=' + codigo,
+            url: 'iframe-content.php?f=' + flag + '&pagina=' + codigo,
             method: method,
-            postData: postData
+            getData: getData,
+            postData: remainingPostData
         });
         setFlag(flag + 1);
     }

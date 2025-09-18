@@ -13,7 +13,17 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path('Helpers/AuthHelper.php');
+        // Load application helpers
+        $helpers = [
+            app_path('Helpers/AuthHelper.php'),
+            app_path('Helpers/QueryHelper.php'),
+        ];
+
+        foreach ($helpers as $file) {
+            if (file_exists($file)) {
+                require_once $file;
+            }
+        }
     }
 
     /**

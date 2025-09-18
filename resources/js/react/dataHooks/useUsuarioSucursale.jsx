@@ -9,7 +9,7 @@ const useUsuarioSucursales = ({ usuarioId }) => {
             const resource = new Resource();
             return await resource.getEntity('user', usuarioId, ['sucursales']);
         },
-        enable: !!usuarioId,
+        enabled: !!usuarioId && usuarioId !== undefined ,
         select: (data) =>
             Object.values(data.sucursales),
         staleTime: 1000 * 60 * 60 * 24, // 24 hours

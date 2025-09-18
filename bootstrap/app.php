@@ -10,6 +10,9 @@ return Application::configure(basePath: dirname(__DIR__))
         \Illuminate\Contracts\Http\Kernel::class => \App\Http\Kernel::class,
         \Illuminate\Contracts\Console\Kernel::class => \App\Console\Kernel::class,
     ])
+    ->withProviders([
+        \App\Providers\HelperServiceProvider::class,
+    ])
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',

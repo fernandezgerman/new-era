@@ -27,7 +27,10 @@
 <body class="m-0 font-sans antialiased font-normal text-left leading-default text-base ne-body dark:ne-dark-body text-slate-500 ">
 <div id="react-dashboard-container"></div>
 <script>
-    window.__POST__ = @json(request()->post());
+    @php
+        $post = request()->except('withFrame');
+    @endphp
+    window.__POST__ = @json($post);
     window.__CSRF__ = '{{ csrf_token() }}';
 </script>
 </body>

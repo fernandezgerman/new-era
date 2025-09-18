@@ -8,7 +8,7 @@ export const UserAndBreadcrumb = ({breadCrumbFirst, breadCrumbSecond, onMenuSele
     const {data: authUser} = useAuthUsuario();
 
     return (
-        <div className="flex-none w-auto max-w-full px-3 my-auto">
+        <div className="flex-none w-auto max-w-[300px] px-3 my-auto">
             <div className="h-full mb-[20px]">
 
                 <h5 className="mb-1" onClick={() => onMenuSelected('miPerfil', 'Usuario', 'Perfil')}>
@@ -21,7 +21,7 @@ export const UserAndBreadcrumb = ({breadCrumbFirst, breadCrumbSecond, onMenuSele
             </div>
 
             <nav className={'mt-15px'}>
-                <ol className="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16 ">
+                <ol className="flex flex-wrap pt-1 bg-transparent rounded-lg ">
                     <li className="leading-normal text-sm breadcrumb-item">
                         <a className="opacity-30 dark:text-white ne-color">
                             <svg width="12px" height="12px" className="mb-1" viewBox="0 0 45 40" version="1.1"

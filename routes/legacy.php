@@ -10,7 +10,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/select-sucursal', [AuthController::class, 'showSelectionForm'])->name('sucursal.selection');
     Route::post('/select-sucursal', [AuthController::class, 'selectSucursal'])->name('sucursal.select');
 
-    Route::any('/principal_iframe.php',[DefaultController::class, 'defaultView'])->name('legacy.principal');
+    Route::any('/iframe-content.php',[DefaultController::class, 'iframeView'])->name('legacy.principal');
     Route::any('/principal.php',[DefaultController::class, 'defaultView'])->name('legacy.principal');
 
 });

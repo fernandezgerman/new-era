@@ -15,9 +15,10 @@ const useAlertas = () => {
 
 }
 
+const getAlertaDetallesQueryKey = (alertaId) => ('usuario-logueado-get-alerta-detalles-'+alertaId);
 const useAlertaDetalles = (alertaId) => {
     return useQuery({
-        queryKey: ['usuario-logueado-get-alerta-detalles-'+alertaId],
+        queryKey: [getAlertaDetallesQueryKey(alertaId)],
         queryFn: async () => {
             const dashboardResources = new Dashboard();
             return await dashboardResources.getAlertaDetalle(alertaId)
@@ -29,4 +30,4 @@ const useAlertaDetalles = (alertaId) => {
 
 }
 
-export { useAlertas, useAlertaDetalles };
+export { useAlertas, useAlertaDetalles, getAlertaDetallesQueryKey };

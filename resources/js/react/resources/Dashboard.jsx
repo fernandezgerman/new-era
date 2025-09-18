@@ -25,15 +25,9 @@ export default class Dashboard extends ResourcesBase
     }
     /* TODO: Move the endpoint from legacy version to API new era */
     async getAlertaDetalle(alertaTipoId) {
-
-
         try{
             return this.processResponse(
-                await window.axios.post('/ajaxAlertasInicioDetalle.php',{
-                    IncluirVistas: null,
-                    inpUsuarioAlertasId: null,
-                    alertaTipoId: alertaTipoId,
-                })
+                await window.axios.get('api/dashboard/alerta/'+alertaTipoId+'/detalles')
             );
         }catch(err)
         {

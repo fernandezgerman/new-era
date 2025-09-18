@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'get_tiempo_maximo_sp' => 2, //segundos
     'legacy_base_directory' => base_path().'/mtihweb/',
     'email_directory' => base_path().'/mtihweb/clases/emails/',
 

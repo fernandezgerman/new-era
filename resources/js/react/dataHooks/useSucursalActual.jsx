@@ -8,7 +8,7 @@ const useSucursalActual = () => {
             const authentication = new Authentication();
             return await authentication.getSucursalActual();
         },
-        enable: true,
+        enabled: true,
         select: (data) => data,
         staleTime: 1000 * 60 * 60 * 24, // 24 hours
     });

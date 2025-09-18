@@ -10,7 +10,7 @@ const useAuthUsuario = () => {
             const authentication = new Authentication();
             return await authentication.me();
         },
-        enable: true,
+        enabled: true,
         select: (data) => data,
         staleTime: 1000 * 60 * 60 * 24, // 24 hours
     });

@@ -10,6 +10,7 @@ export const LegacyFrame = ({iframeHrefs}) => {
     const hasPost = !!(postParams && Object.keys(postParams).length > 0);
 
     useEffect(() => {
+        console.log('setting iframe');
         setPostParams(iframeHrefs?.postData?.length > 0 ? iframeHrefs?.postData :(typeof window !== 'undefined' && window.__POST__ && typeof window.__POST__ === 'object') ? window.__POST__ : null);
     }, [iframeHrefs, hasPost]);
 
@@ -17,7 +18,7 @@ export const LegacyFrame = ({iframeHrefs}) => {
         if (hasPost && formRef.current) {
             // Update action to current iframe hrefs and submit the POST to the iframe target
             try {
-                formRef.current.action = iframeHrefs.url || 'principal_iframe.php';
+                formRef.current.action = iframeHrefs.url || 'iframe-content.php';
                 formRef.current.submit();
             } catch (e) {
                 console.error('Failed to submit POST to iframe:', e);
@@ -51,7 +52,24 @@ export const LegacyFrame = ({iframeHrefs}) => {
                     onLoad={()=>setIsLoading(false)}
                     ref={iframeRef}
                     name="legacy_iframe"
-                    src={iframeHrefs.url}
+                    src={(function(){
+                        const base = iframeHrefs.url || 'iframe-content.php';
+                        const getItems = Array.isArray(iframeHrefs?.getData) ? iframeHrefs.getData : [];
+                        if (getItems.length === 0) return base;
+                        const url = new URL(base, (typeof window !== 'undefined' ? window.location.origin : 'http://localhost'));
+                        const params = url.searchParams;
+                        getItems.forEach(item => {
+                            const key = item?.name ?? item?.key ?? item?.param ?? '';
+                            const val = item?.value ?? item?.val ?? item?.data ?? '';
+                            if (!key) return;
+                            if (Array.isArray(val)) {
+                                val.forEach(v => params.append(key + '[]', String(v)));
+                            } else if (val !== undefined && val !== null) {
+                                params.set(key, String(val));
+                            }
+                        });
+                        return url.toString();
+                    })()}
                     width="100%"
                     className={'h-[calc(100vh-200px)]'+(isLoading ? ' hidden' : '')}
                     title="Contenido Externo"

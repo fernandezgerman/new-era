@@ -1,14 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faFile} from "@fortawesome/free-solid-svg-icons";
+import {faFile, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
 import {useAlertaDetalles, useAlertas} from "@/dataHooks/dashboard/useAlertas.jsx";
 import {get, filter, reduce} from "lodash";
-import {Loading} from "@/components/Loading.jsx";
 import {Hr} from "@/components/Hr.jsx";
 import parse from 'html-react-parser';
 import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 import {ToolTipWrapper} from "@/components/ToolTipWrapper.jsx";
+import { RefreshNode} from "@/components/RefreshNode.jsx";
+import {getAlertaDetallesQueryKey} from "../../dataHooks/dashboard/useAlertas.jsx";
+import {useQueryClient} from "@tanstack/react-query";
 
 const mapColours = {
     amarillo: '!bg-yellow-600',
@@ -21,7 +23,7 @@ const AlertaMenuDetalleInformes = ({informes, onMenuSelected}) => {
 
     const goToInforme = (informe) => {
         onMenuSelected(informe.codigopagina, 'Alertas', 'Informe',
-            'POST', (informe?.parametros ?? []).map((parametro) => ({name: parametro.clave, value: parametro.valor})) );
+            'POST', (informe?.parametros ?? []).map((parametro) => ({name: parametro.clave, value: parametro.valor, type: parametro.type ?? 'POST'})) );
     }
     return (
         <div>
@@ -42,7 +44,6 @@ const AlertaMenuDetalleInformes = ({informes, onMenuSelected}) => {
 }
 const AlertaMenuDetalle = ({alertaDetalle, onMenuSelected}) => {
 
-    console.log('alertaDetalle', alertaDetalle);
     const colour = get(mapColours, alertaDetalle.color.toLowerCase());
 
     return (
@@ -60,28 +61,24 @@ const AlertaMenuDetalle = ({alertaDetalle, onMenuSelected}) => {
     );
 }
 const AlertaMenuDetalles = ({alertaTipoId, onMenuSelected}) => {
-    const {data, isLoading} = useAlertaDetalles(alertaTipoId);
+    const {data, isLoading, isRefetching, refetch} = useAlertaDetalles(alertaTipoId);
 
     const alertaDetalles = data?.alertaDetalles ?? [];
 
-    console.log('alertaDetalles', alertaDetalles);
-
+    const loading = isLoading || isRefetching;
     return (
-        <div
-            className={'overflow-y-scroll scrollbar-hidden dark:!ne-dark-body dark:ne-dark-color text-xs w-auto max-h-[calc(100vh-150px)] max-w-[400px] h-auto p-2 pb-5 bg-white rounded-[10px] '}>
-            {isLoading && <Loading/>}
+        <RefreshNode text={'Actualizar -'} refreshButtonFirst={true} onRefresh={refetch} loading={loading} className={'overflow-y-scroll scrollbar-hidden dark:!ne-dark-body dark:ne-dark-color text-xs w-auto max-h-[calc(100vh-150px)] max-w-[400px] h-auto p-2 pb-5 bg-white rounded-[10px] '}>
             {!isLoading && (
                 <>
                     {(alertaDetalles).map((alertaDetalle) => <AlertaMenuDetalle onMenuSelected={onMenuSelected} alertaDetalle={alertaDetalle}/>)}
                 </>
             )}
-        </div>);
+        </RefreshNode>);
 }
 
-const AlertaMenu = ({alertaMenu, onMenuSelected}) => {
+const AlertaMenu = ({alertaMenu, onMenuSelected, loading}) => {
 
     const circles = reduce(alertaMenu, (carry, value, key) => {
-            console.log('key, attribute', key, value, get(mapColours, key));
 
             if (get(mapColours, key) !== undefined && parseInt(value) > 0) {
                 carry.push({value: parseInt(value), key: key});
@@ -92,10 +89,10 @@ const AlertaMenu = ({alertaMenu, onMenuSelected}) => {
     );
 
     return (
-        <div className={'mr-2'}>
+        <div>
             <ErrorBoundary>
                 <ToolTipWrapper toolTip={
-                    <AlertaMenuDetalles onMenuSelected={onMenuSelected} alertaTipoId={alertaMenu.id}/>}
+                    !loading && <AlertaMenuDetalles onMenuSelected={onMenuSelected} alertaTipoId={alertaMenu.id}/>}
                 >
                     <div className={'h-[35px]'}>
                         <div
@@ -105,7 +102,7 @@ const AlertaMenu = ({alertaMenu, onMenuSelected}) => {
 
                         <div className={'relative mt-[-45px] w-auto flex justify-end pr-[5px]'}>
                             {circles.length === 0 && <div
-                                className={'ml-0.5 text-xs float-right rounded-[15px] h-[18px] p-0.5 w-[20px] text-center text-white align-middle'}>
+                                className={'ml-0.5 text-xs float-right rounded-[15px] h-[20px] p-0.5 w-[20px] text-center text-white align-middle'}>
 
                             </div>}
                             {circles.map((circle, index) => {
@@ -113,7 +110,7 @@ const AlertaMenu = ({alertaMenu, onMenuSelected}) => {
                                 return (
                                     <div
                                         key={index}
-                                        className={'ml-0.5 text-xs float-right rounded-[15px] ' + colour + ' h-[18px] p-0.5 w-[20px] text-center text-white align-middle'}>
+                                        className={'ml-0.5 text-xs float-right rounded-[15px] ' + colour + ' h-[20px] p-0.5 w-[20px] text-center text-white align-middle'}>
                                         {circle.value}
                                     </div>
                                 )
@@ -126,12 +123,25 @@ const AlertaMenu = ({alertaMenu, onMenuSelected}) => {
 }
 
 export const Alertas = ({onMenuSelected}) => {
-    const {data: alertas} = useAlertas();
+    const {data: alertas, refetch, isLoading, isRefetching} = useAlertas();
+    const queryClient = useQueryClient();
+
+    useEffect(() => {
+        if(!isLoading &&  !isRefetching)
+        {
+            for(let alertaKey in alertas){
+                let alerta = alertas[alertaKey];
+                queryClient.removeQueries({ queryKey: [getAlertaDetallesQueryKey(alerta.id)]});
+            }
+        }
+
+    }, [isLoading, isRefetching]);
+
+    const loading = isLoading || isRefetching;
 
     return (
-        <div
-            className={'w-auto max-w-full px-3 my-auto flex items-center justify-end gap-4 ml-auto mt-0'}>
-            {(alertas ?? []).map((menu) => <AlertaMenu onMenuSelected={onMenuSelected} alertaMenu={menu}/>)}
-        </div>
+        <RefreshNode onRefresh={refetch} loading={loading} className={'w-auto max-w-[680px] px-3 my-auto flex items-center justify-end gap-4 ml-auto mt-0'}>
+            {(alertas ?? []).map((menu) => <AlertaMenu key={menu.id} loading={loading} onMenuSelected={onMenuSelected} alertaMenu={menu}/>)}
+        </RefreshNode>
     );
 }
