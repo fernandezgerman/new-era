@@ -41,9 +41,9 @@ export const Dashboard = () => {
     }
 
     return (
-        <div className="flex flex-row w-full h-[calc(100vh-0px)]">
+        <div className="flex flex-row w-full max-w-[1250px] h-[calc(100vh-0px)] nexl:ml-[calc(50vw-625px)]">
             <LeftMenuBar onMenuSelected={onMenuSelected}/>
-            <div className="flex-1 min-w-0 max-w-[990px] h-full overflow-hidden">
+            <div className="nexl:ml-0 ml-[90px] flex-1 min-w-0 max-w-[990px] h-full overflow-hidden ">
                 <Header onMenuSelected={onMenuSelected} breadCrumbFirst={breadcrumb1} breadCrumbSecond={breadcrumb2}/>
                 <LegacyFrame iframeHrefs={iframeHrefs}/>
             </div>

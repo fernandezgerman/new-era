@@ -7,7 +7,7 @@
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    'Segoe UI Symbol', 'Noto Color Emoji';
     /* DARK THEME*/
     --dark-bg-color: #282828;
     --dark-font-color: white;
@@ -16,28 +16,40 @@
     --bg-color: white;
     --font-color: rgb(103 116 142 / var(--tw-text-opacity));
 
+    /*
+    screens:{
+        'xs': '480px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+    };
+*/
+    --breakpoint-nexl: 80.625rem;
+    --breakpoint-nelg: 66.625rem;
+
 }
 
-@utility ne-dark-body{
+@utility ne-dark-body {
     background-color: var(--dark-bg-color);
     color: var(--dark-font-color);
 }
-@utility ne-body{
+@utility ne-body {
     background-color: var(--bg-color);
     color: rgb(103 116 142 / var(--tw-text-opacity));
 }
 
-@utility ne-dark-input{
+@utility ne-dark-input {
     background-color: var(--dark-bg-color);
     color: var(--dark-font-color);
 
 }
-@utility ne-light-input{
+@utility ne-light-input {
     background-color: var(--bg-color);
     color: var(--bg-color)
 }
 
-@utility ne-aux{
+@utility ne-aux {
     width: 600px; /* Set a width for the div */
     height: 400px; /* Set a height for the div */
     background-size: cover; /* Optional: Scale the image to cover the entire div */
@@ -51,21 +63,22 @@
 
 @layer utilities {
 
-    .choices__inner{
+    .choices__inner {
         height: 38px !important;
         min-height: 38px !important;
         padding: 5px 7.5px 3.75px !important;
         border-radius: 8px !important;
-        background-color: transparent!important; /* Optional: Scale the image to cover the entire div */
+        background-color: transparent !important; /* Optional: Scale the image to cover the entire div */
     }
-    .choices__list--dropdown{
+
+    .choices__list--dropdown {
         background-color: var(--bg-color) !important;
         color: var(--font-color) !important;
     }
 
-    .is-highlighted{
-        color: var(--dark-font-color)!important;
-        background-color: pink!important; /* Optional: Scale the image to cover the entire div */
+    .is-highlighted {
+        color: var(--dark-font-color) !important;
+        background-color: pink !important; /* Optional: Scale the image to cover the entire div */
     }
 
     .choices__input {
@@ -78,14 +91,15 @@
             background-color: var(--dark-bg-color) !important;
             color: var(--dark-font-color) !important;
         }
-        .choices__list--dropdown{
+
+        .choices__list--dropdown {
             background-color: var(--dark-bg-color) !important;
             color: var(--dark-font-color) !important;
         }
 
-        .is-highlighted{
-            color: var(--font-color)!important;
-            background-color: pink!important; /* Optional: Scale the image to cover the entire div */
+        .is-highlighted {
+            color: var(--font-color) !important;
+            background-color: pink !important; /* Optional: Scale the image to cover the entire div */
         }
 
     }
@@ -97,7 +111,7 @@
 
     /* Hide scrollbar for IE, Edge, and Firefox */
     .scrollbar-hidden {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;     /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
     }
 }

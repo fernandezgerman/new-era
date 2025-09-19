@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 import useSystemTheme from "@/utils/useSystemTheme.jsx";
 import darkLogo from "../../../../img/dark-logo.png";
 import lightLogo from "../../../../img/light-logo.png";
+import heartLogo from "../../../../img/heart.png";
 import {
     faBell,
-    faBoxArchive, faBug, faCashRegister,
+    faBoxArchive, faBug, faBuilding, faCashRegister,
     faCode,
     faCopy, faFile, faFileLines, faGears,
     faHome,
@@ -91,8 +92,7 @@ const Menu = ({onMenuSelected}) => {
                     <div
                         key={idKey}
                         className="mt-0.5 w-full"
-                        onMouseEnter={() => setHoveredId(idKey)}
-                        onMouseLeave={() => setHoveredId(null)}
+                        onClick={() => setHoveredId(idKey)}
                     >
                         <Modulo modulo={menu} isOpen={isOpen}/>
                         {/* start FUNCTION */}
@@ -137,16 +137,18 @@ export const Inicio = ({onMenuSelected}) => {
         </>);
 }
 
-export const Logo = () => {
+export const Logo = ({openMenu}) => {
     const darkMode = useSystemTheme();
 
     return (
-        <div>
-            <img src={darkMode ? darkLogo : lightLogo} className={'p-6 w-full'} alt="Logo"/>
+        <div className={''}>
+            <img src={darkMode ? darkLogo : lightLogo} className={'p-6 w-full ' + (!openMenu ? ' hidden ' : ' block ') + ' nexl:!block '} alt="Logo"/>
+            {!openMenu && (<img src={heartLogo} className={'p-6 w-[90px] xl:hidden block '} alt="Logo"/>)}
+
         </div>);
 }
 
-const SucursalActual = ({}) => {
+const SucursalActual = ({openMenu}) => {
 
     const {data: authUser} = useAuthUsuario();
     const {data: sucursal, refetch: refetchSucursalActual} = useSucursalActual();
@@ -174,36 +176,62 @@ const SucursalActual = ({}) => {
         }
     };
 
+
     return (
-        <div className="ml-5 mt-11 mb-4 mr-2">
-            {sucursal && sucursales && (
-                <ErrorBoundary>
-                    <span className={'dark:ne-dark-body dark:ne-dark-color'}>
-                        <Select
-                            options={sucursales?.map((sucursal) => ({value: sucursal.id, label: sucursal.nombre}))}
-                            value={sucursal.id}
-                            className={'z-10'}
-                            setValue={saveSelectedSucursal}
-                            isLoading={loadingSucursal}
-                            placeholder="Seleccione una sucursal"
-                        />
-                    </span>
-                    {error && (
-                        <div className="text-red-600 text-sm mb-4">{error}</div>
-                    )}
-                </ErrorBoundary>
+        <>
+            <div className="ml-5 mt-11 mb-4 mr-2">
+                {sucursal && sucursales && (
+                    <ErrorBoundary>
+                        <span className={openMenu ? ' ' : 'hidden' + ' nexl:!visible dark:ne-dark-body dark:ne-dark-color'}>
+                            <Select
+                                options={sucursales?.map((sucursal) => ({value: sucursal.id, label: sucursal.nombre}))}
+                                value={sucursal.id}
+                                className={'z-10'}
+                                setValue={saveSelectedSucursal}
+                                isLoading={loadingSucursal}
+                                placeholder="Seleccione una sucursal"
+                            />
+                        </span>
+                        {error && (
+                            <div className="text-red-600 text-sm mb-4">{error}</div>
+                        )}
+                    </ErrorBoundary>
+                )}
+            </div>
+            {!openMenu && (
+                <>
+                    <ul className="nexl:!hidden flex flex-col pl-0 mb-0 list-none">
+                        <li className="mt-0.5 w-full">
+                            <a className="cursor-pointer dark:ne-dark-body after:ease-soft-in-out after:font-awesome-5-free ease-soft-in-out text-sm py-2.7 active xl:shadow-soft-xl my-0 mx-4 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-all after:ml-auto after:inline-block after:rotate-180 after:font-bold after:text-slate-800 after:antialiased after:transition-all after:duration-200 after:content-['\f107'] "
+                               aria-expanded="true">
+                                <div
+                                    className="dark:ne-dark-body stroke-none shadow-soft-sm bg-gradient-to-tl from-gray-700 to-black-500 mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center fill-current p-2.5 text-center text-black">
+                                    <FontAwesomeIcon icon={faBuilding} className=""/>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </>
+
             )}
-        </div>
+        </>
     );
 }
 export const LeftMenuBar = ({onMenuSelected}) => {
 
+    const [openMenu, setOpenMenu] = React.useState(false);
+
     return (
-        <div className="block h-auto shrink-0 w-full max-w-[250px] ml-[20px] mt-[20px]"
-             id="sidenav-collapse-main">
-            <Logo/>
-            <SucursalActual />
+        /* overflow-hidden fixed io max-w-[60px]  */
+        <div
+            onMouseEnter={() => setOpenMenu(true)}
+            onMouseLeave={() => setOpenMenu(false)}
+            className={"fixed " + (openMenu === true ? "max-w-[250px]" : "max-w-[75px]") + " ne-body dark:ne-dark-body block overflow-scroll shrink-0 w-full nexl:!relative nexl:max-w-[250px] h-[calc(100vh)] overflow-x-clip scrollbar-hidden ne-body dark:ne-dark-bg z-[999]"}
+            id="sidenav-collapse-main">
+            <Logo openMenu={openMenu}/>
+            <SucursalActual openMenu={openMenu}/>
             <Inicio onMenuSelected={onMenuSelected}/>
             <Menu onMenuSelected={onMenuSelected}/>
-        </div>);
+        </div>
+    );
 }

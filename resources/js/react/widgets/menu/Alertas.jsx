@@ -140,7 +140,7 @@ export const Alertas = ({onMenuSelected}) => {
     const loading = isLoading || isRefetching;
 
     return (
-        <RefreshNode onRefresh={refetch} loading={loading} className={'w-auto max-w-[680px] px-3 my-auto flex items-center justify-end gap-4 ml-auto mt-0'}>
+        <RefreshNode onRefresh={refetch} loading={loading} className={'w-auto max-w-[680px] px-3 my-auto flex items-center justify-end gap-4  nelg:ml-auto pt-[20px] nelg:pt-0 nelg:!mt-0'}>
             {(alertas ?? []).map((menu) => <AlertaMenu key={menu.id} loading={loading} onMenuSelected={onMenuSelected} alertaMenu={menu}/>)}
         </RefreshNode>
     );

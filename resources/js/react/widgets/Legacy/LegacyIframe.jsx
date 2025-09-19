@@ -52,26 +52,9 @@ export const LegacyFrame = ({iframeHrefs}) => {
                     onLoad={()=>setIsLoading(false)}
                     ref={iframeRef}
                     name="legacy_iframe"
-                    src={(function(){
-                        const base = iframeHrefs.url || 'iframe-content.php';
-                        const getItems = Array.isArray(iframeHrefs?.getData) ? iframeHrefs.getData : [];
-                        if (getItems.length === 0) return base;
-                        const url = new URL(base, (typeof window !== 'undefined' ? window.location.origin : 'http://localhost'));
-                        const params = url.searchParams;
-                        getItems.forEach(item => {
-                            const key = item?.name ?? item?.key ?? item?.param ?? '';
-                            const val = item?.value ?? item?.val ?? item?.data ?? '';
-                            if (!key) return;
-                            if (Array.isArray(val)) {
-                                val.forEach(v => params.append(key + '[]', String(v)));
-                            } else if (val !== undefined && val !== null) {
-                                params.set(key, String(val));
-                            }
-                        });
-                        return url.toString();
-                    })()}
+                    src={iframeHrefs.url}
                     width="100%"
-                    className={'h-[calc(100vh-200px)]'+(isLoading ? ' hidden' : '')}
+                    className={'h-[calc(100vh-150px)]'+(isLoading ? ' hidden' : '')}
                     title="Contenido Externo"
                 >
                 </iframe>
