@@ -142,8 +142,9 @@ export const Logo = ({openMenu}) => {
 
     return (
         <div className={''}>
-            <img src={darkMode ? darkLogo : lightLogo} className={'p-6 w-full ' + (!openMenu ? ' hidden ' : ' block ') + ' nexl:!block '} alt="Logo"/>
-            {!openMenu && (<img src={heartLogo} className={'p-6 w-[90px] xl:hidden block '} alt="Logo"/>)}
+            <img src={darkMode ? darkLogo : lightLogo}
+                 className={'p-6 w-full ' + (!openMenu ? ' hidden ' : ' block ') + ' nexl:!block '} alt="Logo"/>
+            {!openMenu && (<img src={heartLogo} className={'p-6 w-[90px] nexl:!hidden block '} alt="Logo"/>)}
 
         </div>);
 }
@@ -182,7 +183,8 @@ const SucursalActual = ({openMenu}) => {
             <div className="ml-5 mt-11 mb-4 mr-2">
                 {sucursal && sucursales && (
                     <ErrorBoundary>
-                        <span className={openMenu ? ' ' : 'hidden' + ' nexl:!visible dark:ne-dark-body dark:ne-dark-color'}>
+                        <span
+                            className={openMenu ? ' ' : ' max-nexl:hidden ' + ' nexl:!visible dark:ne-dark-body dark:ne-dark-color'}>
                             <Select
                                 options={sucursales?.map((sucursal) => ({value: sucursal.id, label: sucursal.nombre}))}
                                 value={sucursal.id}
