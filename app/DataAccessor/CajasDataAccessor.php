@@ -84,7 +84,6 @@ class CajasDataAccessor extends DataAccessorBase
                     movimientoscaja.idsucursaldestino
             "));
 
-        Log::info(json_encode(query_builder_to_raw_sql($query)));
         return $query->get();
     }
 }
