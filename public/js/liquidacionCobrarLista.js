@@ -18,41 +18,41 @@ function mostrarDetalleLiquidacion(idLiquidacion){
 				 },
 		success : function(resultado) {
 			json = $.parseJSON(resultado);
-			
+
 			datosReporte = json;
 			if(datosReporte["error"]==1){
 				alert(datosReporte["mensajeError"]);
 			}else{
 				_.templateSettings.variable = "liquidacion";
-				
+
 			    var template = _.template(
 			            $( "#templateLiquidacionesListaDetalle2" ).html()
 			        );
 			    liquidaciones = json['liquidaciones'];
 			    liq = liquidaciones[0];
-			    liq['indice'] = 0; 
+			    liq['indice'] = 0;
 			    $( "#divResultado" ).html(
 			            template(liq)
-			        );				
+			        );
 			}
 		},
 		error : function() {
 			alert('error al obtener los registros');
-		}	
-	});	
+		}
+	});
 }
 
 
 function editarLiquidacion(idLiquidacionDetalle,idLiquidacion){
 	$( "#inpLiquidacionId").val(idLiquidacion);
 	$( "#inpLiquidacionDetalleId").val(idLiquidacionDetalle);
-	
+
 	$("#frmLiquidacionEditar" ).submit();
 }
 function cancelarCobroLiquidacion(idLiquidacionDetalle){
 	if(confirm("Está seguro que desea cancelar el cobro?"))
 	{
-		
+
 		$.ajax({
 			url : 'ajaxLiquidacionCancelar.php?token='+$('#mToken').val(),
 			type : 'POST',
@@ -63,7 +63,7 @@ function cancelarCobroLiquidacion(idLiquidacionDetalle){
 					 },
 			success : function(resultado) {
 				json = $.parseJSON(resultado);
-					
+
 					if(json.error==1){
 						alert(json.mensajeError)
 					}else{
@@ -72,8 +72,8 @@ function cancelarCobroLiquidacion(idLiquidacionDetalle){
 				},
 			error : function() {
 				alert('error al obtener los registros');
-			}	
-		});			
+			}
+		});
 	}
 }
 function cerrarDetalleLiquidacion(indice){
@@ -117,7 +117,7 @@ function mostrarDetalleConcepto(indiceLiquidacion,indiceDetalle){
             template(detalle)
         );
     }
-	
+
 }
 
 function cargarDatos(datos)
@@ -127,7 +127,7 @@ function cargarDatos(datos)
 function mostrarDetalleCompletoDeRendicion(idLiquidacionDetalle,idLiquidacion){
 	$( "#frmMostrarDetalleLiquidacion input[name=inpLiquidacionId]").val(idLiquidacion);
 	$( "#frmMostrarDetalleLiquidacion  input[name=inpLiquidacionDetalleId]").val(idLiquidacionDetalle);
-	
+
 	$("#frmMostrarDetalleLiquidacion" ).submit();
 }
 
@@ -143,29 +143,29 @@ function mostrarDetalleDeMovimientosPendientes(liquidacionId){
 				 },
 		success : function(resultado) {
 			json = $.parseJSON(resultado);
-				
+
 				if(json.error==1){
 					alert(json.mensajeError)
 				}else{
 					_.templateSettings.variable = "resultado";
-					
+
 				    var template = _.template(
 				            $( "#templateLiquidacionesListaMovimientosPendientes" ).html()
 				        );
 				    $( "#divDetalleMovimientosPendientes").html(
 				            template(json)
-				        );  
-				    
+				        );
+
 				}
             $('#divResultado').removeClass('divBuscandoInformacion');
 			},
 		error : function() {
 			alert('error al obtener los registros');
-		}	
-	});				
+		}
+	});
 }
 function cerrarDetalleMovimientosPend(){
-    $( "#divDetalleMovimientosPendientes").html(""); 	
+    $( "#divDetalleMovimientosPendientes").html("");
 }
 function cobrarLiquidacionResumida(idLiquidacion,detalleId,indice){
     $('#divResultado').addClass('divBuscandoInformacion');
@@ -421,7 +421,7 @@ function verPlanillaLiquidacion(idSucursal,origen,oEvent){
 
     if(oEvent) {
         if (oEvent.ctrlKey) {
-            $('#frmPlanillaLiquidacion').attr('target', '_blank');
+           // $('#frmPlanillaLiquidacion').attr('target', '_blank');
         }
     }
 

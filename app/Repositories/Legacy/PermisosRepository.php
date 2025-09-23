@@ -21,7 +21,6 @@ class PermisosRepository
         // This query replicates the logic of the getPerfilFunciones stored procedure
         $funciones = DB::table('funciones as fun')
             ->join('modulos as mdl', 'fun.idmodulo', '=', 'mdl.id')
-            ->join('empresafuncion as ef', 'fun.id', '=', 'ef.idfuncion')
             ->leftJoin('perfilfuncion as pf', function ($join) use ($perfilId) {
                 $join->on('fun.id', '=', 'pf.idfuncion')
                     ->where('pf.idperfil', '=', $perfilId);
@@ -36,8 +35,6 @@ class PermisosRepository
                 'mdl.id as idmodulo',
                 'fun.observaciones'
             )
-            ->where('ef.idempresa', '=', $empresaId)
-            ->where('ef.activo', '=', 1)
             ->where('fun.activa', '=', 1)
             ->where(function ($query) use ($todas) {
                 if (!$todas) {

@@ -7,6 +7,7 @@ use App\Models\MovimientoCaja;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CajasDataAccessor extends DataAccessorBase
 {
@@ -23,10 +24,10 @@ class CajasDataAccessor extends DataAccessorBase
             ->orderBy('numero', 'desc')
             ->first();
 
-        $numeroCaja = $ultimaCaja->numero;
-        $fechaHoraApertura = $ultimaCaja->fechaapertura;
+        $numeroCaja = $ultimaCaja->numero ?? 0;
+        $fechaHoraApertura = $ultimaCaja->fechaapertura ?? '1970-01-01';
 
-        return MovimientoCaja::query()
+        $query = MovimientoCaja::query()
             ->select(db::raw("
                     movimientoscaja.idusuario,
                     movimientoscaja.idusuariodestino,
@@ -45,8 +46,8 @@ class CajasDataAccessor extends DataAccessorBase
                 $join
                     ->on('movimientoscajaestado.idusuario', '=', 'movimientoscaja.idusuario')
                     ->on('movimientoscajaestado.fechahoramovimiento', '=', 'movimientoscaja.fechahoramovimiento')
-                    ->on('movimientoscajaestado.idsucursal', '=', 'movimientoscaja.idsucursal')
-                    ->on('movimientoscajaestado.fechahoraestado', '>=', DB::raw("'$fechaHoraApertura'"));
+                    ->on('movimientoscajaestado.idsucursal', '=', 'movimientoscaja.idsucursal');
+                    //->on('movimientoscajaestado.fechahoraestado', '>=', DB::raw("'$fechaHoraApertura'"));
             })
             ->where(function ($query) use ($usuarioId, $sucursalId, $numeroCaja, $fechaHoraApertura) {
                 $query->where('movimientoscaja.idusuario', $usuarioId);
@@ -81,7 +82,9 @@ class CajasDataAccessor extends DataAccessorBase
                     movimientoscaja.importe,
                     movimientoscaja.idestado,
                     movimientoscaja.idsucursaldestino
-            "))
-            ->get();
+            "));
+
+        Log::info(json_encode(query_builder_to_raw_sql($query)));
+        return $query->get();
     }
 }

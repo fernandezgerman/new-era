@@ -8,7 +8,7 @@ import lightLogo from '../../../../../img/light-logo.png';
 import useSystemTheme from "../../../utils/useSystemTheme.jsx";
 import Authentication from "../../../resources/Authentication.jsx";
 import {Select} from "../../../components/Select.jsx";
-import {useUsuarioSucursales} from "../../../dataHooks/useUsuarioSucursale.jsx";
+import {useUsuarioSucursalesCaja} from "../../../dataHooks/useUsuarioHooks.jsx";
 import ErrorBoundary from "../../../components/ErrorBoundary.jsx";
 
 
@@ -95,7 +95,7 @@ export const SelectSucursal = ({authUser}) => {
         }
     };
 
-    const {data} = useUsuarioSucursales({usuarioId: authUser.id});
+    const {data} = useUsuarioSucursalesCaja({usuarioId: authUser.id});
 
 
     return (

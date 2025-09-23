@@ -46,7 +46,7 @@
 }
 @utility ne-light-input {
     background-color: var(--bg-color);
-    color: var(--bg-color)
+    color: var(--font-color);
 }
 
 @utility ne-aux {

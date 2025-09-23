@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckLegacyPermissions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +11,7 @@ Route::get('/user', function (Request $request) {
     return $user;
 })->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', CheckLegacyPermissions::class])->group(function () {
     Route::post('/sucursal/{sucursalId}/establecer-actual', [\App\Http\ApiResources\Authentication::class, 'selectSucursal']);
     Route::get('/sucursal/actual', [\App\Http\ApiResources\Authentication::class, 'getSucursalActual']);
 

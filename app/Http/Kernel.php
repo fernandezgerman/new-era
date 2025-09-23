@@ -1,6 +1,7 @@
 <?php
 namespace App\Http;
 
+use App\Http\Middleware\CheckLegacyPermissions;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -31,12 +32,14 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            CheckLegacyPermissions::class
         ],
 
         'api' => [
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
+            CheckLegacyPermissions::class
         ],
 
         'legacy' => [
@@ -45,6 +48,7 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            CheckLegacyPermissions::class
         ],
     ];
 

@@ -77,7 +77,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Exception $e, \Illuminate\Http\Request $request) {
             // Only customize for API requests
-            if ($request->is('api/*')) {
+            if ($request->is('api/*') || $e instanceof \App\Http\Exceptions\Api\Exceptions\ApiException) {
                 return app(App\Http\Exceptions\Api\ExceptionRender::class)->handle($e);
             }
             // For non-API, use default behavior

@@ -56,6 +56,7 @@ class UsuarioDataAccessor extends DataAccessorBase
         return $menues;
     }
 
+
     public function getAlertas(int $alertaTipoId = null)
     {
 

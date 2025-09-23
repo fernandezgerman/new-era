@@ -2,16 +2,19 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Legacy\DefaultController;
+use App\Http\Middleware\CheckLegacyPermissions;
 use Illuminate\Support\Facades\Route;
 //\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
 
 // Sucursal Selection Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', CheckLegacyPermissions::class])->group(function () {
     Route::get('/select-sucursal', [AuthController::class, 'showSelectionForm'])->name('sucursal.selection');
     Route::post('/select-sucursal', [AuthController::class, 'selectSucursal'])->name('sucursal.select');
 
     Route::any('/iframe-content.php',[DefaultController::class, 'iframeView'])->name('legacy.principal');
     Route::any('/principal.php',[DefaultController::class, 'defaultView'])->name('legacy.principal');
+
+    Route::any('/cerrar-session',[AuthController::class, 'logout'])->name('legacy.principal');
 
 });
 
@@ -23,7 +26,7 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureSucursalIsSelected::class]
 // Route for handling all .php files (except principal.php which is handled separately)
 Route::any('/{path}.php', [\App\Http\Controllers\Legacy\LegacyPhpController::class, 'handlePhpFile'])
     ->where('path', '(?!principal).*') // Negative lookahead to exclude 'principal'
-    ->middleware('auth')
+    ->middleware(['auth', CheckLegacyPermissions::class])
     ->name('legacy.php-file');
 
 Route::get('/template', [DefaultController::class, 'template']);

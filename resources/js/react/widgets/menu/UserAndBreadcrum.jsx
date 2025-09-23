@@ -1,26 +1,55 @@
 import React from "react";
 import {useAuthUsuario} from "@/dataHooks/useAuthUsuario.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCog} from "@fortawesome/free-solid-svg-icons";
+import {faCog, faCopy} from "@fortawesome/free-solid-svg-icons";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
+import {get} from "lodash";
+import {ToolTipWrapper} from "../../components/ToolTipWrapper.jsx";
 
+
+const UsuarioConfig = ({authUser, onMenuSelected}) => {
+    return (
+        <div
+            className={'scrollbar-hidden dark:!ne-dark-body dark:ne-dark-color text-xs h-auto w-[200px] max-w-[600px] h-auto p-2 pb-5 bg-white rounded-[10px] '}>
+            <div
+                onClick={() => onMenuSelected('miPerfil', 'Usuario', 'Perfil')}
+                className="hover:bg-gray-200 hover:text-black dark:ne-dark-body cursor-pointer stroke-none shadow-soft-2xl mr-2 flex h-8 w-full items-center justify-center rounded-lg bg-center fill-current p-2.5 text-center">
+                <FontAwesomeIcon icon={faCopy} className=""/>
+
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">
+                    Editar Perfil
+                </span>
+            </div>
+            <br/>
+            <a href={'cerrar-session'}>
+                <div
+                    className="hover:bg-gray-200 hover:text-black dark:ne-dark-body cursor-pointer stroke-none shadow-soft-2xl mr-2 flex h-8 w-full items-center justify-center rounded-lg bg-center fill-current p-2.5 text-center">
+                    <FontAwesomeIcon icon={faCopy} className=""/>
+
+                    <span className=" ml-1 duration-300 opacity-100 pointer-events-none ease-soft">
+                        Cerrar sesion
+                    </span>
+                </div>
+            </a>
+        </div>
+    );
+}
 export const UserAndBreadcrumb = ({breadCrumbFirst, breadCrumbSecond, onMenuSelected}) => {
     const {data: authUser} = useAuthUsuario();
 
     return (
         <div className="flex-none w-auto max-w-[300px] px-3 my-auto">
-            <div className="h-full mb-[20px]">
-
-                <h5 className="mb-1" onClick={() => onMenuSelected('miPerfil', 'Usuario', 'Perfil')}>
-                <span className={'dark:ne-dark-body dark:ne-dark-color'}>
-                    {authUser?.apellido} {authUser?.nombre}
-                    <FontAwesomeIcon icon={faCog} className={'ml-2 cursor-pointer'}/>
-
-                </span>
-                </h5>
-                <p className="mb-0 font-semibold leading-normal text-sm dark:text-white dark:opacity-60">{authUser?.perfil?.nombre}</p>
-            </div>
-
+            <ToolTipWrapper toolTip={<UsuarioConfig onMenuSelected={onMenuSelected} authUser={authUser}/>}>
+                <div className="h-full mb-[20px]">
+                    <h5 className="mb-1">
+                    <span className={'dark:ne-dark-body dark:ne-dark-color'}>
+                        {authUser?.apellido} {authUser?.nombre}
+                        <FontAwesomeIcon icon={faCog} className={'ml-2 cursor-pointer'}/>
+                    </span>
+                    </h5>
+                    <p className="mb-0 font-semibold leading-normal text-sm dark:text-white dark:opacity-60">{authUser?.perfil?.nombre}</p>
+                </div>
+            </ToolTipWrapper>
             <nav className={'mt-15px'}>
                 <ol className="flex flex-wrap pt-1 bg-transparent rounded-lg ">
                     <li className="leading-normal text-sm breadcrumb-item">

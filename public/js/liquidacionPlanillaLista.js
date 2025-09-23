@@ -9,7 +9,7 @@ function verPlanillaLiquidacion(idSucursal,origen,oEvent){
 		}
 	}
 */
-	$('#frmPlanillaLiquidacion').attr('target', '_blank');
+	//$('#frmPlanillaLiquidacion').attr('target', '_blank');
 
 	$("#frmPlanillaLiquidacion input[name=sucursalId]").val(idSucursal);
 	$("#inpPaginaRetorno").val(origen);

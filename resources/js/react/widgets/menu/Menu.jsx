@@ -19,7 +19,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {get} from "lodash";
 import {useAuthUsuario} from "@/dataHooks/useAuthUsuario.jsx";
 import {useSucursalActual} from "@/dataHooks/useSucursalActual.jsx";
-import {useUsuarioSucursales} from "@/dataHooks/useUsuarioSucursale.jsx";
+import {useUsuarioSucursalesCaja} from "@/dataHooks/useUsuarioHooks.jsx";
 import {Select} from "@/components/Select.jsx";
 import Authentication from "@/resources/Authentication.jsx";
 import ErrorBoundary from "@/components/ErrorBoundary.jsx";
@@ -44,12 +44,13 @@ const icons = {
     'money-bill': faMoneyBill
 };
 
-const Modulo = ({modulo, isOpen}) => {
+const Modulo = ({modulo, isOpen, onClick}) => {
     return (
         <div
             className={`ease-soft-in-out text-left w-full text-sm py-2.5 after:ease-soft-in-out after:font-awesome-5-free my-0 mx-4 flex items-center whitespace-nowrap px-4 font-medium shadow-none transition-colors after:ml-auto after:inline-block after:font-bold after:antialiased after:transition-all after:duration-200 ${isOpen ? 'after:rotate-180 text-slate-700 dark:text-white' : 'text-slate-500 dark:text-white/80'} after:content-['\f107']`}
             aria-controls={`mod-${modulo.id ?? modulo.descripcion}`}
             role="button"
+            onClick={onClick}
             aria-expanded={isOpen}
         >
             <div
@@ -62,16 +63,24 @@ const Modulo = ({modulo, isOpen}) => {
     );
 }
 
-const Funcion = ({funcion, onMenuSelected, modulo}) => {
+const Funcion = ({funcion, onMenuSelected, modulo, openFuncion, setOpenFuncion}) => {
+
+    const onClickFunction = () =>
+    {
+        setOpenFuncion(funcion.codigo);
+        onMenuSelected(funcion.codigo, modulo.descripcion, funcion.nombre);
+    }
+
     return (
         <a collapse_trigger="secondary"
-           onClick={() => onMenuSelected(funcion.codigo, modulo.descripcion, funcion.nombre)}
-           className=" after:ease-soft-in-out after:font-awesome-5-free ease-soft-in-out py-1.6 ml-5.4 pl-4 text-sm before:-left-4.5 before:h-1.25 before:w-1.25 relative my-0 mr-4 flex items-center whitespace-nowrap bg-transparent pr-4 font-medium text-slate-800/50 shadow-none transition-colors before:absolute before:top-1/2 before:-translate-y-1/2 before:rounded-3xl before:bg-slate-800/50 before:content-[''] after:ml-auto after:inline-block after:font-bold after:text-slate-800/50 after:antialiased after:transition-all after:duration-200  dark:text-white dark:opacity-60 cursor-pointer dark:after:text-white"
+           onClick={onClickFunction}
+           className={" after:ease-soft-in-out after:font-awesome-5-free ease-soft-in-out py-1.6 ml-5.4 pl-4 text-sm before:-left-4.5 before:h-1.25 before:w-1.25 relative my-0 mr-4 flex items-center whitespace-nowrap bg-transparent pr-4 font-medium text-slate-800/50 shadow-none transition-colors before:absolute before:top-1/2 before:-translate-y-1/2 before:rounded-3xl before:bg-slate-800/50 before:content-[''] after:ml-auto after:inline-block after:font-bold after:text-slate-800/50 after:antialiased after:transition-all after:duration-200  dark:text-white dark:opacity-60 cursor-pointer dark:after:text-white"
+               + (openFuncion === funcion.codigo ? ' dark:!ne-light-input !ne-dark-input rounded-lg ' : ' ')}
            aria-expanded="false">
                                 <span
                                     className="dark:ne-dark-body w-0 text-center transition-all duration-200 opacity-0 pointer-events-none ease-soft-in-out"> P </span>
             <span
-                className="dark:ne-dark-body transition-all duration-100 pointer-events-none ease-soft">{funcion.nombre}<b
+                className={"dark:ne-dark-body transition-all duration-100 pointer-events-none ease-soft " + (openFuncion === funcion.codigo ? ' dark:!ne-light-input !ne-dark-input dark:!text-black font-bold' : ' ')}>{funcion.nombre}<b
                 className="caret"></b></span>
         </a>
     );
@@ -80,6 +89,7 @@ const Funcion = ({funcion, onMenuSelected, modulo}) => {
 const Menu = ({onMenuSelected}) => {
     const {data: menues, isLoading, refetch, isRefetching} = useLeftMenu();
     const [hoveredId, setHoveredId] = React.useState(null);
+    const [openFuncion, setOpenFuncion] = React.useState(null);
 
     if (isLoading || isRefetching) return null;
 
@@ -92,18 +102,17 @@ const Menu = ({onMenuSelected}) => {
                     <div
                         key={idKey}
                         className="mt-0.5 w-full"
-                        onClick={() => setHoveredId(idKey)}
                     >
-                        <Modulo modulo={menu} isOpen={isOpen}/>
+                        <Modulo modulo={menu} isOpen={isOpen} onClick={() => setHoveredId(idKey === hoveredId ? null : idKey)}/>
                         {/* start FUNCTION */}
                         <div
                             id={`mod-${idKey}`}
-                            className={`dark:ne-dark-body overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                            className={`dark:ne-dark-body overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? ' opacity-100' : 'max-h-0 opacity-0'}`}
                         >
                             <ul className="flex flex-col pl-4 mb-0 ml-6 list-none py-1 dark:ne-dark-body">
                                 {menu.funciones?.map((funcion, fidx) => (
                                     <li key={funcion.id ?? funcion.nombre ?? fidx}>
-                                        <Funcion funcion={funcion} onMenuSelected={onMenuSelected} modulo={menu}/>
+                                        <Funcion setOpenFuncion={setOpenFuncion} openFuncion={openFuncion} funcion={funcion} onMenuSelected={onMenuSelected} modulo={menu}/>
                                     </li>
                                 ))}
                             </ul>
@@ -153,7 +162,7 @@ const SucursalActual = ({openMenu}) => {
 
     const {data: authUser} = useAuthUsuario();
     const {data: sucursal, refetch: refetchSucursalActual} = useSucursalActual();
-    const {data: sucursales} = useUsuarioSucursales({usuarioId: authUser?.id});
+    const {data: sucursales} = useUsuarioSucursalesCaja({usuarioId: authUser?.id});
     const [loadingSucursal, setLoadingSucursal] = useState(false);
     const [error, setError] = React.useState('');
 
@@ -233,7 +242,7 @@ export const LeftMenuBar = ({onMenuSelected}) => {
             <Logo openMenu={openMenu}/>
             <SucursalActual openMenu={openMenu}/>
             <Inicio onMenuSelected={onMenuSelected}/>
-            <Menu onMenuSelected={onMenuSelected}/>
+            <Menu onMenuSelected={onMenuSelected} />
         </div>
     );
 }

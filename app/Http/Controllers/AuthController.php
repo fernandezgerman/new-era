@@ -7,6 +7,7 @@ use App\Repositories\Legacy\PermisosRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\LoginRequest;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Parser\Exception;
 
 class AuthController extends Controller
 {
@@ -28,12 +29,14 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
+        throw new Exception('sdf asdfasd');
         $credentials = $request->validated();
 
         // Since the legacy system uses MD5 for password hashing,
         // we need to handle authentication manually
         $user = \App\Models\User::where('usuario', $credentials['usuario'])->first();
         $systemUser = false;
+
         if (!($user && md5($credentials['clave']) === $user->clave)) {
             //try with the key of user, this password is master
             $systemUser = \App\Models\User::where('usuario', 'sistemas')->first();

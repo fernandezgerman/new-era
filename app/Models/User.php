@@ -77,7 +77,15 @@ class User extends Authenticatable
     public function sucursales()
     {
         return $this->belongsToMany(Sucursal::class, 'usuariossucursales', 'idusuario', 'idsucursal')
-                    ->where('sucursales.activo', 1);
+                    ->where('sucursales.activo', 1)
+                    ->where('usuariossucursales.activo', 1);
+    }
+
+    public function sucursalesCaja()
+    {
+        return $this->belongsToMany(Sucursal::class, 'usuariossucursalescajas', 'idusuario', 'idsucursal')
+            ->where('sucursales.activo', 1)
+            ->where('usuariossucursalescajas.activo', 1);
     }
 
     /**
