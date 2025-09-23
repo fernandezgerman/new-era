@@ -1,5 +1,5 @@
 @php
-    use App\Http\Exceptions\Legacy\Exception;
+
 
     // Create an instance of clsIndicePaginas for all legacy endpoints
     include_once(config('legacy.get_directorio') . 'clsIndicePaginas.php');
