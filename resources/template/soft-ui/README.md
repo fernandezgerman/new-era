@@ -138,7 +138,7 @@ soft-ui-dashboard-pro-tailwind
 ├── package.json
 ├── src
 │   └── styles.css
-└── tailwind.config.js
+└── tailwind.config.js_
 
 ```
 
