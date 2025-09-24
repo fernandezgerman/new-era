@@ -14,22 +14,32 @@ class RequestParamsTap
 
     public function __invoke(Logger $logger): void
     {
-        $req = Request();
-        if(!$req)
-        {
+        // Avoid interfering with console (e.g., scheduler) logging
+        if (app()->runningInConsole()) {
             return;
         }
-        $logger->info('REQUEST DATA:' . json_encode([
-            'meta' => [
+
+        $req = request();
+        if(!$req) {
+            return;
+        }
+
+        try {
+            $user = auth()->user();
+            $logger->info('REQUEST DATA:' . json_encode([
+                'meta' => [
                     'method' => $req->method(),
                     'uri' => $req->getPathInfo(),
-                    'full_url' => $req->fullUrl(),
-                    'ip' => $req->ip(),
+                    'full_url' => method_exists($req, 'fullUrl') ? $req->fullUrl() : null,
+                    'ip' => method_exists($req, 'ip') ? $req->ip() : null,
                     'ips' => method_exists($req, 'ips') ? $req->ips() : null,
                 ],
-            'request_all' => $req->all(),
-            'auth_user' => auth()->user()->toArray(),
+                'request_all' => method_exists($req, 'all') ? $req->all() : null,
+                'auth_user' => $user ? (method_exists($user, 'toArray') ? $user->toArray() : $user) : null,
             ]));
+        } catch (\Throwable $e) {
+            // Never let logging of request data break the app
+        }
     }
 
 }
