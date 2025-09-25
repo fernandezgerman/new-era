@@ -53,5 +53,4 @@ return [
             'venta-event' => 'venta',
         ]
     ],
-    'log_sp_take_too_long' => env('LOG_SP_TAKE_TOO_LONG', 6),
 ];
