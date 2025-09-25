@@ -9,6 +9,9 @@ export default defineConfig({
             '@': path.resolve(__dirname, './resources/js/react'), // Alias '@components' to 'src/components'
         },
     },
+    server: {
+        https: true,
+    },
     plugins: [
         laravel({
            // input: ['resources/css/app.css', 'resources/js/app.js'],
