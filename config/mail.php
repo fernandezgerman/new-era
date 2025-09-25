@@ -114,5 +114,52 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
-
+    'destinatarios' => [
+        'email_diario_de_ventas' => [
+           'sistemas', // 'valeria', 'daniel', 'ariel'
+        ],
+        'stock_nobleza' => [
+            'sistemas', //'nobleza_1', 'nobleza_2', 'nobleza_3'
+        ],
+        'ventas_nobleza' => [
+            'sistemas', //'nobleza_1', 'nobleza_2', 'nobleza_3'
+        ],
+        'comparativo_semanal' => [
+            'sistemas', //'valeria', 'daniel', 'sistemas'
+        ],
+        'ganancias_ventas_por_hora' => [
+            'sistemas', //'valeria', 'daniel', 'sistemas', 'ariel'
+        ]
+    ],
+    'emails' => [
+        'sistemas' => [
+            'email' => 'fernandezgermandario@gmail.com',
+            'name' => 'Encargado de sistemas New Era',
+        ],
+        'valeria' => [
+            'email' => 'valeryrul@yahoo.com',
+            'name' => 'Valeria Franco',
+        ],
+        'daniel' => [
+            'email' => 'danirodiche@hotmail.com',
+            'name' => 'Daniel Rodiche',
+        ],
+        'ariel' => [
+            'email' => 'arielhricchi@gmail.com',
+            'name' => 'Ariel Ricchi',
+        ],
+        // Nobleza
+        'nobleza_1' => [
+            'email' => 'mariangeles_genzano@bat.com',
+            'name' => 'Mariangeles Genzano',
+        ],
+        'nobleza_2' => [
+            'email' => 'Gaston_alejandro_torralba@bat.com',
+            'name' => 'Gaston Alejandro Torralba',
+        ],
+        'nobleza_3' => [
+            'email' => 'mariano_pieroni@bat.com',
+            'name' => 'Mariano Pieroni',
+        ],
+    ]
 ];
