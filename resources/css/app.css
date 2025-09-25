@@ -30,7 +30,7 @@
 
 }
 
-@utility ne-aux {
+@utility ne-dark-body {
     background-color: var(--dark-bg-color);
     color: var(--dark-font-color);
 }
