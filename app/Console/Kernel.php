@@ -23,7 +23,6 @@ class Kernel extends ConsoleKernel
     {
         // Quick heartbeat to verify scheduler is running every minute
         $schedule->call(function () {
-            return;
             // Write to both Laravel log and scheduler-heartbeat output file (via stdout)
             Log::info('Scheduler heartbeat tick');
             echo '[' . now()->toDateTimeString() . "] Scheduler heartbeat tick\n";
