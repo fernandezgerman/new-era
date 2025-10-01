@@ -21,12 +21,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Quick heartbeat to verify scheduler is running every minute
-        $schedule->call(function () {
-            // Write to both Laravel log and scheduler-heartbeat output file (via stdout)
-            Log::info('Scheduler heartbeat tick');
-            echo '[' . now()->toDateTimeString() . "] Scheduler heartbeat tick\n";
-        })->everyMinute()->appendOutputTo(storage_path('logs/scheduler-heartbeat.log'))->name('heartbeat');
 
         // MTIH legacy cron migrations to Laravel Scheduler
 
