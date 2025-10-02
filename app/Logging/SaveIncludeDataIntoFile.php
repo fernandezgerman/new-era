@@ -2,16 +2,19 @@
 
 namespace App\Logging;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class SaveIncludeDataIntoFile
 {
+    protected string $logFileName = 'general.log';
     public function __construct(
-        protected string $logFileName,
         protected string $includeFileName,
     )
     {
-
+        $sufix = Carbon::now()->subMonth()->startOfMonth()->format('_Y_m');
+        $aux = explode('/', $this->includeFileName);
+        $this->logFileName = str_replace(".php", $sufix.".log", $aux[count($aux) - 1]);
     }
 
     public function __invoke()
@@ -30,7 +33,7 @@ class SaveIncludeDataIntoFile
             ob_end_clean();
 
             // 5. Write the captured content to a file
-            file_put_contents(storage_path('logs/'.$this->logFileName), $output_content);
+            file_put_contents(storage_path('logs/'.$this->logFileName), $output_content, FILE_APPEND);
         }catch (\Throwable $exception){
             Log::error($exception->getMessage(), ['exception' => $exception]);
         }

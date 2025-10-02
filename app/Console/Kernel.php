@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
 */
         // 00:03 daily - cronDiario.php
 
-        $schedule->call(new SaveIncludeDataIntoFile('scheduler-test.log', base_path('mtihweb/cronTest.php')))
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronTest.php')))
             ->everyMinute()
             ->appendOutputTo(storage_path('logs/scheduler-test.log'));
 
@@ -47,7 +47,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             try {
-
 
                 Log::info('mtihweb/cronDiario.php');
             } catch (\Throwable $e) {
