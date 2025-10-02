@@ -26,104 +26,36 @@ class Kernel extends ConsoleKernel
 
         // MTIH legacy cron migrations to Laravel Scheduler
 
-        // 03:00 daily - realizar_copia_web.sh (bash backup + S3)
-        /*
-        $schedule->exec('sh '.base_path('mtihweb/realizar_copia_web.sh'))
-            ->dailyAt('03:00')
-            ->appendOutputTo(storage_path('logs/realizar_copia_web.log'));
-*/
-        // 00:03 daily - cronDiario.php
-
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronTest.php')))
-            ->everyMinute()
-            ->appendOutputTo(storage_path('logs/scheduler-test.log'));
-
-        $schedule->call(function () {
-            echo 'Esto va a al log por minuto';
-            Log::info('Esto va al log general: '.storage_path('logs/crondiario.log'));
-        })->everyMinute()->appendOutputTo(storage_path('logs/crondiario.log'))->name('cronTest')->withoutOverlapping();
-
-
-
-        $schedule->call(function () {
-            try {
-
-                Log::info('mtihweb/cronDiario.php');
-            } catch (\Throwable $e) {
-                Log::error('cronDiario failed: ' . $e->getMessage());
-            }
-        })->dailyAt('00:03')->appendOutputTo(storage_path('logs/crondiario.log'))->name('cronDiario')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronDiario.php')))
+            ->dailyAt('00:03')->name('cronDiario')->withoutOverlapping();
 
         // Every hour at minute 55 - cronPorHora.php
-        $schedule->call(function () {
-            try {
-                include base_path('mtihweb/cronPorHora.php');
-                Log::info('mtihweb/cronPorHora.php');
-            } catch (\Throwable $e) {
-                Log::error('cronPorHora failed: ' . $e->getMessage());
-            }
-        })->hourlyAt(55)->appendOutputTo(storage_path('logs/cronporhora.log'))->name('cronPorHora')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronPorHora.php')))
+            ->hourlyAt(55)->name('cronPorHora')->withoutOverlapping();
 
         // Every 15 minutes - cron15min.php
-        $schedule->call(function () {
-            Log::info('Cron 15 min');
-            try {
-                include base_path('mtihweb/cron15min.php');
-                Log::info('mtihweb/cron15min.php');
-            } catch (\Throwable $e) {
-                Log::error('cron15min failed: ' . $e->getMessage());
-            }
-        })->everyFifteenMinutes()->appendOutputTo(storage_path('logs/cron15min.log'))->name('cron15min')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron15min.php')))
+            ->everyFifteenMinutes()->name('cron15min')->withoutOverlapping();
 
         // 07:00 daily - cron7AM.php
-        $schedule->call(function () {
-            try {
-                include base_path('mtihweb/cron7AM.php');
-                Log::info('mtihweb/cron7AM.php');
-            } catch (\Throwable $e) {
-                Log::error('cron7AM failed: ' . $e->getMessage());
-            }
-        })->dailyAt('07:00')->appendOutputTo(storage_path('logs/cron7AM.log'))->name('cron7AM')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron7AM.php')))
+            ->dailyAt('07:00')->name('cron7AM')->withoutOverlapping();
 
         // 02:00 daily - cron2AM.php
-        $schedule->call(function () {
-            try {
-                include base_path('mtihweb/cron2AM.php');
-                Log::info('mtihweb/cron2AM.php');
-            } catch (\Throwable $e) {
-                Log::error('cron2AM failed: ' . $e->getMessage());
-            }
-        })->dailyAt('02:00')->appendOutputTo(storage_path('logs/cron2AM.log'))->name('cron2AM')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron2AM.php')))
+            ->dailyAt('02:00')->name('cron2AM')->withoutOverlapping();
 
         // Monday 08:00 - cronLunes8AM.php
-        $schedule->call(function () {
-            try {
-                include base_path('mtihweb/cronLunes8AM.php');
-                Log::info('mtihweb/cronLunes8AM.php');
-            } catch (\Throwable $e) {
-                Log::error('cronLunes8AM failed: ' . $e->getMessage());
-            }
-        })->weeklyOn(1, '08:00')->appendOutputTo(storage_path('logs/cronLunes8AM.log'))->name('cronLunes8AM')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronLunes8AM.php')))
+            ->weeklyOn(1, '08:00')->name('cronLunes8AM')->withoutOverlapping();
 
         // Monday 07:00 - cronLunes7AM.php
-        $schedule->call(function () {
-            try {
-                include base_path('mtihweb/cronLunes7AM.php');
-                Log::info('mtihweb/cronLunes7AM.php');
-            } catch (\Throwable $e) {
-                Log::error('cronLunes7AM failed: ' . $e->getMessage());
-            }
-        })->weeklyOn(1, '07:00')->appendOutputTo(storage_path('logs/cronLunes7AM.log'))->name('cronLunes7AM')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronLunes7AM.php')))
+            ->weeklyOn(1, '07:00')->name('cronLunes7AM')->withoutOverlapping();
 
         // 10 past at 9,13,17,21 - cronNotificacionesGanancias.php
-        $schedule->call(function () {
-            try {
-                include base_path('mtihweb/cronNotificacionesGanancias.php');
-                Log::info('mtihweb/cronNotificacionesGanancias.php');
-            } catch (\Throwable $e) {
-                Log::error('cronNotificacionesGanancias failed: ' . $e->getMessage());
-            }
-        })->cron('10 9,13,17,21 * * *')->appendOutputTo(storage_path('logs/cron8-12-16-20.log'))->name('cronNotificacionesGanancias')->withoutOverlapping();
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))
+            ->cron('10 9,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
     }
 
     /**
