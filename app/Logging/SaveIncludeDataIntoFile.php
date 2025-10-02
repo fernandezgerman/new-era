@@ -12,7 +12,7 @@ class SaveIncludeDataIntoFile
         protected string $includeFileName,
     )
     {
-        $sufix = Carbon::now()->subMonth()->startOfMonth()->format('_Y_m');
+        $sufix = Carbon::now()->startOfMonth()->format('_Y_m');
         $aux = explode('/', $this->includeFileName);
         $this->logFileName = str_replace(".php", $sufix.".log", $aux[count($aux) - 1]);
     }
