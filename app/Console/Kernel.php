@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+
+use App\Logging\SaveIncludeDataIntoFile;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +34,7 @@ class Kernel extends ConsoleKernel
 */
         // 00:03 daily - cronDiario.php
 
-        $schedule->exec("php '".base_path('mtihweb/cronTest.php')."';")
+        $schedule->call(new SaveIncludeDataIntoFile('scheduler-test.log', base_path('mtihweb/cronTest.php')))
             ->everyMinute()
             ->appendOutputTo(storage_path('logs/scheduler-test.log'));
 
@@ -45,7 +47,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             try {
-                include base_path('mtihweb/cronDiario.php');
+
+
                 Log::info('mtihweb/cronDiario.php');
             } catch (\Throwable $e) {
                 Log::error('cronDiario failed: ' . $e->getMessage());
