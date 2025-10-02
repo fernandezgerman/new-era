@@ -7,6 +7,7 @@ use App\Logging\SaveIncludeDataIntoFile;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -25,6 +26,9 @@ class Kernel extends ConsoleKernel
     {
 
         // MTIH legacy cron migrations to Laravel Scheduler
+
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronTest.php')))
+            ->everyMinute()->name('cronTest')->withoutOverlapping();
 
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronDiario.php')))
             ->dailyAt('00:03')->name('cronDiario')->withoutOverlapping();
@@ -56,6 +60,27 @@ class Kernel extends ConsoleKernel
         // 10 past at 9,13,17,21 - cronNotificacionesGanancias.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))
             ->cron('10 9,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
+
+        // Daily: delete .log files in storage/logs not modified for one week
+        $schedule->call(function () {
+            $logsPath = storage_path('logs');
+            $threshold = Carbon::now()->subWeek();
+            if (!is_dir($logsPath)) {
+                return;
+            }
+            $deleted = 0;
+            foreach (glob($logsPath . DIRECTORY_SEPARATOR . '*.log') as $file) {
+                $mtime = @filemtime($file);
+                if ($mtime === false) {
+                    continue;
+                }
+                if (Carbon::createFromTimestamp($mtime)->lessThan($threshold)) {
+                    @unlink($file);
+                    $deleted++;
+                }
+            }
+            Log::info('Old log cleanup executed', ['deleted' => $deleted]);
+        })->dailyAt('03:10')->name('cleanupOldLogs')->withoutOverlapping();
     }
 
     /**
