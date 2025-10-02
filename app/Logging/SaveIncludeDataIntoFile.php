@@ -32,8 +32,9 @@ class SaveIncludeDataIntoFile
             // 4. Clean and end output buffering
             ob_end_clean();
 
+            Log::info(storage_path('logs/'.$this->logFileName));
             // 5. Write the captured content to a file
-            file_put_contents(storage_path('logs/'.$this->logFileName), $output_content, FILE_APPEND);
+            file_put_contents(storage_path('logs/'.$this->logFileName), $output_content);
         }catch (\Throwable $exception){
             Log::error($exception->getMessage(), ['exception' => $exception]);
         }
