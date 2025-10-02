@@ -34,7 +34,7 @@ class SaveIncludeDataIntoFile
 
             Log::info(storage_path('logs/'.$this->logFileName));
             // 5. Write the captured content to a file
-            file_put_contents(storage_path('logs/'.$this->logFileName), $output_content);
+            file_put_contents(storage_path('logs/'.$this->logFileName), PHP_EOL.$output_content, FILE_APPEND);
         }catch (\Throwable $exception){
             Log::error($exception->getMessage(), ['exception' => $exception]);
         }
