@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             echo 'Esto va a al log por minuto';
-            Log::info('Esto va al log general');
+            Log::info('Esto va al log general: '.storage_path('logs/crondiario.log'));
         })->everyMinute()->appendOutputTo(storage_path('logs/crondiario.log'))->name('cronTest')->withoutOverlapping();
 
 
