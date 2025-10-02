@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
 */
         // 00:03 daily - cronDiario.php
 
-        $schedule->exec('echo "Hello from scheduler!"')
+        $schedule->exec("include base_path('mtihweb/cronTest.php');")
             ->everyMinute()
             ->appendOutputTo(storage_path('logs/scheduler-test.log'));
 
