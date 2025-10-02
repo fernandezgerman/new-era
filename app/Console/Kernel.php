@@ -32,6 +32,11 @@ class Kernel extends ConsoleKernel
 */
         // 00:03 daily - cronDiario.php
 
+        $schedule->exec('echo "Hello from scheduler!"')
+            ->everyMinute()
+            ->appendOutputTo(storage_path('logs/scheduler-test.log'));
+
+
         $schedule->call(function () {
             echo 'Esto va a al log por minuto';
             Log::info('Esto va al log general: '.storage_path('logs/crondiario.log'));
