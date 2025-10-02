@@ -31,6 +31,14 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo(storage_path('logs/realizar_copia_web.log'));
 */
         // 00:03 daily - cronDiario.php
+
+        $schedule->call(function () {
+            echo 'Esto va a al log por minuto';
+            Log::info('Esto va al log general');
+        })->everyMinute()->appendOutputTo(storage_path('logs/crondiario.log'))->name('cronTest')->withoutOverlapping();
+
+
+
         $schedule->call(function () {
             try {
                 include base_path('mtihweb/cronDiario.php');
