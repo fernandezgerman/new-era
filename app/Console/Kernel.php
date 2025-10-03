@@ -27,8 +27,8 @@ class Kernel extends ConsoleKernel
 
         // MTIH legacy cron migrations to Laravel Scheduler
 
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronTest.php')))
-            ->everyMinute()->name('cronTest')->withoutOverlapping();
+        /*$schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronTest.php')))
+            ->everyMinute()->name('cronTest')->withoutOverlapping();*/
 
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronDiario.php')))
             ->dailyAt('00:03')->name('cronDiario')->withoutOverlapping();
