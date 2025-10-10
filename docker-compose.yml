@@ -27,6 +27,7 @@ services:
             - meilisearch
             - mailpit
             - selenium
+            - dynamodb
 
     # New PHP 7.0 Apache container for legacy SOAP services
     soap7:
@@ -69,11 +70,7 @@ services:
         networks:
             - sail
         healthcheck:
-            test:
-                - CMD
-                - mysqladmin
-                - ping
-                - '-p${DB_PASSWORD}'
+            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
     redis:
@@ -85,10 +82,7 @@ services:
         networks:
             - sail
         healthcheck:
-            test:
-                - CMD
-                - redis-cli
-                - ping
+            test: ["CMD", "redis-cli", "ping"]
             retries: 3
             timeout: 5s
     meilisearch:
@@ -102,12 +96,7 @@ services:
         networks:
             - sail
         healthcheck:
-            test:
-                - CMD
-                - wget
-                - '--no-verbose'
-                - '--spider'
-                - 'http://127.0.0.1:7700/health'
+            test: ["CMD", "wget", "--no-verbose", "--spider", "http://127.0.0.1:7700/health"]
             retries: 3
             timeout: 5s
     mailpit:
@@ -125,6 +114,40 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
+    dynamodb:
+        image: 'amazon/dynamodb-local:latest'
+        command: -jar DynamoDBLocal.jar -inMemory -sharedDb
+        ports:
+            - '${FORWARD_DYNAMODB_PORT:-8000}:8000'
+        volumes:
+            - 'sail-dynamodb:/home/dynamodblocal/data'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8000/shell/ | grep -q DynamoDB"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
+    dynamodb-admin:
+        image: 'aaronshaf/dynamodb-admin:latest'
+        environment:
+            DYNAMO_ENDPOINT: 'http://dynamodb:8000'
+            AWS_REGION: '${AWS_DEFAULT_REGION}'
+            AWS_ACCESS_KEY_ID: '${AWS_ACCESS_KEY_ID}'
+            AWS_SECRET_ACCESS_KEY: '${AWS_SECRET_ACCESS_KEY}'
+            HOST: '${DYNAMODB_ADMIN_HOST:-0.0.0.0}'
+        ports:
+            - '${FORWARD_DYNAMODB_ADMIN_PORT:-8001}:${DYNAMODB_ADMIN_PORT:-8001}'
+        depends_on:
+            - dynamodb
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "wget", "--no-verbose", "--spider", "http://127.0.0.1:${DYNAMODB_ADMIN_PORT:-8001}"]
+            retries: 5
+            timeout: 5s
+            interval: 10s
 networks:
     sail:
         driver: bridge
@@ -134,4 +157,6 @@ volumes:
     sail-redis:
         driver: local
     sail-meilisearch:
+        driver: local
+    sail-dynamodb:
         driver: local
