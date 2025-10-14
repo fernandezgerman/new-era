@@ -10,7 +10,6 @@ export const LegacyFrame = ({iframeHrefs}) => {
     const hasPost = !!(postParams && Object.keys(postParams).length > 0);
 
     useEffect(() => {
-        console.log('setting iframe');
         setPostParams(iframeHrefs?.postData?.length > 0 ? iframeHrefs?.postData :(typeof window !== 'undefined' && window.__POST__ && typeof window.__POST__ === 'object') ? window.__POST__ : null);
     }, [iframeHrefs, hasPost]);
 
@@ -61,6 +60,13 @@ export const LegacyFrame = ({iframeHrefs}) => {
                         const baseUrl = iframeHrefs.url;
                         const currentQs = (typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
                         const separator = baseUrl?.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
+                        const url = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
+
+                        if(iframeHrefs.getData && iframeHrefs.getData.length > 0) {
+                            const auxSeparator = url?.includes('?') ? '&' :'?';
+
+                            return url + auxSeparator + iframeHrefs.getData.reduce((acum, data) => data.name + '=' + data.value + '&' + acum, '');
+                        }
                         return `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
                     })()}
                     width="100%"
