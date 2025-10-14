@@ -18,7 +18,12 @@ export const LegacyFrame = ({iframeHrefs}) => {
         if (hasPost && formRef.current) {
             // Update action to current iframe hrefs and submit the POST to the iframe target
             try {
-                formRef.current.action = iframeHrefs.url || 'iframe-content.php';
+                // Append current window query parameters to the iframe URL
+                const baseUrl = iframeHrefs.url || 'iframe-content.php';
+                const currentQs = (typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+                // If baseUrl already has query, merge appropriately
+                const separator = baseUrl.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
+                formRef.current.action = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
                 formRef.current.submit();
             } catch (e) {
                 console.error('Failed to submit POST to iframe:', e);
@@ -52,7 +57,12 @@ export const LegacyFrame = ({iframeHrefs}) => {
                     onLoad={()=>setIsLoading(false)}
                     ref={iframeRef}
                     name="legacy_iframe"
-                    src={iframeHrefs.url}
+                    src={(function(){
+                        const baseUrl = iframeHrefs.url;
+                        const currentQs = (typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+                        const separator = baseUrl?.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
+                        return `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
+                    })()}
                     width="100%"
                     className={'h-[calc(100vh-150px)]'+(isLoading ? ' hidden' : '')}
                     title="Contenido Externo"
