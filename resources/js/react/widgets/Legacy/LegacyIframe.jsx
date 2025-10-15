@@ -19,7 +19,8 @@ export const LegacyFrame = ({iframeHrefs}) => {
             try {
                 // Append current window query parameters to the iframe URL
                 const baseUrl = iframeHrefs.url || 'iframe-content.php';
-                const currentQs = (typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+                const currentQs = ''; //(typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+
                 // If baseUrl already has query, merge appropriately
                 const separator = baseUrl.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
                 formRef.current.action = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
@@ -58,7 +59,7 @@ export const LegacyFrame = ({iframeHrefs}) => {
                     name="legacy_iframe"
                     src={(function(){
                         const baseUrl = iframeHrefs.url;
-                        const currentQs = (typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+                        const currentQs = ''; //(typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
                         const separator = baseUrl?.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
                         const url = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
 
