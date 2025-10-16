@@ -4,6 +4,7 @@ export const LegacyFrame = ({iframeHrefs}) => {
     const iframeRef = React.useRef(null);
     const formRef = React.useRef(null);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [currentQs, setCurrentQs] = React.useState('');
 
     // Prepare POST params from server-injected global (set in Blade)
     const [postParams, setPostParams] = useState((typeof window !== 'undefined' && window.__POST__ && typeof window.__POST__ === 'object') ? window.__POST__ : null);
@@ -19,7 +20,7 @@ export const LegacyFrame = ({iframeHrefs}) => {
             try {
                 // Append current window query parameters to the iframe URL
                 const baseUrl = iframeHrefs.url || 'iframe-content.php';
-                const currentQs = ''; //(typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+                const currentQs = (typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
 
                 // If baseUrl already has query, merge appropriately
                 const separator = baseUrl.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
@@ -30,6 +31,10 @@ export const LegacyFrame = ({iframeHrefs}) => {
             }
         }
     }, [postParams]);
+
+    useEffect(() => {
+        //setCurrentQs((typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '');
+    }, []);
 
     return (
         <ErrorBoundary>
@@ -54,7 +59,10 @@ export const LegacyFrame = ({iframeHrefs}) => {
 
             {iframeHrefs !== null && (
                 <iframe
-                    onLoad={()=>setIsLoading(false)}
+                    onLoad={()=>{
+                        setIsLoading(false);
+                        setCurrentQs('');
+                    }}
                     ref={iframeRef}
                     name="legacy_iframe"
                     src={(function(){
