@@ -34,7 +34,7 @@ const UsuarioConfig = ({authUser, onMenuSelected}) => {
         </div>
     );
 }
-export const UserAndBreadcrumb = ({breadCrumbFirst, breadCrumbSecond, onMenuSelected}) => {
+export const UserAndBreadcrumb = ({breadCrumbFirst, breadCrumbSecond, onMenuSelected, showPopup = true}) => {
     const {data: authUser} = useAuthUsuario();
 
     return (
@@ -44,7 +44,7 @@ export const UserAndBreadcrumb = ({breadCrumbFirst, breadCrumbSecond, onMenuSele
                     <h5 className="mb-1">
                     <span className={'dark:ne-dark-body dark:ne-dark-color'}>
                         {authUser?.apellido} {authUser?.nombre}
-                        <FontAwesomeIcon icon={faCog} className={'ml-2 cursor-pointer'}/>
+                        {showPopup && <FontAwesomeIcon icon={faCog} className={'ml-2 cursor-pointer'}/>}
                     </span>
                     </h5>
                     <p className="mb-0 font-semibold leading-normal text-sm dark:text-white dark:opacity-60">{authUser?.perfil?.nombre}</p>

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ErrorBoundary from "@/components/ErrorBoundary.jsx";
+import {isMobile} from "react-device-detect";
 export const LegacyFrame = ({iframeHrefs}) => {
     const iframeRef = React.useRef(null);
     const formRef = React.useRef(null);
@@ -35,6 +36,8 @@ export const LegacyFrame = ({iframeHrefs}) => {
     useEffect(() => {
         //setCurrentQs((typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '');
     }, []);
+
+    const iFrameHeight = isMobile ? ' h-full ' : ' h-[calc(100vh-150px)] ';
 
     return (
         <ErrorBoundary>
@@ -79,7 +82,7 @@ export const LegacyFrame = ({iframeHrefs}) => {
                         return `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
                     })()}
                     width="100%"
-                    className={'h-[calc(100vh-150px)]'+(isLoading ? ' hidden' : '')}
+                    className={iFrameHeight + (isLoading ? ' hidden' : '')}
                     title="Contenido Externo"
                 >
                 </iframe>
