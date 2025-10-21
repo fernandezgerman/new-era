@@ -324,10 +324,10 @@ function validarfecha(fecha) {
 	/*
 	 * var fechaArr = fecha.split('-'); var aho = fechaArr[0]; var mes =
 	 * fechaArr[1]; var dia = fechaArr[2];
-	 * 
+	 *
 	 * var plantilla = new Date(aho, mes - 1, dia);// mes empieza de cero Enero // =
 	 * 0
-	 * 
+	 *
 	 * if(!plantilla || plantilla.getFullYear() == aho && plantilla.getMonth() ==
 	 * mes -1 && plantilla.getDate() == dia){ return true; }else{ return false; }
 	 */
@@ -619,6 +619,10 @@ function obtenerParametroDesdeRequest(sParam) {
 function arregloACadena(arreglo, delimitador) {
 	resultado = '';
 	separador = '';
+    if(!arreglo)
+    {
+        return '';
+    }
 	for (x = 0; x < arreglo.length; x++) {
 		resultado = arreglo[x] + separador + resultado;
 		separador = delimitador;
@@ -694,7 +698,7 @@ function serialize(arr) {
 		}else{
 			res += 'i:' + i + ';s:' + arr[i].length + ':"' + arr[i] + '";';
 		}
-		
+
 	}
 	res += '}';
 
@@ -704,7 +708,7 @@ function serialize2(arr2) {
 	 res2 = 'a:' + arr2.length + ':{';
 	for (i2 = 0; i2 < arr2.length; i2++) {
 		res2 += 'i:' + i2 + ';s:' + arr2[i2].length + ':"' + arr2[i2] + '";';
-		
+
 	}
 	res2 += '}';
 

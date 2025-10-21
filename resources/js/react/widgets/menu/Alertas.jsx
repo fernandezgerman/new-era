@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFile, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons/faChevronDown";
@@ -11,6 +11,7 @@ import {ToolTipWrapper} from "@/components/ToolTipWrapper.jsx";
 import { RefreshNode} from "@/components/RefreshNode.jsx";
 import {getAlertaDetallesQueryKey} from "../../dataHooks/dashboard/useAlertas.jsx";
 import {useQueryClient} from "@tanstack/react-query";
+import {isMobile} from "react-device-detect";
 
 const mapColours = {
     amarillo: '!bg-yellow-600',
@@ -45,12 +46,13 @@ const AlertaMenuDetalleInformes = ({informes, onMenuSelected}) => {
 const AlertaMenuDetalle = ({alertaDetalle, onMenuSelected}) => {
 
     const colour = get(mapColours, alertaDetalle.color.toLowerCase());
+    const alertaDescripcionPosition = isMobile ? '' :  ' float-right ';
 
     return (
-        <div className={'p-2 rounded-[5px]'}>
+        <div className={isMobile ? '' : ' p-2 ' + ' rounded-[5px]'}>
             <div className={colour + ' text-white h-auto w-full rounded-[5px] p-1 mb-2'}>
                 {alertaDetalle.nombre}
-                <div className={'float-right'}>{alertaDetalle.tiempoTranscurrido}</div>
+                <div className={alertaDescripcionPosition}>{alertaDetalle.tiempoTranscurrido}</div>
             </div>
             <div className={'mb-2 text-xs'}>
                 {alertaDetalle?.descripcion ? parse(alertaDetalle.descripcion) : ''}
@@ -66,14 +68,15 @@ const AlertaMenuDetalles = ({alertaTipoId, onMenuSelected}) => {
     const alertaDetalles = data?.alertaDetalles ?? [];
 
     const loading = isLoading || isRefetching;
-    return (
+    return (alertaDetalles.length > 0 && (
+
         <RefreshNode text={'Actualizar -'} refreshButtonFirst={true} onRefresh={refetch} loading={loading} className={'overflow-y-scroll scrollbar-hidden dark:!ne-dark-body dark:ne-dark-color text-xs w-auto max-h-[calc(100vh-150px)] max-w-[400px] h-auto p-2 pb-5 bg-white rounded-[10px] '}>
             {!isLoading && (
                 <>
                     {(alertaDetalles).map((alertaDetalle) => <AlertaMenuDetalle onMenuSelected={onMenuSelected} alertaDetalle={alertaDetalle}/>)}
                 </>
             )}
-        </RefreshNode>);
+        </RefreshNode>));
 }
 
 const AlertaMenu = ({alertaMenu, onMenuSelected, loading}) => {
@@ -122,6 +125,51 @@ const AlertaMenu = ({alertaMenu, onMenuSelected, loading}) => {
         </div>);
 }
 
+
+const AlertaMenuMobile = ({alertaMenu, setAlertaSeleccionada, alertaSeleccionada}) => {
+
+    const circles = reduce(alertaMenu, (carry, value, key) => {
+
+            if (get(mapColours, key) !== undefined && parseInt(value) > 0) {
+                carry.push({value: parseInt(value), key: key});
+            }
+
+            return carry;
+        }, []
+    );
+
+    const ButtonState = alertaSeleccionada === alertaMenu.id ? ' font-bold ne-dark-body! ne-dark-color! dark:text-gray-600! dark:bg-white! ' :alertaMenu.id;
+
+    return (
+        <div>
+            <ErrorBoundary>
+                <button className={'h-[35px] w-full mb-2 mt-2 '} onClick={() => setAlertaSeleccionada(alertaSeleccionada === alertaMenu.id ? null :alertaMenu.id )}>
+                    <div
+                        className={'capitalize ne-body dark:ne-dark-body dark:ne-dark-color px-2 py-1 cursor-pointer rounded-[5px] border dark:!border-gray-600 ' + ButtonState}>
+                        {alertaMenu.codigo.toLowerCase()}
+                    </div>
+
+                    <div className={'relative mt-[-45px] w-auto flex justify-end pr-[5px]'}>
+                        {circles.length === 0 && <div
+                            className={'ml-0.5 text-xs float-right rounded-[15px] h-[20px] p-0.5 w-[20px] text-center text-white align-middle'}>
+
+                        </div>}
+                        {circles.map((circle, index) => {
+                            const colour = get(mapColours, circle.key);
+                            return (
+                                <div
+                                    key={index}
+                                    className={'ml-0.5 text-xs float-right rounded-[15px] ' + colour + ' h-[20px] p-0.5 w-[20px] text-center text-white align-middle'}>
+                                    {circle.value}
+                                </div>
+                            )
+                        })}
+                    </div>
+                </button>
+            </ErrorBoundary>
+        </div>);
+}
+
 export const Alertas = ({onMenuSelected}) => {
     const {data: alertas, refetch, isLoading, isRefetching} = useAlertas();
     const queryClient = useQueryClient();
@@ -139,9 +187,44 @@ export const Alertas = ({onMenuSelected}) => {
 
     const loading = isLoading || isRefetching;
 
-    return (
+    return (alertas ?? []).length > 0 && (
         <RefreshNode onRefresh={refetch} loading={loading} className={'w-auto max-w-[680px] px-3 my-auto flex items-center justify-end gap-4  nelg:ml-auto pt-[20px] nelg:pt-0 nelg:!mt-0'}>
             {(alertas ?? []).map((menu) => <AlertaMenu key={menu.id} loading={loading} onMenuSelected={onMenuSelected} alertaMenu={menu}/>)}
         </RefreshNode>
+    );
+}
+
+export const AlertasMobile = ({onMenuSelected}) => {
+    const {data: alertas, refetch, isLoading, isRefetching} = useAlertas();
+    const queryClient = useQueryClient();
+    const [alertaSeleccionada, setAlertaSeleccionada] = useState(null);
+
+    useEffect(() => {
+        if(!isLoading &&  !isRefetching)
+        {
+            for(let alertaKey in alertas){
+                let alerta = alertas[alertaKey];
+                queryClient.removeQueries({ queryKey: [getAlertaDetallesQueryKey(alerta.id)]});
+            }
+        }
+
+    }, [isLoading, isRefetching]);
+
+
+    const loading = isLoading || isRefetching;
+
+    return (alertas ?? []).length > 0 && (
+        <>
+
+            {(alertas ?? []).map((menu) => <AlertaMenuMobile key={menu.id} loading={loading}
+                                                             onMenuSelected={onMenuSelected} alertaMenu={menu}
+                                                             setAlertaSeleccionada={setAlertaSeleccionada}
+                                                             alertaSeleccionada={alertaSeleccionada}
+            />)}
+
+            <ErrorBoundary>
+                {!loading && alertaSeleccionada !== null && <AlertaMenuDetalles onMenuSelected={onMenuSelected} alertaTipoId={alertaSeleccionada}/>}
+            </ErrorBoundary>
+        </>
     );
 }

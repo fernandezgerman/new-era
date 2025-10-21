@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Storage;
 //\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
 
 // Authentication Routes
-
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware('mobile.redirection')->name('login');
+Route::post('/login', [AuthController::class, 'login'])->middleware('mobile.redirection');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth:sanctum')->group(function () {

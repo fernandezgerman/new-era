@@ -5,6 +5,7 @@ namespace App\Http\ApiResources;
 use App\Services\Alertas\Transformers\AlertaSummaryDTOTransformer;
 use App\Services\Alertas\Transformers\AlertaDetalleDTOToLegacyResponseTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 
 class Dashboard extends AbstractApiHandler
 {
@@ -21,6 +22,11 @@ class Dashboard extends AbstractApiHandler
     {
         $user = auth()->user();
 
+        $arr = session('permisos');
+        if (Arr::get($arr,'alrtgral','PERMITIDO') ==="RESTRINGIDO")
+        {
+            return new JsonResponse([]);
+        }
         $usuarioDataAccessor = app(\App\DataAccessor\UsuarioDataAccessor::class, ['user' => $user]);
 
         return $this->sendResponse(

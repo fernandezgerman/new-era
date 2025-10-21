@@ -97,9 +97,10 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
 
         $alertas = new AlertasSummaryCollection($alertasCollection);
         //Muestra los missed alertas en el menu
-        $missingAlertas = $this->getMisssingAlertaTipo($alertas);
-        $merged = $alertas->merge($missingAlertas);
+       /* $missingAlertas = $this->getMisssingAlertaTipo($alertas);
+        $merged = $alertas->merge($missingAlertas); */
 
+        $merged = $alertas;
         // Order by alertaTipo->codigo ascending
         $sorted = $merged->sortBy(function ($item) {
             /** @var \App\Services\Alertas\DTOs\AlertaSummaryDTO $item */

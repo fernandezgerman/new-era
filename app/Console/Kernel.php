@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
 
         // Every 15 minutes - cron15min.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron15min.php')))
-            ->everyFifteenMinutes()->name('cron15min')->withoutOverlapping();
+            ->everyFifteenMinutes()->name('cron15min');
 
         // 07:00 daily - cron7AM.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron7AM.php')))
