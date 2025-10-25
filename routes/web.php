@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Legacy\DefaultController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,6 +28,8 @@ Route::middleware(['custom.auth'])
 
 
 Route::get('/test', function() {
-    return view('mediosDePago.order-preview');
+    // Fetch latest 15 articulos ordered by id desc and pass to view
+    $articulos = \App\Models\Articulo::orderBy('id', 'desc')->limit(15)->get(['id','codigo','nombre','costo']);
+    return view('mediosDePago.order-preview-test', compact('articulos'));
 });
 

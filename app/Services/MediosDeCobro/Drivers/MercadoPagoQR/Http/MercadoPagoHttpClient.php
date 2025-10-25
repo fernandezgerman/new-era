@@ -3,6 +3,9 @@ namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Http;
 
 use App\Contracts\Integrations\HttpClient;
 use App\Contracts\Integrations\IntegrationResponse;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRIdempotencyKeyAlreadyTakenException;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Illuminate\Support\Facades\Http;
 
@@ -10,12 +13,13 @@ class MercadoPagoHttpClient implements HttpClient
 {
     private string $host;
 
+
     private string $accessToken;
 
     public function __construct()
     {
         $this->accessToken = "APP_USR-3275564673385356-101013-a2213ab05478298eb6fce38ae85efda2-2915257368";
-        $this->host = "api.mercadopago.com/v1/";
+        $this->host = "https://api.mercadopago.com/v1/";
     }
 
     public function delete(string $uri, array $data): IntegrationResponse
@@ -28,9 +32,9 @@ class MercadoPagoHttpClient implements HttpClient
         return $this->getResponse($this->callHttpMethod('get', $uri, $data));
     }
 
-    public function post(string $uri, array $data, array $queryParameters = []): IntegrationResponse
+    public function post(string $uri, array $data, array $queryParameters = [], string $idempotencyKey = null): IntegrationResponse
     {
-        return $this->getResponse($this->callHttpMethod('post', $uri, $data, $queryParameters));
+        return $this->getResponse($this->callHttpMethod('post', $uri, $data, $queryParameters, $idempotencyKey ));
     }
 
     public function put(string $uri, array $data): IntegrationResponse
@@ -39,20 +43,20 @@ class MercadoPagoHttpClient implements HttpClient
     }
 
     private function callHttpMethod(string $method, string $uri,
-                                    array $data = [], array $queryParameters = []): \Illuminate\Http\Client\Response
+                                    array $data = [], array $queryParameters = [], string $idempotencyKey = null): \Illuminate\Http\Client\Response
     {
         return Http::withToken($this->accessToken)
             //We set verify = false on non production environments to not get certificate issues from guzzle.
             ->withOptions(['verify' => false, 'stream' => true])
-            ->withHeaders($this->getHeaders())
+            ->withHeaders($this->getHeaders($idempotencyKey))
             ->withQueryParameters($queryParameters)
             ->{$method}($this->host.$uri, $data);
     }
 
-    private function getHeaders(): array
+    private function getHeaders(string $idempotencyKey = null): array
     {
         return [
-
+            'X-Idempotency-Key' => $idempotencyKey
         ];
     }
     private function getResponse(\Illuminate\Http\Client\Response $response): IntegrationResponse
@@ -74,10 +78,15 @@ class MercadoPagoHttpClient implements HttpClient
 
         if (! in_array($response->status(), $httpOkResponsesStatus))
         {
-            //throw ExceptionFactory::makeFromResponse($response);
+            if($response->status() === HttpResponse::HTTP_CONFLICT) //409 idempotenci already used
+            {
+                throw new MercadoPagoQRIdempotencyKeyAlreadyTakenException('Idempotency Key Already Taken');
+            }
+            Log::error(json_encode($body));
+            throw new Exception('Unexpected HTTP status code '.$response->status());
         }
 
-        return app(IntegrationResponse::class, [
+        return app(MercadoPagoResponse::class, [
             'status' => $response->status(),
             'data'   => $body,
         ]);

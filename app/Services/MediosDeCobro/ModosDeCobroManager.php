@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Services\MediosDeCobro;
+
+use App\Models\VentaSucursalCobro;
+use App\Models\VentaSucursalCobroArticulo;
+use App\Services\MediosDeCobro\Contracts\MedioDeCobroDriverInterface;
+use App\Services\MediosDeCobro\Contracts\MedioDeCobroQRDriverInterface;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRDynamoPersitanceException;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRIdempotencyKeyAlreadyTakenException;
+use App\Services\MediosDeCobro\DTOs\OrderDetalleDTO;
+use App\Services\MediosDeCobro\DTOs\OrderDTO;
+use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\Exceptions\MediosDeCobroException;
+use App\Services\MediosDeCobro\Factories\OrderDTOFactory;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+class ModosDeCobroManager
+{
+    public function __construct()
+    {
+
+    }
+
+    public function generarOrden(OrderDTO $order): VentaSucursalCobro
+    {
+
+        $ventaSucursalCobro = new VentaSucursalCobro();
+
+        db::transaction(function () use ($order, &$ventaSucursalCobro) {
+            $ventaSucursalCobro->idusuario = $order->usuario->id;
+            $ventaSucursalCobro->idsucursal = $order->sucursal->id;
+            $ventaSucursalCobro->idmododecobro = $order->modoDeCobro?->id;
+            $ventaSucursalCobro->estado = MedioDeCobroEstados::NUEVA->value;
+
+            $totalOrden = 0;
+            foreach ($order->detalles as $detalle) {
+                $totalOrden = $totalOrden + ($detalle->precio_unitario * $detalle->cantidad);
+            }
+            $ventaSucursalCobro->importe = $totalOrden;
+            $ventaSucursalCobro->save();
+
+            /** @var OrderDetalleDTO $detalle */
+            foreach ($order->detalles as $detalle) {
+                $ventaSucursalCobroDetalle = new VentaSucursalCobroArticulo();
+                $ventaSucursalCobroDetalle->idventasucursalcobro = $ventaSucursalCobro->id;
+                $ventaSucursalCobroDetalle->idarticulo = $detalle->articulo->id;
+                $ventaSucursalCobroDetalle->cantidad = $detalle->cantidad;
+                $ventaSucursalCobroDetalle->importe = $detalle->precio_unitario * $detalle->cantidad;
+                $ventaSucursalCobroDetalle->idunicoventa = $detalle->id_unico_venta;
+                $ventaSucursalCobroDetalle->save();
+            }
+
+        });
+
+        return $ventaSucursalCobro;
+    }
+
+    private function getDriverOrFail(VentaSucursalCobro $ventaSucursalCobro): MedioDeCobroDriverInterface
+    {
+        $mc = $ventaSucursalCobro->modoDeCobro;
+        $driverClass = config('medios_de_cobro.drivers.'.$ventaSucursalCobro->modoDeCobro?->driver.'.class');
+
+        if(!$driverClass)
+        {
+            throw new MediosDeCobroException('No se encontro la clase para le medio de pago: '.'modos_de_cobro.driver.'.$ventaSucursalCobro->modoDeCobro?->driver.'.class');
+        }
+
+        /** @var MedioDeCobroDriverInterface $driver */
+        return app($driverClass);
+
+    }
+    public function generarCobro(VentaSucursalCobro $ventaSucursalCobro): void
+    {
+        $orderDTO = OrderDTOFactory::fromVentaSucursalCobro($ventaSucursalCobro);
+        try{
+            $driver = $this->getDriverOrFail($ventaSucursalCobro);
+
+            $driver->createOrder($orderDTO);
+
+        }catch (MercadoPagoQRDynamoPersitanceException $e)
+        {
+            Log::error($e->getMessage(), $e->getTrace());
+        }
+        catch (MercadoPagoQRIdempotencyKeyAlreadyTakenException $e)
+        {
+            if($ventaSucursalCobro->estado === MedioDeCobroEstados::PENDIENTE->value){
+                return;
+            }
+        }
+        $ventaSucursalCobro->estado = MedioDeCobroEstados::PENDIENTE->value;
+        $ventaSucursalCobro->save();
+    }
+
+    public function getQRImageURL(VentaSucursalCobro $ventaSucursalCobro): ?string
+    {
+        $driver = $this->getDriverOrFail($ventaSucursalCobro);
+
+        if($driver instanceof MedioDeCobroQRDriverInterface)
+        {
+            return $driver->getQRImageURL(OrderDTOFactory::fromModel($ventaSucursalCobro));
+        }
+        return null;
+    }
+}

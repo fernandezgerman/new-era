@@ -27,23 +27,28 @@
         <h1 class="text-xl font-bold mb-4">Testeador: Order Preview</h1>
         <p class="mb-2 text-sm text-slate-600">Presione el botón para enviar el JSON requerido mediante un formulario HTML.</p>
 
-        <form id="orderPreviewForm" class="space-y-2" method="POST" action="/medios-de-pago/order-preview">
+        <form id="orderPreviewForm" class="space-y-2" method="POST" action="/medios-de-pago/order/preview">
             <!-- Laravel requires CSRF for web group, but this route is under custom.auth group (no CSRF). We still include it in case. -->
             <input type="hidden" name="usuario" value="sistemas">
             <input type="hidden" name="clave" value="7f019d20f53f13734184d0f0cafd314c">
             <input type="hidden" name="idsucursal" value="12">
-            <input type="hidden" name="type" value="qr">
 
-            <!-- Represent items[] as repeated field groups -->
-            <input type="hidden" name="items[0][idunicoventa]" value="ALSADLASLAS4445">
-            <input type="hidden" name="items[0][descripcion]" value="Torpedo de limon">
-            <input type="hidden" name="items[0][cantidad]" value="2">
-            <input type="hidden" name="items[0][importe]" value="1200">
-
-            <input type="hidden" name="items[1][idunicoventa]" value="ALSADLASLAS4445">
-            <input type="hidden" name="items[1][descripcion]" value="Torpedo de limon">
-            <input type="hidden" name="items[1][cantidad]" value="2">
-            <input type="hidden" name="items[1][importe]" value="1200">
+            @if(isset($articulos) && count($articulos) > 0)
+                <!-- Generar campos ocultos para items[] a partir de articulos -->
+                @foreach($articulos as $i => $art)
+                    @php
+                        $cantidad = random_int(1, 10);
+                        $importe = $cantidad * (float)($art->costo ?? 0);
+                        $idunicoventa = bin2hex(random_bytes(16));
+                    @endphp
+                        <!-- Represent items[] as repeated field groups -->
+                    <input type="hidden" name="items[{{ $i }}][idunicoventa]" value="{{ $idunicoventa }}" />
+                    <input type="hidden" name="items[{{ $i }}][codigo]" value="{{ $art->codigo }}" />
+                    <input type="hidden" name="items[{{ $i }}][descripcion]" value="{{ $art->nombre }}" />
+                    <input type="hidden" name="items[{{ $i }}][cantidad]" value="{{ $cantidad }}" />
+                    <input type="hidden" name="items[{{ $i }}][importe]" value="{{ number_format($importe, 2, '.', '') }}" />
+                @endforeach
+            @endif
 
             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Enviar POST a /medios-de-pago/order-preview</button>
         </form>

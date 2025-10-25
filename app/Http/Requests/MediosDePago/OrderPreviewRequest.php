@@ -9,16 +9,15 @@ class OrderPreviewRequest extends AbstractApiRequest
 {
     public function rules(): array
     {
-        $tipos = array_map(fn($c) => $c->value, TiposMedioDeCobro::cases());
 
         return [
             'usuario' => ['required', 'string'],
             'clave' => ['required', 'string'],
             'idsucursal' => ['required', 'integer', 'exists:sucursales,id'],
-            'type' => ['required', 'string', 'in:' . implode(',', $tipos)],
 
             'items' => ['required', 'array', 'min:1'],
             'items.*.idunicoventa' => ['required', 'string'],
+            'items.*.codigo' => ['required', 'string'],
             'items.*.descripcion' => ['required', 'string'],
             'items.*.cantidad' => ['required', 'integer', 'min:1'],
             'items.*.importe' => ['required', 'numeric', 'min:0'],
