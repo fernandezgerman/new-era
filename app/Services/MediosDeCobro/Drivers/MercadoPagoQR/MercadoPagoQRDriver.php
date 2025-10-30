@@ -3,16 +3,32 @@
 namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR;
 
 use App\Contracts\Integrations\HttpClient;
+use App\Services\MediosDeCobro\Contracts\MedioDeCobroEventHandlerInterface;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroQRDriverInterface;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoQRWebhookEventDTO;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Enum\MercadoPagoQRStatus;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRDynamoPersitanceException;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQREventValidationFaild;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRIdempotencyKeyAlreadyTakenException;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRNotFoundException;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoOrderRequestFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoOrderResponseFactory;
-use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQROrderFactory;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQROrderNotificationFactory;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQROrderSqlFactory;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQRWebhookEventFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Http\MercadoPagoHttpClient;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Models\MercadoPagoQROrderSql;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
-use Illuminate\Http\Client\StrayRequestException;
+use App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO;
+use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
+use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\MediosDeCobroNotImplementedException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
-class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface
+
+
+class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobroEventHandlerInterface
 {
     private HttpClient $httpClient;
     public function __construct()
@@ -25,6 +41,13 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface
      */
     public function createOrder(OrderDTO $orderDTO): OrderDTO
     {
+
+        $order = MercadoPagoQROrderSql::where('ventasucursalcobroid',$orderDTO->localId)->first();
+        if($order)
+        {
+            throw new MercadoPagoQRIdempotencyKeyAlreadyTakenException('Ya se genero una orden en mercado pago');
+        }
+
         // Build request payload via factory
         $payload = MercadoPagoOrderRequestFactory::make($orderDTO);
 
@@ -36,11 +59,11 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface
 
         $orderDTO->gatewayResponse = MercadoPagoOrderResponseFactory::fromArray($data);
 
-        $mercadoPagoQROrder =  MercadoPagoQROrderFactory::fromOrderDTO($orderDTO);
-        try {
+        $mercadoPagoQROrder =  MercadoPagoQROrderSqlFactory::fromOrderDTO($orderDTO);
+
+        if(MercadoPagoQROrderSql::where('externalorderid',$data['id'])->doesntExist())
+        {
             $mercadoPagoQROrder->save();
-        }catch (\Throwable $throwable) {
-            throw new MercadoPagoQRDynamoPersitanceException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
 
         return $orderDTO;
@@ -50,4 +73,88 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface
     {
         return $orderDTO->gatewayResponse?->type_response?->qr_data ?? '';
     }
+
+    public function validateEventOrigin(Request $request): bool
+    {
+        try {
+
+            //Explanation: La mierda de mercado pago, admite algunos webhooks con este metodo de validacion, pero otros ni idea ni yo ni la puta documentacion
+            // por loq eu decidi clavarle un query param al webhook y la re puta que lo pario
+
+            if($request->get('ne_token') === env('MERCADO_PAGO_WEBHOOK_QUERY_PARAM_AUTH')) return true;
+
+            $signature = $request->header('x-signature');
+            if(!$signature) throw new MercadoPagoQREventValidationFaild('Auth event failed.');
+            $signatureContent = explode(',',$signature);
+
+            if(count($signatureContent) !== 2) throw new MercadoPagoQREventValidationFaild('Incorrect x-signature format.');
+
+            $tsPosition = 0;
+            $keyPosition = 1;
+
+            $signatureContent[$tsPosition] = str_replace('ts=','',$signatureContent[$tsPosition]);
+            $signatureContent[$keyPosition] = str_replace('v1=','',$signatureContent[$keyPosition]);
+
+            $id = ($request->get('id') ?? $request->get('data_id'));
+            $template = "id:{$id};request-id:{$request->header('x-request-id')};ts:{$signatureContent[$tsPosition]};";
+
+            Log::info('TEMPOLATE: '.$template);
+            $key = env('MERCADO_PAGO_WEBHOOK_SECRET_KEY');
+            $cyphedSignature = hash_hmac('sha256', $template, $key);
+
+            if($cyphedSignature !== $signatureContent[$keyPosition]) throw new MercadoPagoQREventValidationFaild('Encrypted value does not match.');
+
+        }catch(\Throwable $throwable)
+        {
+            throw new MercadoPagoQREventValidationFaild('Mercado pago QR events: '. $throwable->getMessage());
+        }
+
+        return true;
+    }
+
+    public function processEvent(WebhookEventDTO $webhookEventDTO): ?\App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO
+    {
+        $mpQRWebhookEvent = MercadoPagoQRWebhookEventFactory::fromWebhook($webhookEventDTO);
+        $localOrder =  MercadoPagoQROrderSql::where('externalorderid', $mpQRWebhookEvent->data->id)->first();
+
+        if(!$localOrder){
+            throw new MercadoPagoQRNotFoundException('Mercado pago QR -> Order not found: '.$mpQRWebhookEvent->data->id);
+        }
+
+        if($mpQRWebhookEvent->notification_type !== MercadoPagoQRWebhookEventDTO::NOTIFICATION_TYPE_ORDER)
+        {
+            throw new MediosDeCobroNotImplementedException('Mercado pago QR -> driver does not implement this kind of notification: '. $mpQRWebhookEvent->notification_type);
+        }
+
+        $mercadoPagoQROrderNotification = MercadoPagoQROrderNotificationFactory::fromOrderAndWebhook($localOrder, $webhookEventDTO);
+        $mercadoPagoQROrderNotification->save();
+
+        if($localOrder->estado !== $mercadoPagoQROrderNotification->estado)
+        {
+            $localOrder->estado = $mercadoPagoQROrderNotification->estado;
+            $localOrder->save();
+
+            $orderStatusChangeDTO = new OrderStatusChangeDTO();
+            $orderStatusChangeDTO->externalId = $localOrder->externalorderid;
+            $orderStatusChangeDTO->localId = $localOrder->ventasucursalcobroid;
+            $orderStatusChangeDTO->status = $this->getModoDeCobroStatus($localOrder->estado);
+
+
+            return $orderStatusChangeDTO;
+        }
+
+        return null;
+    }
+
+    private function getModoDeCobroStatus(string $mpQrStatus): MedioDeCobroEstados
+    {
+        return match($mpQrStatus){
+            MercadoPagoQRStatus::EXPIRED->value => MedioDeCobroEstados::EXPIRO,
+            MercadoPagoQRStatus::CREATED->value => MedioDeCobroEstados::PENDIENTE,
+            MercadoPagoQRStatus::PROCESSED->value => MedioDeCobroEstados::APROBADO,
+            default => throw new MediosDeCobroNotImplementedException('Mercado pago qr driver does not implement this kind of status: '. $mpQrStatus),
+        };
+    }
 }
+
+

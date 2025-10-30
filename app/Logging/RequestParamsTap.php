@@ -27,6 +27,7 @@ class RequestParamsTap
         try {
             $user = auth()->user();
             $logger->info('REQUEST DATA:' . json_encode([
+                'headers' => $req->headers->all(),
                 'meta' => [
                     'method' => $req->method(),
                     'uri' => $req->getPathInfo(),

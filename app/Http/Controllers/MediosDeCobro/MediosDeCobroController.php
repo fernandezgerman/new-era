@@ -7,8 +7,12 @@ use App\Http\Requests\MediosDePago\GenerateOrderRequest;
 use App\Http\Requests\MediosDePago\OrderPreviewRequest;
 use App\Models\ModoDeCobro;
 use App\Models\VentaSucursalCobro;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoQRDriver;
 use App\Services\MediosDeCobro\Factories\OrderDTOFactory;
 use App\Services\MediosDeCobro\ModosDeCobroManager;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 
 class MediosDeCobroController extends BaseController
 {
@@ -46,5 +50,14 @@ class MediosDeCobroController extends BaseController
         $modosDeCobroManager->generarCobro($ventaSucursalCobro);
 
         return view('mediosDePago.MercadoPago.order-waiting-payment',compact('ventaSucursalCobro'));
+    }
+
+    public function processEvent(Request $request)
+    {
+        $modosDeCobroManager = app(ModosDeCobroManager::class);
+
+        $modosDeCobroManager->processEvent($request, app(MercadoPagoQRDriver::class));
+
+        return 'ok';
     }
 }

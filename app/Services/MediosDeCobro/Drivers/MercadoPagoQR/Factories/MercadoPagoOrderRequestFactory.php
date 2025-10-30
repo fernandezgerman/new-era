@@ -43,12 +43,7 @@ class MercadoPagoOrderRequestFactory
 
         $payments[] = [ 'amount' => number_format($total, 2, '.', '') ];
 
-        $externalReference = sprintf(
-            'suc-%s_usr-%s_%s',
-            $orderDTO->sucursal->id,
-            $orderDTO->usuario->id,
-            now()->timestamp
-        );
+        $externalReference = 'ID'.$orderDTO->localId;
 
         $externalPosId = config('services.mercadopago.external_pos_id', env('MP_EXTERNAL_POS_ID', 'CAJA1'));
         $mode = config('services.mercadopago.qr_mode', env('MP_QR_MODE', 'static'));
@@ -70,6 +65,7 @@ class MercadoPagoOrderRequestFactory
                 'payments' => $payments,
             ],
             'items' => $items,
+            //'notification_url' => 'https://flat-ducks-wink.loca.lt/api/medios-de-cobro/mercado-pago-qr/order/event?source_news=webhooks'
         ];
     }
 }
