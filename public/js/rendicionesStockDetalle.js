@@ -1,6 +1,17 @@
+
 var articulosPendientes = new Array();
 var articulosIngresados = new Array();
 var articuloSeleccionado = false;
+
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 
 $(document).ready(function(){
 	cargarJson();
@@ -16,27 +27,27 @@ function checkArticulosPendientesDeImpacto(){
 			$("#divMensajeAtencion").css("display", "block");
 		}
 	}
-	
+
 }
 function mostrarArticulosPendientes(){
 	_.templateSettings.variable = "articulosPendientes";
-	
+
     var template = _.template(
             $( "#templateArticulosPendientes" ).html()
         );
     $( "#divArticulosPendientes" ).html(
             template(articulosPendientes)
-        );   	
+        );
 }
 function mostrarArticulosRendidos(){
 	_.templateSettings.variable = "articulosIngresados";
-	
+
     var template = _.template(
             $( "#templateArticulosRendidos" ).html()
         );
     $( "#divArticulosRendidos" ).html(
             template(articulosIngresados)
-        );   	
+        );
 }
 function getFinalizar()
 {
@@ -52,31 +63,31 @@ function aceptarArticulo()
 	var codigo = $('#inpCodigoArticulo').val();
 	if(codigo==""){
 		$('#descripcionArticulo').html('Ingrese un codigo');
-		
+
 		$('#inpCodigoArticulo').val('');
 		return;
 	}
-	
+
 	articuloSeleccionado = false;
 	for(i=0;i<articulosPendientes.length;i++){
 		objeto = articulosPendientes[i];
 		if (objeto.codigo == codigo){
 			articuloSeleccionado = objeto;
-		}  
+		}
 	}
 	if(!articuloSeleccionado){
 		alert('El articulo no se encuentra en la lista de pendientes');
 		$('#descripcionArticulo').html('Ingrese un codigo');
-		
+
 		$('#inpCodigoArticulo').val('');
-		$('#inpCodigoArticulo').focus();		
+		$('#inpCodigoArticulo').focus();
 	}else{
-		$('#descripcionArticulo').html(articuloSeleccionado.articulo);		
-		
+		$('#descripcionArticulo').html(articuloSeleccionado.articulo);
+
 		$('#inpCantidad').removeAttr("disabled");
 		$('#btnRendirArticulo').removeAttr("disabled");
 		$('#inpCantidad').val("");
-		$('#inpCantidad').focus();		
+		$('#inpCantidad').focus();
 	}
 }
 function rendirArticuloValido(){
@@ -91,8 +102,8 @@ function rendirArticuloValido(){
 	if (parseFloat($('#inpCantidad').val())>10000){
 		alert('La cantidad no puede ser mayor a 10000 unidades.');
 		return false;
-	}	
-	
+	}
+
 	return true;
 }
 function rendirArticulo(){
@@ -100,12 +111,12 @@ function rendirArticulo(){
 		return ;
 	}
 	var cantidad = $('#inpCantidad').val();
-	
+
 	envioAjaxDeRendicion(cantidad,articuloSeleccionado);
 	sigArticulo = actualizarArreglosPendientes(articuloSeleccionado.idarticulo);
-	
+
 	agregarArticuloParaRendir(sigArticulo);
-	
+
 }
 function envioAjaxDeRendicion(cantidad,articuloSel){
 	var rendicionId = $('#inpRendicionId').val();
@@ -132,11 +143,12 @@ function envioAjaxDeRendicion(cantidad,articuloSel){
 				'cantidad': cantidad,
 				'precio': precioArticulo,
 				'token':token,
+                'idempotencyKey': generateRandomString(20),
 				'finalizar':getFinalizar()
 				 },
 		success : function(resultado) {
 			json = $.parseJSON(resultado);
-			
+
 			if (json.resultado=='ERROR') {
 				alert(json.mensaje);
 				$('#descripcionArticulo').html('Ingrese un codigo');
@@ -144,18 +156,18 @@ function envioAjaxDeRendicion(cantidad,articuloSel){
 				$('#inpCodigoArticulo').focus();
 			} else {
 				actualizarArreglosRendidos(json.idarticulo ,json.cantidadsistema,json.cantidadrendida,json.idrendicion,json.hora);
-			}	
+			}
 			checkArticulosPendientesDeImpacto();
 		},
 		error : function() {
-			alert('Error al establecer la rendicion!!!');		
-		}	
-	});	
+			alert('Error al establecer la rendicion!!!');
+		}
+	});
 }
 function buscarSiguienteArticulo(idarticulo)
 {
 	arrAux = new Array();
-	
+
 	selArt = 0;
 	for(i=0;i<articulosPendientes.length;i++){
 		objeto = articulosPendientes[i];
@@ -179,7 +191,7 @@ function actualizarArreglosPendientes(idarticulo){
 			arrAux[arrAux.length] = objeto;
 			if (selArt == 0){
 				selArt = 1;
-				
+
 				artSiguiente = arrAux.length - 1;
 			}
 		}  else {
@@ -187,7 +199,7 @@ function actualizarArreglosPendientes(idarticulo){
 		}
 	}
 	articulosPendientes = arrAux;
-	
+
 	articulosIngresados[articulosIngresados.length] =art;
 	mostrarArticulosPendientes();
 	mostrarArticulosRendidos();
@@ -201,15 +213,15 @@ function actualizarArreglosRendidos(idarticulo,cantidadsistema,cantidadrendida,i
 			indice = i;
 			art = objeto;
 			if (parseInt(art['id'])>0){ //Es una correccion
-				
+
 				art = $.extend(true, {}, objeto);
-				indice = indice + 1; 
+				indice = indice + 1;
 				articulosIngresados.splice(indice,0 ,art);
 			}
 			break;
 		}
 	}
-		
+
 	art['cantidadsistema'] = cantidadsistema;
 	art['cantidadrendida'] = cantidadrendida;
 	art['id'] = json.idrendicion;
@@ -217,24 +229,24 @@ function actualizarArreglosRendidos(idarticulo,cantidadsistema,cantidadrendida,i
 	art['valorsistema'] = formatearPrecio( parseFloat(cantidadsistema) * parseFloat(art.precio));
 	art['valorrendido'] = formatearPrecio(parseFloat(cantidadrendida) * parseFloat(art.precio));
 	art['valordiferencia'] = formatearPrecio(parseFloat(art['valorrendido']) - parseFloat(art['valorsistema']));
-	
+
 	articulosIngresados[indice] =art;
-	
-	 
+
+
 	mostrarArticulosRendidos();
-	
+
 	//return artSiguiente;
 }
 function agregarArticuloParaRendir(indice){
 	$('#inpCodigoArticulo').val(articulosPendientes[indice].codigo);
 	aceptarArticulo();
 	$('#inpCantidad').focus();
-	
+
 }
 function enterCantidad(e){
 	if (presionaEnter(e)) {
 		rendirArticulo();
-	}	
+	}
 }
 function focoEnLinea(i,clase){
 	$('#filaNumero'+i).addClass('tblFilaVerdeNegrita');
@@ -252,15 +264,15 @@ function rendirArticuloLinea(indice){
 	if (parseFloat($('#inpCantidadLinea'+indice).val())>10000){
 		alert('La cantidad no puede ser mayor a 10000 unidades.');
 		return false;
-	}		
+	}
 	var cantidad = $('#inpCantidadLinea'+indice).val();
-	
+
 	objarticulo = articulosPendientes[indice];
 
 	actualizarArreglosPendientes(objarticulo.idarticulo);
-	
+
 	envioAjaxDeRendicion(cantidad,objarticulo);
-	
+
 	if (articulosPendientes.length > 0){
 		if (indice < articulosPendientes.length) {
 			$('#inpCantidadLinea'+indice).focus()
@@ -268,12 +280,12 @@ function rendirArticuloLinea(indice){
 			$('#inpCantidadLinea'+(indice-1)).focus()
 		}
 	}
-		
+
 }
 function enterCantidadIndice(e,indice){
 	if (presionaEnter(e)) {
 		rendirArticuloLinea(indice);
-	}	
+	}
 }
 
 function focoEnLineaRendido(i,clase){
@@ -293,13 +305,13 @@ function corregirArticuloLinea(indice){
 	if (parseFloat($('#inpCantidadLineaCorregir'+indice).val())>10000){
 		alert('La cantidad no puede ser mayor a 10000 unidades.');
 		return false;
-	}		
+	}
 	var cantidad = $('#inpCantidadLineaCorregir'+indice).val();
-	
+
 	objarticulo = articulosIngresados[indice];
 
 	//actualizarArreglosPendientes(objarticulo.idarticulo);
-	
+
 	envioAjaxDeRendicion(cantidad,objarticulo);
 	/*
 	if (articulosPendientes.length > 0){
@@ -315,7 +327,7 @@ function corregirArticuloLinea(indice){
 function enterCantidadIndiceCorregir(e,indice){
 	if (presionaEnter(e)) {
 		corregirArticuloLinea(indice);
-	}	
+	}
 }
 function ordenarColumnaReporte(columna,alfabetico){
     articulosIngresados = ordenarArregloGenerico(articulosIngresados,columna,alfabetico);
