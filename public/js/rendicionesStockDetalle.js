@@ -232,7 +232,7 @@ function actualizarArreglosRendidos(idarticulo,cantidadsistema,cantidadrendida,i
 
     articulosIngresados[indice] = art;
 
-    // Ordenar por idarticulo (int) asc y luego por hora (formato d h:m:s) asc
+    // Ordenar por articulo (string) asc y luego por hora (formato d h:m:s) asc
     function __parseHoraOrdenRendicion(h) {
         if (!h) return 0;
         try {
@@ -259,9 +259,10 @@ function actualizarArreglosRendidos(idarticulo,cantidadsistema,cantidadrendida,i
     }
 
     articulosIngresados.sort(function(a, b){
-        var ai = parseInt(a.idarticulo, 10) || 0;
-        var bi = parseInt(b.idarticulo, 10) || 0;
-        if (ai !== bi) return ai - bi;
+        var as = (a.articulo || '').toString().trim();
+        var bs = (b.articulo || '').toString().trim();
+        var cmp = as.localeCompare(bs, undefined, { numeric: true, sensitivity: 'base' });
+        if (cmp !== 0) return cmp;
         var ta = __parseHoraOrdenRendicion(a.hora);
         var tb = __parseHoraOrdenRendicion(b.hora);
         return ta - tb;
