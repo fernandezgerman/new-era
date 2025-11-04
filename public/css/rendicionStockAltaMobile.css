@@ -1,0 +1,15 @@
+.fondoListas{
+    width: calc(100vw) !important;
+    margin: 0px !important;
+}
+.tabla_excepciones{
+    width: calc(100vw - 30px) !important;
+}
+
+.divNoErrorGrande {
+    width: calc(100% - 50px);
+}
+
+.divEdicion_campos_inputs {
+    width: calc(100% - 50px) !important;
+}

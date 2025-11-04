@@ -209,7 +209,7 @@ function actualizarArreglosRendidos(idarticulo,cantidadsistema,cantidadrendida,i
     var indice;
     for(i=0;i<articulosIngresados.length;i++){
         objeto = articulosIngresados[i];
-        if (objeto.idarticulo== idarticulo){
+        if (objeto.idarticulo=== idarticulo){
             indice = i;
             art = objeto;
             if (parseInt(art['id'])>0){ //Es una correccion
@@ -230,8 +230,42 @@ function actualizarArreglosRendidos(idarticulo,cantidadsistema,cantidadrendida,i
     art['valorrendido'] = formatearPrecio(parseFloat(cantidadrendida) * parseFloat(art.precio));
     art['valordiferencia'] = formatearPrecio(parseFloat(art['valorrendido']) - parseFloat(art['valorsistema']));
 
-    articulosIngresados[indice] =art;
+    articulosIngresados[indice] = art;
 
+    // Ordenar por idarticulo (int) asc y luego por hora (formato d h:m:s) asc
+    function __parseHoraOrdenRendicion(h) {
+        if (!h) return 0;
+        try {
+            h = ('' + h).trim();
+            var d = 0, hh = 0, mm = 0, ss = 0;
+            var parts = h.split(' ');
+            if (parts.length === 2) {
+                d = parseInt(parts[0], 10) || 0;
+                var tp = parts[1].split(':');
+                hh = parseInt(tp[0], 10) || 0;
+                mm = parseInt(tp[1], 10) || 0;
+                ss = parseInt(tp[2], 10) || 0;
+            } else {
+                // Si viene solo "h:m:s"
+                var tp2 = h.split(':');
+                hh = parseInt(tp2[0], 10) || 0;
+                mm = parseInt(tp2[1], 10) || 0;
+                ss = parseInt(tp2[2], 10) || 0;
+            }
+            return (d * 86400) + (hh * 3600) + (mm * 60) + ss;
+        } catch (e) {
+            return 0;
+        }
+    }
+
+    articulosIngresados.sort(function(a, b){
+        var ai = parseInt(a.idarticulo, 10) || 0;
+        var bi = parseInt(b.idarticulo, 10) || 0;
+        if (ai !== bi) return ai - bi;
+        var ta = __parseHoraOrdenRendicion(a.hora);
+        var tb = __parseHoraOrdenRendicion(b.hora);
+        return ta - tb;
+    });
 
     mostrarArticulosRendidos();
 
