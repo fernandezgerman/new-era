@@ -49,6 +49,8 @@ export const LegacyFrame = ({iframeHrefs}) => {
 
     const iFrameHeight = isMobile ? ' h-full ' : ' h-[calc(100vh-150px)] ';
 
+    const refreshButtonClass = isMobile ? '  ml-[50px] mt-[0px]  ' : '  ml-[10px] mt-[10px]  ';
+
     return (
         <ErrorBoundary>
             {/* Hidden form to post parameters into the iframe when available */}
@@ -72,7 +74,7 @@ export const LegacyFrame = ({iframeHrefs}) => {
 
             {iframeHrefs !== null && (
                 <>
-                    <div className={'absolute p-[5px] ml-[10px] mt-[10px] text-white cursor-pointer opacity-100 bg-pink-600 rounded-lg'}>
+                    <div className={'absolute p-[5px] w-[40px] h-[40px] items-center text-center align-middle pt-[7px]  text-white cursor-pointer opacity-100 bg-pink-600 rounded-lg '+ refreshButtonClass}>
                         <button onClick={recargarIframe}>
                             <FontAwesomeIcon icon={faSyncAlt} className={isLoading ? 'animate-spin ' : ''} />
                         </button>
