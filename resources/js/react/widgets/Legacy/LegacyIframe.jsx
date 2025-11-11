@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 import {isMobile} from "react-device-detect";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 export const LegacyFrame = ({iframeHrefs}) => {
     const iframeRef = React.useRef(null);
     const formRef = React.useRef(null);
@@ -10,6 +12,14 @@ export const LegacyFrame = ({iframeHrefs}) => {
     // Prepare POST params from server-injected global (set in Blade)
     const [postParams, setPostParams] = useState((typeof window !== 'undefined' && window.__POST__ && typeof window.__POST__ === 'object') ? window.__POST__ : null);
     const hasPost = !!(postParams && Object.keys(postParams).length > 0);
+
+
+    const recargarIframe = () => {
+        if (iframeRef.current.contentWindow) {
+            iframeRef.current.contentWindow.location.reload();
+            setIsLoading(true);
+        }
+    };
 
     useEffect(() => {
         setPostParams(iframeHrefs?.postData?.length > 0 ? iframeHrefs?.postData :(typeof window !== 'undefined' && window.__POST__ && typeof window.__POST__ === 'object') ? window.__POST__ : null);
@@ -61,31 +71,38 @@ export const LegacyFrame = ({iframeHrefs}) => {
             )}
 
             {iframeHrefs !== null && (
-                <iframe
-                    onLoad={()=>{
-                        setIsLoading(false);
-                        setCurrentQs('');
-                    }}
-                    ref={iframeRef}
-                    name="legacy_iframe"
-                    src={(function(){
-                        const baseUrl = iframeHrefs.url;
-                        const currentQs = ''; //(typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
-                        const separator = baseUrl?.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
-                        const url = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
+                <>
+                    <div className={'absolute p-[5px] ml-[10px] mt-[10px] text-white cursor-pointer opacity-100 bg-pink-600 rounded-lg'}>
+                        <button onClick={recargarIframe}>
+                            <FontAwesomeIcon icon={faSyncAlt} className={isLoading ? 'animate-spin ' : ''} />
+                        </button>
+                    </div>
+                    <iframe
+                        onLoad={()=>{
+                            setIsLoading(false);
+                            setCurrentQs('');
+                        }}
+                        ref={iframeRef}
+                        name="legacy_iframe"
+                        src={(function(){
+                            const baseUrl = iframeHrefs.url;
+                            const currentQs = ''; //(typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+                            const separator = baseUrl?.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
+                            const url = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
 
-                        if(iframeHrefs.getData && iframeHrefs.getData.length > 0) {
-                            const auxSeparator = url?.includes('?') ? '&' :'?';
+                            if(iframeHrefs.getData && iframeHrefs.getData.length > 0) {
+                                const auxSeparator = url?.includes('?') ? '&' :'?';
 
-                            return url + auxSeparator + iframeHrefs.getData.reduce((acum, data) => data.name + '=' + data.value + '&' + acum, '');
-                        }
-                        return `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
-                    })()}
-                    width="100%"
-                    className={iFrameHeight + (isLoading ? ' hidden' : '')}
-                    title="Contenido Externo"
-                >
-                </iframe>
+                                return url + auxSeparator + iframeHrefs.getData.reduce((acum, data) => data.name + '=' + data.value + '&' + acum, '');
+                            }
+                            return `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
+                        })()}
+                        width="100%"
+                        className={iFrameHeight + (isLoading ? ' hidden' : '')}
+                        title="Contenido Externo"
+                    >
+                    </iframe>
+                </>
             )}
         </ErrorBoundary>
     );
