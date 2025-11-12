@@ -2,17 +2,22 @@
 
 namespace App\Services\MediosDeCobro;
 
+use App\Events\Events\MediosDeCobro\MediosDeCobroStatusChangeEvent;
 use App\Models\VentaSucursalCobro;
 use App\Models\VentaSucursalCobroArticulo;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroDriverInterface;
+use App\Services\MediosDeCobro\Contracts\MedioDeCobroEventHandlerInterface;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroQRDriverInterface;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRDynamoPersitanceException;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRIdempotencyKeyAlreadyTakenException;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRNotFoundException;
 use App\Services\MediosDeCobro\DTOs\OrderDetalleDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
+use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroException;
 use App\Services\MediosDeCobro\Factories\OrderDTOFactory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -86,9 +91,7 @@ class ModosDeCobroManager
         }
         catch (MercadoPagoQRIdempotencyKeyAlreadyTakenException $e)
         {
-            if($ventaSucursalCobro->estado === MedioDeCobroEstados::PENDIENTE->value){
-                return;
-            }
+            return;
         }
         $ventaSucursalCobro->estado = MedioDeCobroEstados::PENDIENTE->value;
         $ventaSucursalCobro->save();
@@ -103,5 +106,35 @@ class ModosDeCobroManager
             return $driver->getQRImageURL(OrderDTOFactory::fromModel($ventaSucursalCobro));
         }
         return null;
+    }
+
+    public function processEvent(Request $request, MedioDeCobroEventHandlerInterface $driver): void
+    {
+        $webhookEvent = new WebhookEventDTO($request->all());
+        $newStatus = null;
+        try{
+            $newStatus = $driver->processEvent($webhookEvent);
+        }catch(MercadoPagoQRNotFoundException|MediosDeCobroNotImplementedException|MediosDeCobroNotImplementedException $mercadoPagoQRNotFoundException)
+        {
+            Log::warning($mercadoPagoQRNotFoundException->getMessage());
+        }
+
+        if($newStatus !== null)
+        {
+
+            $ventaSucursalCobro = VentaSucursalCobro::where('id', $newStatus->localId)->first();
+            if(!$newStatus->localId)
+            {
+                throw new MediosDeCobroException('No se pudo localizar una ventaSucursalCobro en la notificacion.');
+            }
+
+            if($ventaSucursalCobro->estado !== $newStatus->status->value)
+            {
+                $ventaSucursalCobro->estado = $newStatus->status->value;
+                $ventaSucursalCobro->save();
+
+                event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
+            }
+        }
     }
 }

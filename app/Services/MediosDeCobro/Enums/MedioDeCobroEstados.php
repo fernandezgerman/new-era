@@ -11,4 +11,6 @@ enum MedioDeCobroEstados: string
     case RECHAZADO = 'rechazado';
     case CANCELADO_POR_EL_USUARIO = 'cancelado_por_el_usuario';
 
+    case EXPIRO = 'expiro';
+
 }

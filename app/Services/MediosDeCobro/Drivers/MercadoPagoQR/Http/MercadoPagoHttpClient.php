@@ -18,7 +18,7 @@ class MercadoPagoHttpClient implements HttpClient
 
     public function __construct()
     {
-        $this->accessToken = "APP_USR-3275564673385356-101013-a2213ab05478298eb6fce38ae85efda2-2915257368";
+        $this->accessToken = "APP_USR-6468260747376535-100914-8f38318e2797248ece7921c68900edac-2915257368";
         $this->host = "https://api.mercadopago.com/v1/";
     }
 
