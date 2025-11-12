@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 import {isMobile} from "react-device-detect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSyncAlt} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeftLong, faPeopleArrowsLeftRight, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 export const LegacyFrame = ({iframeHrefs}) => {
     const iframeRef = React.useRef(null);
     const formRef = React.useRef(null);
@@ -20,6 +20,16 @@ export const LegacyFrame = ({iframeHrefs}) => {
             setIsLoading(true);
         }
     };
+
+    const atrasIframe = () => {
+        if (iframeRef.current.contentWindow) {
+            iframeRef.current.contentWindow.history.back();
+            iframeRef.current.contentWindow.history.go(-1);
+            setIsLoading(true);
+        }
+    };
+
+
 
     useEffect(() => {
         setPostParams(iframeHrefs?.postData?.length > 0 ? iframeHrefs?.postData :(typeof window !== 'undefined' && window.__POST__ && typeof window.__POST__ === 'object') ? window.__POST__ : null);
@@ -74,10 +84,17 @@ export const LegacyFrame = ({iframeHrefs}) => {
 
             {iframeHrefs !== null && (
                 <>
-                    <div className={'absolute p-[5px] w-[40px] h-[40px] items-center text-center align-middle pt-[7px]  text-white cursor-pointer opacity-100 bg-pink-600 rounded-lg '+ refreshButtonClass}>
-                        <button onClick={recargarIframe}>
-                            <FontAwesomeIcon icon={faSyncAlt} className={isLoading ? 'animate-spin ' : ''} />
-                        </button>
+                    <div className={'absolute flex flex-row flex-nowrap items-center space-x-2 ' + refreshButtonClass}>
+                        <div className={'p-[5px] w-[40px] h-[40px] items-center text-center align-middle pt-[7px]  text-white cursor-pointer opacity-100 bg-pink-600 rounded-lg '}>
+                            <button onClick={recargarIframe}>
+                                <FontAwesomeIcon icon={faSyncAlt} className={isLoading ? 'animate-spin ' : ''} />
+                            </button>
+                        </div>
+                        <div className={'p-[5px] hidden w-[40px] h-[40px] items-center text-center align-middle pt-[7px]  text-white cursor-pointer opacity-100 bg-pink-600 rounded-lg '}>
+                            <button onClick={atrasIframe}>
+                                <FontAwesomeIcon icon={faArrowLeftLong} className={isLoading ? 'animate-spin ' : ''} />
+                            </button>
+                        </div>
                     </div>
                     <iframe
                         onLoad={()=>{
