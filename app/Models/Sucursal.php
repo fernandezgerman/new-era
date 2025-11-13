@@ -124,4 +124,20 @@ class Sucursal extends Model
                     ->withPivot('activo')
                     ->withTimestamps();
     }
+
+    /**
+     * Compras asociadas a esta sucursal (sucursal de la operación)
+     */
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'idsucursal');
+    }
+
+    /**
+     * Compras registradas en caja en esta sucursal (idsucursalcaja)
+     */
+    public function comprasCaja()
+    {
+        return $this->hasMany(Compra::class, 'idsucursalcaja');
+    }
 }

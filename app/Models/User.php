@@ -97,6 +97,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Compras realizadas por este usuario (operador)
+     */
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'idusuario');
+    }
+
+    /**
+     * Compras registradas por este usuario de caja (idusuariocaja)
+     */
+    public function comprasCaja()
+    {
+        return $this->hasMany(Compra::class, 'idusuariocaja');
+    }
+
+    /**
      * Get the empresa that the user belongs to.
      */
     public function empresa()

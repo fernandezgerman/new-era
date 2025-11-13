@@ -15,4 +15,12 @@ class Proveedor extends CustomModel
     protected $fillable = [
         // Define minimally common fields if needed; unknown columns are omitted for safety
     ];
+
+    /**
+     * Compras realizadas a este proveedor
+     */
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'idproveedor');
+    }
 }
