@@ -50,12 +50,21 @@ class Kernel extends ConsoleKernel
             ->dailyAt('02:00')->name('cron2AM')->withoutOverlapping();
 
         // Monday 08:00 - cronLunes8AM.php
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronLunes8AM.php')))
-            ->weeklyOn(1, '08:00')->name('cronLunes8AM')->withoutOverlapping();
+        $schedule->command('email:comparativo-semanal')
+            ->weeklyOn(1, '08:00')->name('comparativoSemanal')->withoutOverlapping();
+
 
         // Monday 07:00 - cronLunes7AM.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronLunes7AM.php')))
             ->weeklyOn(1, '07:00')->name('cronLunes7AM')->withoutOverlapping();
+
+        /*
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronMartes.php')))
+            ->weeklyOn(2, '04:00')->name('cronMartes')->withoutOverlapping();
+*/
+        // Tuesday 03:00 - email:nobleza-ventas
+        $schedule->command('email:nobleza-ventas')
+            ->weeklyOn(2, '03:00')->name('emailNoblezaVentas')->withoutOverlapping();
 
         // 10 past at 9,13,17,21 - cronNotificacionesGanancias.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))

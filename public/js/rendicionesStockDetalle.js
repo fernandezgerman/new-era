@@ -14,320 +14,355 @@ function generateRandomString(length) {
 }
 
 $(document).ready(function(){
-	cargarJson();
-	mostrarArticulosPendientes();
-	mostrarArticulosRendidos();
-	$("#divMensajeAtencion").css("display", "none");
+    cargarJson();
+    mostrarArticulosPendientes();
+    mostrarArticulosRendidos();
+    $("#divMensajeAtencion").css("display", "none");
 });
 function checkArticulosPendientesDeImpacto(){
-	$("#divMensajeAtencion").css("display", "none");
-	for(i=0;i<articulosIngresados.length;i++){
-		objeto = articulosIngresados[i];
-		if (!objeto.id){
-			$("#divMensajeAtencion").css("display", "block");
-		}
-	}
+    $("#divMensajeAtencion").css("display", "none");
+    for(i=0;i<articulosIngresados.length;i++){
+        objeto = articulosIngresados[i];
+        if (!objeto.id){
+            $("#divMensajeAtencion").css("display", "block");
+        }
+    }
 
 }
 function mostrarArticulosPendientes(){
-	_.templateSettings.variable = "articulosPendientes";
+    _.templateSettings.variable = "articulosPendientes";
 
     var template = _.template(
-            $( "#templateArticulosPendientes" ).html()
-        );
+        $( "#templateArticulosPendientes" ).html()
+    );
     $( "#divArticulosPendientes" ).html(
-            template(articulosPendientes)
-        );
+        template(articulosPendientes)
+    );
 }
 function mostrarArticulosRendidos(){
-	_.templateSettings.variable = "articulosIngresados";
+    _.templateSettings.variable = "articulosIngresados";
 
     var template = _.template(
-            $( "#templateArticulosRendidos" ).html()
-        );
+        $( "#templateArticulosRendidos" ).html()
+    );
     $( "#divArticulosRendidos" ).html(
-            template(articulosIngresados)
-        );
+        template(articulosIngresados)
+    );
 }
 function getFinalizar()
 {
-	if ( articulosPendientes.length == 0){
-		return 1
-	}else{
-		return 0;
-	}
+    if ( articulosPendientes.length == 0){
+        return 1
+    }else{
+        return 0;
+    }
 }
 
 function aceptarArticulo()
 {
-	var codigo = $('#inpCodigoArticulo').val();
-	if(codigo==""){
-		$('#descripcionArticulo').html('Ingrese un codigo');
+    var codigo = $('#inpCodigoArticulo').val();
+    if(codigo==""){
+        $('#descripcionArticulo').html('Ingrese un codigo');
 
-		$('#inpCodigoArticulo').val('');
-		return;
-	}
+        $('#inpCodigoArticulo').val('');
+        return;
+    }
 
-	articuloSeleccionado = false;
-	for(i=0;i<articulosPendientes.length;i++){
-		objeto = articulosPendientes[i];
-		if (objeto.codigo == codigo){
-			articuloSeleccionado = objeto;
-		}
-	}
-	if(!articuloSeleccionado){
-		alert('El articulo no se encuentra en la lista de pendientes');
-		$('#descripcionArticulo').html('Ingrese un codigo');
+    articuloSeleccionado = false;
+    for(i=0;i<articulosPendientes.length;i++){
+        objeto = articulosPendientes[i];
+        if (objeto.codigo == codigo){
+            articuloSeleccionado = objeto;
+        }
+    }
+    if(!articuloSeleccionado){
+        alert('El articulo no se encuentra en la lista de pendientes');
+        $('#descripcionArticulo').html('Ingrese un codigo');
 
-		$('#inpCodigoArticulo').val('');
-		$('#inpCodigoArticulo').focus();
-	}else{
-		$('#descripcionArticulo').html(articuloSeleccionado.articulo);
+        $('#inpCodigoArticulo').val('');
+        $('#inpCodigoArticulo').focus();
+    }else{
+        $('#descripcionArticulo').html(articuloSeleccionado.articulo);
 
-		$('#inpCantidad').removeAttr("disabled");
-		$('#btnRendirArticulo').removeAttr("disabled");
-		$('#inpCantidad').val("");
-		$('#inpCantidad').focus();
-	}
+        $('#inpCantidad').removeAttr("disabled");
+        $('#btnRendirArticulo').removeAttr("disabled");
+        $('#inpCantidad').val("");
+        $('#inpCantidad').focus();
+    }
 }
 function rendirArticuloValido(){
-	if (articuloSeleccionado==false){
-		alert('Debe seleccionar un articulo');
-		return false;
-	}
-	if ($('#inpCantidad').val()==""){
-		alert('Debe ingresar una cantidad');
-		return false;
-	}
-	if (parseFloat($('#inpCantidad').val())>10000){
-		alert('La cantidad no puede ser mayor a 10000 unidades.');
-		return false;
-	}
+    if (articuloSeleccionado==false){
+        alert('Debe seleccionar un articulo');
+        return false;
+    }
+    if ($('#inpCantidad').val()==""){
+        alert('Debe ingresar una cantidad');
+        return false;
+    }
+    if (parseFloat($('#inpCantidad').val())>10000){
+        alert('La cantidad no puede ser mayor a 10000 unidades.');
+        return false;
+    }
 
-	return true;
+    return true;
 }
 function rendirArticulo(){
-	if (!rendirArticuloValido()){
-		return ;
-	}
-	var cantidad = $('#inpCantidad').val();
+    if (!rendirArticuloValido()){
+        return ;
+    }
+    var cantidad = $('#inpCantidad').val();
 
-	envioAjaxDeRendicion(cantidad,articuloSeleccionado);
-	sigArticulo = actualizarArreglosPendientes(articuloSeleccionado.idarticulo);
+    envioAjaxDeRendicion(cantidad,articuloSeleccionado);
+    sigArticulo = actualizarArreglosPendientes(articuloSeleccionado.idarticulo);
 
-	agregarArticuloParaRendir(sigArticulo);
+    agregarArticuloParaRendir(sigArticulo);
 
 }
 function envioAjaxDeRendicion(cantidad,articuloSel){
-	var rendicionId = $('#inpRendicionId').val();
-	var token = $('#inpToken').val();
-	idart = articuloSel.idarticulo;
-	precioArticulo = articuloSel.precio;
+    var rendicionId = $('#inpRendicionId').val();
+    var token = $('#inpToken').val();
+    idart = articuloSel.idarticulo;
+    precioArticulo = articuloSel.precio;
 
-	if (!(articulosPendientes.length > 0)){
-		$('#divDescripcionEstado').html("Finalizado");
-		$('#inpCodigoArticulo').val("");
-		$('#inpCantidad').val("");
-	    $('#inpCodigoArticulo').attr("disabled","disabled");
-	    $('#inpCantidad').attr("disabled","disabled");
-	    $('#btnRendirArticulo').attr("disabled","disabled");
-	}
-	$("#divMensajeAtencion").css("display", "block");
-	$.ajax({
-		url : 'rendicionesStockArticulosGuardarJson.php?token='+token,
-		type : 'POST',
-		datatype : 'json',
-		async : true,
-		data : {'idarticulo': idart,
-				'idrendicion': rendicionId,
-				'cantidad': cantidad,
-				'precio': precioArticulo,
-				'token':token,
-                'idempotencyKey': generateRandomString(20),
-				'finalizar':getFinalizar()
-				 },
-		success : function(resultado) {
-			json = $.parseJSON(resultado);
+    if (!(articulosPendientes.length > 0)){
+        $('#divDescripcionEstado').html("Finalizado");
+        $('#inpCodigoArticulo').val("");
+        $('#inpCantidad').val("");
+        $('#inpCodigoArticulo').attr("disabled","disabled");
+        $('#inpCantidad').attr("disabled","disabled");
+        $('#btnRendirArticulo').attr("disabled","disabled");
+    }
+    $("#divMensajeAtencion").css("display", "block");
+    $.ajax({
+        url : 'rendicionesStockArticulosGuardarJson.php?token='+token,
+        type : 'POST',
+        datatype : 'json',
+        async : true,
+        data : {'idarticulo': idart,
+            'idrendicion': rendicionId,
+            'cantidad': cantidad,
+            'precio': precioArticulo,
+            'token':token,
+            'idempotencyKey': generateRandomString(20),
+            'finalizar':getFinalizar()
+        },
+        success : function(resultado) {
+            json = $.parseJSON(resultado);
 
-			if (json.resultado=='ERROR') {
-				alert(json.mensaje);
-				$('#descripcionArticulo').html('Ingrese un codigo');
-				$('#inpCodigoArticulo').val('');
-				$('#inpCodigoArticulo').focus();
-			} else {
-				actualizarArreglosRendidos(json.idarticulo ,json.cantidadsistema,json.cantidadrendida,json.idrendicion,json.hora);
-			}
-			checkArticulosPendientesDeImpacto();
-		},
-		error : function() {
-			alert('Error al establecer la rendicion!!!');
-		}
-	});
+            if (json.resultado=='ERROR') {
+                alert(json.mensaje);
+                $('#descripcionArticulo').html('Ingrese un codigo');
+                $('#inpCodigoArticulo').val('');
+                $('#inpCodigoArticulo').focus();
+            } else {
+                actualizarArreglosRendidos(json.idarticulo ,json.cantidadsistema,json.cantidadrendida,json.idrendicion,json.hora);
+            }
+            checkArticulosPendientesDeImpacto();
+        },
+        error : function() {
+            alert('Error al establecer la rendicion!!!');
+        }
+    });
 }
 function buscarSiguienteArticulo(idarticulo)
 {
-	arrAux = new Array();
+    arrAux = new Array();
 
-	selArt = 0;
-	for(i=0;i<articulosPendientes.length;i++){
-		objeto = articulosPendientes[i];
-		if (objeto.idarticulo == idarticulo){
-			sig = 1;
-		}  else {
-			if (sig == 1){
-				return i;
-			}
-		}
-	}
-	return 'nada';
+    selArt = 0;
+    for(i=0;i<articulosPendientes.length;i++){
+        objeto = articulosPendientes[i];
+        if (objeto.idarticulo == idarticulo){
+            sig = 1;
+        }  else {
+            if (sig == 1){
+                return i;
+            }
+        }
+    }
+    return 'nada';
 }
 function actualizarArreglosPendientes(idarticulo){
-	arrAux = new Array();
-	artSiguiente = 'nada';
-	selArt = 0;
-	for(i=0;i<articulosPendientes.length;i++){
-		objeto = articulosPendientes[i];
-		if (objeto.idarticulo != idarticulo){
-			arrAux[arrAux.length] = objeto;
-			if (selArt == 0){
-				selArt = 1;
+    arrAux = new Array();
+    artSiguiente = 'nada';
+    selArt = 0;
+    for(i=0;i<articulosPendientes.length;i++){
+        objeto = articulosPendientes[i];
+        if (objeto.idarticulo != idarticulo){
+            arrAux[arrAux.length] = objeto;
+            if (selArt == 0){
+                selArt = 1;
 
-				artSiguiente = arrAux.length - 1;
-			}
-		}  else {
-			art = objeto;
-		}
-	}
-	articulosPendientes = arrAux;
+                artSiguiente = arrAux.length - 1;
+            }
+        }  else {
+            art = objeto;
+        }
+    }
+    articulosPendientes = arrAux;
 
-	articulosIngresados[articulosIngresados.length] =art;
-	mostrarArticulosPendientes();
-	mostrarArticulosRendidos();
-	return artSiguiente;
+    articulosIngresados[articulosIngresados.length] =art;
+    mostrarArticulosPendientes();
+    mostrarArticulosRendidos();
+    return artSiguiente;
 }
 function actualizarArreglosRendidos(idarticulo,cantidadsistema,cantidadrendida,idrendicion,hora){
-	var indice;
-	for(i=0;i<articulosIngresados.length;i++){
-		objeto = articulosIngresados[i];
-		if (objeto.idarticulo== idarticulo){
-			indice = i;
-			art = objeto;
-			if (parseInt(art['id'])>0){ //Es una correccion
+    var indice;
+    for(i=0;i<articulosIngresados.length;i++){
+        objeto = articulosIngresados[i];
+        if (objeto.idarticulo=== idarticulo){
+            indice = i;
+            art = objeto;
+            if (parseInt(art['id'])>0){ //Es una correccion
 
-				art = $.extend(true, {}, objeto);
-				indice = indice + 1;
-				articulosIngresados.splice(indice,0 ,art);
-			}
-			break;
-		}
-	}
+                art = $.extend(true, {}, objeto);
+                indice = indice + 1;
+                articulosIngresados.splice(indice,0 ,art);
+            }
+            break;
+        }
+    }
 
-	art['cantidadsistema'] = cantidadsistema;
-	art['cantidadrendida'] = cantidadrendida;
-	art['id'] = json.idrendicion;
-	art['hora'] = hora;
-	art['valorsistema'] = formatearPrecio( parseFloat(cantidadsistema) * parseFloat(art.precio));
-	art['valorrendido'] = formatearPrecio(parseFloat(cantidadrendida) * parseFloat(art.precio));
-	art['valordiferencia'] = formatearPrecio(parseFloat(art['valorrendido']) - parseFloat(art['valorsistema']));
+    art['cantidadsistema'] = cantidadsistema;
+    art['cantidadrendida'] = cantidadrendida;
+    art['id'] = json.idrendicion;
+    art['hora'] = hora;
+    art['valorsistema'] = formatearPrecio( parseFloat(cantidadsistema) * parseFloat(art.precio));
+    art['valorrendido'] = formatearPrecio(parseFloat(cantidadrendida) * parseFloat(art.precio));
+    art['valordiferencia'] = formatearPrecio(parseFloat(art['valorrendido']) - parseFloat(art['valorsistema']));
 
-	articulosIngresados[indice] =art;
+    articulosIngresados[indice] = art;
 
+    // Ordenar por articulo (string) asc y luego por hora (formato d h:m:s) asc
+    function __parseHoraOrdenRendicion(h) {
+        if (!h) return 0;
+        try {
+            h = ('' + h).trim();
+            var d = 0, hh = 0, mm = 0, ss = 0;
+            var parts = h.split(' ');
+            if (parts.length === 2) {
+                d = parseInt(parts[0], 10) || 0;
+                var tp = parts[1].split(':');
+                hh = parseInt(tp[0], 10) || 0;
+                mm = parseInt(tp[1], 10) || 0;
+                ss = parseInt(tp[2], 10) || 0;
+            } else {
+                // Si viene solo "h:m:s"
+                var tp2 = h.split(':');
+                hh = parseInt(tp2[0], 10) || 0;
+                mm = parseInt(tp2[1], 10) || 0;
+                ss = parseInt(tp2[2], 10) || 0;
+            }
+            return (d * 86400) + (hh * 3600) + (mm * 60) + ss;
+        } catch (e) {
+            return 0;
+        }
+    }
 
-	mostrarArticulosRendidos();
+    articulosIngresados.sort(function(a, b){
+        var as = (a.articulo || '').toString().trim();
+        var bs = (b.articulo || '').toString().trim();
+        var cmp = as.localeCompare(bs, undefined, { numeric: true, sensitivity: 'base' });
+        if (cmp !== 0) return cmp;
+        var ta = __parseHoraOrdenRendicion(a.hora);
+        var tb = __parseHoraOrdenRendicion(b.hora);
+        return ta - tb;
+    });
 
-	//return artSiguiente;
+    mostrarArticulosRendidos();
+
+    //return artSiguiente;
 }
 function agregarArticuloParaRendir(indice){
-	$('#inpCodigoArticulo').val(articulosPendientes[indice].codigo);
-	aceptarArticulo();
-	$('#inpCantidad').focus();
+    $('#inpCodigoArticulo').val(articulosPendientes[indice].codigo);
+    aceptarArticulo();
+    $('#inpCantidad').focus();
 
 }
 function enterCantidad(e){
-	if (presionaEnter(e)) {
-		rendirArticulo();
-	}
+    if (presionaEnter(e)) {
+        rendirArticulo();
+    }
 }
 function focoEnLinea(i,clase){
-	$('#filaNumero'+i).addClass('tblFilaVerdeNegrita');
-	$('#filaNumero'+i).removeClass(clase);
+    $('#filaNumero'+i).addClass('tblFilaVerdeNegrita');
+    $('#filaNumero'+i).removeClass(clase);
 }
 function pierdeFocoLinea(i,clase){
-	$('#filaNumero'+i).removeClass('tblFilaVerdeNegrita');
-	$('#filaNumero'+i).addClass(clase);
+    $('#filaNumero'+i).removeClass('tblFilaVerdeNegrita');
+    $('#filaNumero'+i).addClass(clase);
 }
 function rendirArticuloLinea(indice){
-	if ($('#inpCantidadLinea'+indice).val()==""){
-		alert('Ingrese una cantidad ');
-		return false;
-	}
-	if (parseFloat($('#inpCantidadLinea'+indice).val())>10000){
-		alert('La cantidad no puede ser mayor a 10000 unidades.');
-		return false;
-	}
-	var cantidad = $('#inpCantidadLinea'+indice).val();
+    if ($('#inpCantidadLinea'+indice).val()==""){
+        alert('Ingrese una cantidad ');
+        return false;
+    }
+    if (parseFloat($('#inpCantidadLinea'+indice).val())>10000){
+        alert('La cantidad no puede ser mayor a 10000 unidades.');
+        return false;
+    }
+    var cantidad = $('#inpCantidadLinea'+indice).val();
 
-	objarticulo = articulosPendientes[indice];
+    objarticulo = articulosPendientes[indice];
 
-	actualizarArreglosPendientes(objarticulo.idarticulo);
+    actualizarArreglosPendientes(objarticulo.idarticulo);
 
-	envioAjaxDeRendicion(cantidad,objarticulo);
+    envioAjaxDeRendicion(cantidad,objarticulo);
 
-	if (articulosPendientes.length > 0){
-		if (indice < articulosPendientes.length) {
-			$('#inpCantidadLinea'+indice).focus()
-		}else{
-			$('#inpCantidadLinea'+(indice-1)).focus()
-		}
-	}
+    if (articulosPendientes.length > 0){
+        if (indice < articulosPendientes.length) {
+            $('#inpCantidadLinea'+indice).focus()
+        }else{
+            $('#inpCantidadLinea'+(indice-1)).focus()
+        }
+    }
 
 }
 function enterCantidadIndice(e,indice){
-	if (presionaEnter(e)) {
-		rendirArticuloLinea(indice);
-	}
+    if (presionaEnter(e)) {
+        rendirArticuloLinea(indice);
+    }
 }
 
 function focoEnLineaRendido(i,clase){
-	$('#filaRendidosNumero'+i).addClass('tblFilaAzulNegrita');
-	$('#filaRendidosNumero'+i).removeClass(clase);
+    $('#filaRendidosNumero'+i).addClass('tblFilaAzulNegrita');
+    $('#filaRendidosNumero'+i).removeClass(clase);
 }
 function pierdeFocoLineaRendido(i,clase){
-	$('#filaRendidosNumero'+i).removeClass('tblFilaAzulNegrita');
-	$('#filaRendidosNumero'+i).addClass(clase);
+    $('#filaRendidosNumero'+i).removeClass('tblFilaAzulNegrita');
+    $('#filaRendidosNumero'+i).addClass(clase);
 }
 
 function corregirArticuloLinea(indice){
-	if ($('#inpCantidadLineaCorregir'+indice).val()==""){
-		alert('Ingrese una cantidad ');
-		return false;
-	}
-	if (parseFloat($('#inpCantidadLineaCorregir'+indice).val())>10000){
-		alert('La cantidad no puede ser mayor a 10000 unidades.');
-		return false;
-	}
-	var cantidad = $('#inpCantidadLineaCorregir'+indice).val();
+    if ($('#inpCantidadLineaCorregir'+indice).val()==""){
+        alert('Ingrese una cantidad ');
+        return false;
+    }
+    if (parseFloat($('#inpCantidadLineaCorregir'+indice).val())>10000){
+        alert('La cantidad no puede ser mayor a 10000 unidades.');
+        return false;
+    }
+    var cantidad = $('#inpCantidadLineaCorregir'+indice).val();
 
-	objarticulo = articulosIngresados[indice];
+    objarticulo = articulosIngresados[indice];
 
-	//actualizarArreglosPendientes(objarticulo.idarticulo);
+    //actualizarArreglosPendientes(objarticulo.idarticulo);
 
-	envioAjaxDeRendicion(cantidad,objarticulo);
-	/*
-	if (articulosPendientes.length > 0){
-		if (indice < articulosPendientes.length) {
-			$('#inpCantidadLinea'+indice).focus()
-		}else{
-			$('#inpCantidadLinea'+(indice-1)).focus()
-		}
-	}
-	*/
+    envioAjaxDeRendicion(cantidad,objarticulo);
+    /*
+    if (articulosPendientes.length > 0){
+        if (indice < articulosPendientes.length) {
+            $('#inpCantidadLinea'+indice).focus()
+        }else{
+            $('#inpCantidadLinea'+(indice-1)).focus()
+        }
+    }
+    */
 }
 
 function enterCantidadIndiceCorregir(e,indice){
-	if (presionaEnter(e)) {
-		corregirArticuloLinea(indice);
-	}
+    if (presionaEnter(e)) {
+        corregirArticuloLinea(indice);
+    }
 }
 function ordenarColumnaReporte(columna,alfabetico){
     articulosIngresados = ordenarArregloGenerico(articulosIngresados,columna,alfabetico);

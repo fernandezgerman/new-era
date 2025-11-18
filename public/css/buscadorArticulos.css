@@ -75,7 +75,15 @@
 		transform: none !important;
 	}
 }
-
+@media (max-height: 860px) {
+    .divAjaxVentana {
+        position:absolute;
+        margin-left:0px !important;
+        top:0px !important;
+        left:0px !important;
+        transform: none !important;
+    }
+}
 /*
 W: 217
 H: 250
