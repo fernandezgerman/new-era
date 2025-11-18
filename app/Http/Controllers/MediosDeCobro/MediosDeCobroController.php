@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MediosDeCobro;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\MediosDePago\GenerateOrderByDataRequest;
 use App\Http\Requests\MediosDePago\GenerateOrderRequest;
 use App\Http\Requests\MediosDePago\OrderPreviewRequest;
 use App\Models\ModoDeCobro;
@@ -59,5 +60,42 @@ class MediosDeCobroController extends BaseController
         $modosDeCobroManager->processEvent($request, app(MercadoPagoQRDriver::class));
 
         return 'ok';
+    }
+
+    public function generateOrderByData(GenerateOrderByDataRequest $orderPreviewRequest)
+    {
+        // For now, just echo back the validated payload as JSON
+        $requestData = $orderPreviewRequest->validated();
+
+        $modosDeCobroManager = app(ModosDeCobroManager::class);
+
+        $ventaSucursalCobro = $modosDeCobroManager->generarOrden(
+            OrderDTOFactory::fromRequest($orderPreviewRequest)
+        );
+
+
+        $modosDeCobroManager = app(ModosDeCobroManager::class);
+        $modosDeCobroManager->generarCobro($ventaSucursalCobro);
+
+        return [
+            'link' => url('medios-de-pago/order/'.$ventaSucursalCobro->idunicolegacy.'/legacy-preview'),
+            'ventaSucursalCobro' => $ventaSucursalCobro
+        ];
+    }
+
+    public function orderLegacyPreview($idunicolegacy)
+    {
+        $ventaSucursalCobro = VentaSucursalCobro::where('idunicolegacy', $idunicolegacy)->first();
+        if (!$ventaSucursalCobro) {
+            return response('Orden no encontrada', 404);
+        }
+        //ToDo: cargar el QR correcto
+        $qr = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Commons_QR_code.png";
+        return view('mediosDePago.MercadoPago.legacy-preview', compact('ventaSucursalCobro','qr'));
+    }
+
+    public function getOrder($idventasucursalcobro)
+    {
+        return VentaSucursalCobro::where('id', $idventasucursalcobro)->first();
     }
 }

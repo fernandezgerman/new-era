@@ -13,7 +13,7 @@ class GenerateOrderRequest extends AbstractApiRequest
         return [
             'usuario' => ['required', 'string'],
             'clave' => ['required', 'string'],
-            'idventassucursalcobro' => ['required', 'integer', 'exists:ventassucursalcobros,id'],
+            'idventassucursalcobro' => ['required', 'integer', 'exists:ventasucursalcobros,id'],
             'idmododecobro' => ['required', 'integer', 'exists:modosdecobro,id'],
         ];
     }

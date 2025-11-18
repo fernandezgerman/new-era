@@ -12,6 +12,7 @@ class OrderDTO
 {
     public ?int $localId;
     public ?string $externalId;
+    public ?string $idunicolegacy;
     public Sucursal $sucursal;
     public User $usuario;
     public ?ModoDeCobro $modoDeCobro;

@@ -8,7 +8,7 @@ class VentaSucursalCobroArticulo extends Model
 {
     protected $table = 'ventasucursalcobroarticulos';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'idventasucursalcobro',

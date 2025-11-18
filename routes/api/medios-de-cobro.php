@@ -19,6 +19,12 @@ route::prefix('medios-de-cobro')->group(function () {
             Route::post('order/event', [MediosDeCobroController::class, 'processEvent'])
                 ->withoutMiddleware([ValidateMercadoPagoQR::class]);
         });
+
+
+    Route::post('/order/generate', [MediosDeCobroController::class, 'generateOrderByData'])
+        ->withoutMiddleware(['auth:sanctum', CheckLegacyPermissions::class])
+        ->middleware('custom.auth')
+        ->name('medios-de-cobro.order-legacy-generate');
 });
 
 

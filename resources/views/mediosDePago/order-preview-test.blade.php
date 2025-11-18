@@ -56,6 +56,9 @@
         <div class="mt-4 p-3 bg-slate-100 rounded text-sm">
             Esta acción enviará application/x-www-form-urlencoded (o multipart/form-data) con los campos equivalentes al JSON solicitado.
         </div>
+        @php
+            echo 'BROWSER: '.$_SERVER['HTTP_USER_AGENT'];
+        @endphp
     </div>
 </body>
 <script src="../../assets/js/plugins/chartjs.min.js"></script>

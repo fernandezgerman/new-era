@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use phpDocumentor\Parser\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
 
@@ -17,15 +18,19 @@ class CustomAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
+        //ToDo: Create a custom way to auth the mercado pago notifications
+        return $next($request);
 
         // Accept either 'user'/'password' or 'usuario'/'clave'
         $username = $request->input('user', $request->input('usuario'));
         $password = $request->input('password', $request->input('clave'));
 
         if (!$username || !$password) {
+            throw new Exception('Missing credentials');
+            /*
             return response()->json([
                 'message' => 'Missing credentials',
-            ], 403);
+            ], 403);*/
         }
 
         $query = User::query();
@@ -36,9 +41,11 @@ class CustomAuth
         $user = $query->first();
 
         if (!$user) {
+            throw new Exception('User not found');
+            /*
             return response()->json([
                 'message' => 'User not found',
-            ], 403);
+            ], 403); */
         }
 
         auth()->setUser($user);

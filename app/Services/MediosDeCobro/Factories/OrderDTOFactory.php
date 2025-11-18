@@ -2,6 +2,7 @@
 
 namespace App\Services\MediosDeCobro\Factories;
 
+use App\Http\Requests\MediosDePago\GenerateOrderByDataRequest;
 use App\Http\Requests\MediosDePago\GenerateOrderRequest;
 use App\Http\Requests\MediosDePago\OrderPreviewRequest;
 use App\Models\Articulo;
@@ -14,6 +15,7 @@ use App\Services\MediosDeCobro\DTOs\Collections\OrderDetalleDTOCollection;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDetalleDTO;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroException;
+use Illuminate\Support\Arr;
 
 class OrderDTOFactory
 {
@@ -60,7 +62,7 @@ class OrderDTOFactory
 
         return $dto;
     }
-    public static function fromRequest(OrderPreviewRequest $request): OrderDTO
+    public static function fromRequest(OrderPreviewRequest|GenerateOrderByDataRequest $request): OrderDTO
     {
         $data = $request->validated();
         return self::fromArray($data);
@@ -107,10 +109,12 @@ class OrderDTOFactory
         // Detalles
         $detallesCollection = new OrderDetalleDTOCollection();
         foreach ($data['items'] as $item) {
+            $articulo = false;
             // Buscar artículo por código
-            $articulo = Articulo::where('codigo', $item['codigo'] ?? null)->first();
-            if (!$articulo) {
-                throw new MediosDeCobroException('Artículo no encontrado para el código: ' . ($item['codigo'] ?? ''));
+            if( isset($item['idarticulo'])){
+                $articulo = Articulo::where('id', $item['idarticulo'] ?? null)->first();
+            }else{
+                throw new MediosDeCobroException('Articulo no encontrado, id: '. $item['idarticulo']);
             }
 
             $cantidad = (float) ($item['cantidad'] ?? 0);
@@ -129,6 +133,7 @@ class OrderDTOFactory
         // Armar DTO
         $dto = new OrderDTO();
         $dto->usuario = $usuario;
+        $dto->idunicolegacy = Arr::get($data, 'idunicoventasucursallegacy');
         $dto->sucursal = $sucursal;
         $dto->modoDeCobro = $modoDeCobro;
         $dto->detalles = $detallesCollection;

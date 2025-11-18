@@ -38,6 +38,8 @@ class ModosDeCobroManager
             $ventaSucursalCobro->idusuario = $order->usuario->id;
             $ventaSucursalCobro->idsucursal = $order->sucursal->id;
             $ventaSucursalCobro->idmododecobro = $order->modoDeCobro?->id;
+            $ventaSucursalCobro->idunicolegacy = $order->idunicolegacy;
+
             $ventaSucursalCobro->estado = MedioDeCobroEstados::NUEVA->value;
 
             $totalOrden = 0;
