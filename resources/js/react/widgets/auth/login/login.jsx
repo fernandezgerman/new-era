@@ -1,7 +1,7 @@
 import React from 'react';
 import {Input} from "../../../components/Input.jsx";
 import {DivCenterContentHyV} from "../../../components/Containers/DivCenterContentHyV.jsx";
-import {ButtonSuccess} from "../../../components/Buttons.jsx";
+import {Button} from "../../../components/Buttons.jsx";
 
 import darkLogo from '../../../../../img/dark-logo.png';
 import lightLogo from '../../../../../img/light-logo.png';
@@ -58,8 +58,9 @@ const SelectUserAndPassword = ({setAuthUser}) => {
                         <div className="text-red-600 text-sm mb-4">{error}</div>
                     )}
                     <div className="text-center">
-                        <ButtonSuccess type="submit"
-                                       disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</ButtonSuccess>
+                        <Button type="submit"
+                                       className={'w-full! float-right'}>
+                                       disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</Button>
                     </div>
                 </form>
             </div>
@@ -118,9 +119,10 @@ export const SelectSucursal = ({authUser}) => {
                     <div className="text-red-600 text-sm mb-4">{error}</div>
                 )}
                 <div className="text-center">
-                    <ButtonSuccess type="button"
+                    <Button type="button"
                                    onClick={handleSubmit}
-                                   disabled={loading || sucursal === null}>{loading ? 'Aguarde...' : 'Continuar'}</ButtonSuccess>
+                                    className={'w-full'}
+                                   disabled={loading || sucursal === null}>{loading ? 'Aguarde...' : 'Continuar'}</Button>
                 </div>
             </div>
         </>
@@ -150,7 +152,7 @@ export const Login = () => {
                                     className="text-xs text-red-600 mb-2 whitespace-pre-wrap">{String(error?.message || error)}</div>
 
                                 <div className="text-center">
-                                    <ButtonSuccess type="button" onClick={resetErrorBoundary}>Reintentar</ButtonSuccess>
+                                    <Button type="button" onClick={resetErrorBoundary}>Reintentar</Button>
                                 </div>
                             </div>
                         )}>

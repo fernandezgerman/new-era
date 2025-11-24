@@ -17,8 +17,9 @@
     --dark-font-color: white;
 
     /* LIGHT THEME*/
-    --bg-color: white;
+    --bg-color: #F3F4F5;
     --font-color: rgb(103 116 142 / var(--tw-text-opacity));
+
 
     /*
     screens:{
@@ -38,6 +39,7 @@
     background-color: var(--dark-bg-color);
     color: var(--dark-font-color);
 }
+
 @utility ne-body {
     background-color: var(--bg-color);
     color: rgb(103 116 142 / var(--tw-text-opacity));

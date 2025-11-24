@@ -22,7 +22,7 @@ export default class ResourcesBase{
                 );
         }
 
-        throw new Error(error?.response.message ?? 'Error no determinado realizando la operacion');
+        throw new Error(errorResponse?.response?.message ?? errorResponse ?? 'Error no determinado realizando la operacion');
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR;
 
 use App\Contracts\Integrations\HttpClient;
+use App\Services\MediosDeCobro\Contracts\MedioDeCobroDriverInterface;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroEventHandlerInterface;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroQRDriverInterface;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoQRWebhookEventDTO;
@@ -18,10 +19,12 @@ use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQROrde
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQRWebhookEventFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Http\MercadoPagoHttpClient;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Models\MercadoPagoQROrderSql;
+use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\Exceptions\MediosDeCobroInvalidOrderException;
 use App\Services\MediosDeCobro\MediosDeCobroNotImplementedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,9 +34,9 @@ use Illuminate\Support\Facades\Log;
 class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobroEventHandlerInterface
 {
     private HttpClient $httpClient;
-    public function __construct()
+    public function __construct(ConnectionDataDTO $connectionDataDTO)
     {
-        $this->httpClient = app(MercadoPagoHttpClient::class);
+        $this->httpClient = new MercadoPagoHttpClient($connectionDataDTO);
     }
 
     /**
@@ -154,6 +157,18 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
             MercadoPagoQRStatus::PROCESSED->value => MedioDeCobroEstados::APROBADO,
             default => throw new MediosDeCobroNotImplementedException('Mercado pago qr driver does not implement this kind of status: '. $mpQrStatus),
         };
+    }
+
+    public function testConnection(): bool
+    {
+        try{
+            $this->httpClient->get('orders/AAAA1');
+            return true;
+        }catch(MediosDeCobroInvalidOrderException $e)
+        {
+            return true;
+        }
+
     }
 }
 

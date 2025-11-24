@@ -4,7 +4,11 @@ namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Http;
 use App\Contracts\Integrations\HttpClient;
 use App\Contracts\Integrations\IntegrationResponse;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRIdempotencyKeyAlreadyTakenException;
+use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
+use App\Services\MediosDeCobro\Exceptions\ErrorInTheRequestException;
+use App\Services\MediosDeCobro\Exceptions\MediosDeCobroInvalidOrderException;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Illuminate\Support\Facades\Http;
@@ -16,10 +20,12 @@ class MercadoPagoHttpClient implements HttpClient
 
     private string $accessToken;
 
-    public function __construct()
+    public function __construct(ConnectionDataDTO $connectionDataDTO)
     {
-        $this->accessToken = "APP_USR-6468260747376535-100914-8f38318e2797248ece7921c68900edac-2915257368";
-        $this->host = "https://api.mercadopago.com/v1/";
+        $this->accessToken = $connectionDataDTO->token;
+            //"APP_USR-6468260747376535-100914-8f38318e2797248ece7921c68900edac-2915257368";
+        $this->host = config('medios_de_cobro.drivers.MercadoPagoQR.host');
+            //"https://api.mercadopago.com/v1/";
     }
 
     public function delete(string $uri, array $data): IntegrationResponse
@@ -83,6 +89,17 @@ class MercadoPagoHttpClient implements HttpClient
                 throw new MercadoPagoQRIdempotencyKeyAlreadyTakenException('Idempotency Key Already Taken');
             }
             Log::error(json_encode($body));
+
+            if(Arr::get($body, 'errors.0.code') === 'invalid_path_param')
+            {
+                throw new MediosDeCobroInvalidOrderException('Los parametros definidos no son correctos');
+            }
+
+            if($response->status() > 399 && $response->status() < 500)
+            {
+                throw new ErrorInTheRequestException(Arr::get($body, 'errors.0.message') ?? 'Request error');
+            }
+
             throw new Exception('Unexpected HTTP status code '.$response->status());
         }
 

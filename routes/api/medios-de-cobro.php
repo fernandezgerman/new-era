@@ -20,11 +20,13 @@ route::prefix('medios-de-cobro')->group(function () {
                 ->withoutMiddleware([ValidateMercadoPagoQR::class]);
         });
 
-
     Route::post('/order/generate', [MediosDeCobroController::class, 'generateOrderByData'])
         ->withoutMiddleware(['auth:sanctum', CheckLegacyPermissions::class])
         ->middleware('custom.auth')
         ->name('medios-de-cobro.order-legacy-generate');
+
+    Route::post('/test-connection', [MediosDeCobroController::class, 'testQRConnection'])
+        ->name('medios-de-cobro.test-connection');
 });
 
 

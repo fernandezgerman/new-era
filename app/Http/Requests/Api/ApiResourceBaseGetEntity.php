@@ -8,21 +8,9 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class ApiResourceBaseGetEntity extends FormRequest
+class ApiResourceBaseGetEntity extends AbstractApiRequest
 {
     protected $exception = ApiValidationException::class;
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw (new ApiResourceValidationException($validator))
-            ->errorBag($this->errorBag)
-            ->redirectTo($this->getRedirectUrl());
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
 
     public function rules(): array
     {
@@ -49,6 +37,8 @@ class ApiResourceBaseGetEntity extends FormRequest
                     $fail('The selected id is invalid.');
                 }
             }],
+            'filtros' => ['nullable', 'array'],
+            'orden' => ['nullable', 'array'],
             'includes' => ['sometimes', 'array'],
             'includes.*' => ['string', function ($attribute, $value, $fail) {
                 $modelClass = $this->resolveModelClass($this->route('entity'));
@@ -78,15 +68,17 @@ class ApiResourceBaseGetEntity extends FormRequest
             $parts = array_filter(array_map('trim', explode(',', $includes)));
             $this->merge(['includes' => $parts]);
         }
-    }
 
-    private function resolveModelClass(?string $entity): string
-    {
-        if (! $entity) {
-            return '';
+        $filtros = $this->query('filtros');
+        if (is_string($filtros)) {
+            $filtros = json_decode($filtros, true);
+            $this->merge(['filtros' => $filtros]);
         }
-        // Accept entity in various cases, map to StudlyCase and singular if needed.
-        $class = Str::studly(Str::singular($entity));
-        return "App\\Models\\$class";
+
+        $orden = $this->query('orden');
+        if (is_string($orden)) {
+            $parts = array_filter(array_map('trim', explode(',', $orden)));
+            $this->merge(['orden' => $parts]);
+        }
     }
 }

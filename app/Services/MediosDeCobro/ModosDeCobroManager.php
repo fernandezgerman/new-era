@@ -3,6 +3,7 @@
 namespace App\Services\MediosDeCobro;
 
 use App\Events\Events\MediosDeCobro\MediosDeCobroStatusChangeEvent;
+use App\Models\ModoDeCobro;
 use App\Models\VentaSucursalCobro;
 use App\Models\VentaSucursalCobroArticulo;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroDriverInterface;
@@ -11,10 +12,12 @@ use App\Services\MediosDeCobro\Contracts\MedioDeCobroQRDriverInterface;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRDynamoPersitanceException;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRIdempotencyKeyAlreadyTakenException;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRNotFoundException;
+use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDetalleDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConnectionTestException;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroException;
 use App\Services\MediosDeCobro\Factories\OrderDTOFactory;
 use Illuminate\Http\Request;
@@ -65,20 +68,22 @@ class ModosDeCobroManager
         return $ventaSucursalCobro;
     }
 
-    private function getDriverOrFail(VentaSucursalCobro $ventaSucursalCobro): MedioDeCobroDriverInterface
+    private function getDriverOrFail(ConnectionDataDTO $subject): MedioDeCobroDriverInterface
     {
-        $mc = $ventaSucursalCobro->modoDeCobro;
-        $driverClass = config('medios_de_cobro.drivers.'.$ventaSucursalCobro->modoDeCobro?->driver.'.class');
+        $mc = $subject->modoDeCobro;
+
+        $driverClass = config('medios_de_cobro.drivers.'.$mc->driver.'.class');
 
         if(!$driverClass)
         {
-            throw new MediosDeCobroException('No se encontro la clase para le medio de pago: '.'modos_de_cobro.driver.'.$ventaSucursalCobro->modoDeCobro?->driver.'.class');
+            throw new MediosDeCobroException('No se encontro la clase para le medio de pago: '.'modos_de_cobro.driver.'.$mc?->driver.'.class');
         }
 
         /** @var MedioDeCobroDriverInterface $driver */
-        return app($driverClass);
+        return app($driverClass, ['connectionDataDTO' => $subject]);
 
     }
+
     public function generarCobro(VentaSucursalCobro $ventaSucursalCobro): void
     {
         $orderDTO = OrderDTOFactory::fromVentaSucursalCobro($ventaSucursalCobro);
@@ -137,6 +142,21 @@ class ModosDeCobroManager
 
                 event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
             }
+        }
+    }
+
+    /**
+     * @throws MediosDeCobroConnectionTestException
+     */
+    public function testConnection(ConnectionDataDTO $connectionDataDTO): bool
+    {
+        try
+        {
+            $driver = $this->getDriverOrFail($connectionDataDTO);
+            return $driver->testConnection();
+
+        }catch(\Exception $e){
+            throw new MediosDeCobroConnectionTestException($e->getMessage(),);
         }
     }
 }
