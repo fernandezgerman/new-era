@@ -7,6 +7,6 @@ use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 
 interface MedioDeCobroEventHandlerInterface
 {
-    public function processEvent(WebhookEventDTO $webhookEventDTO): ?OrderStatusChangeDTO;
+    public static function processEvent(WebhookEventDTO $webhookEventDTO): ?OrderStatusChangeDTO;
 
 }

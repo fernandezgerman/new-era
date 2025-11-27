@@ -9,6 +9,6 @@ interface MedioDeCobroDriverInterface
 {
     public function createOrder(OrderDTO $orderDTO): OrderDTO;
 
-    public function testConnection(): bool;
+    public function testConnection(int $sucursalId): bool;
 
 }

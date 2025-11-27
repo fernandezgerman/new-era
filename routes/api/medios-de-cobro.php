@@ -14,10 +14,7 @@ route::prefix('medios-de-cobro')->group(function () {
         ->withoutMiddleware(['auth:sanctum', CheckLegacyPermissions::class])
         ->middleware(ValidateMercadoPagoQR::class)
         ->group(function () {
-            Route::post('event', [MediosDeCobroController::class, 'processEvent']);
-
-            Route::post('order/event', [MediosDeCobroController::class, 'processEvent'])
-                ->withoutMiddleware([ValidateMercadoPagoQR::class]);
+            Route::post('event/{validationToken}', [MediosDeCobroController::class, 'processEvent']);
         });
 
     Route::post('/order/generate', [MediosDeCobroController::class, 'generateOrderByData'])

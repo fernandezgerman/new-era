@@ -43,6 +43,7 @@ class MedioDeCobroSucursalConfiguracion extends Model
         'idsucursalcajadestino',
         'idusuariocajadestino',
         'metadata',
+        'configuration_checked',
     ];
 
     /**
@@ -56,6 +57,7 @@ class MedioDeCobroSucursalConfiguracion extends Model
             'habilitarconfiguracion' => 'boolean',
             'transferirmonto' => 'boolean',
             'metadata' => 'array', // JSON column
+            'configuration_checked' => 'boolean',
         ];
     }
 

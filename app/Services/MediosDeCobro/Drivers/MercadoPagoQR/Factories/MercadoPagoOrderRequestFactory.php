@@ -2,7 +2,11 @@
 
 namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories;
 
+use App\DataAccessor\MedioDeCobroSucursalConfiguracionDataAccessor;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
+use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConfiguracionException;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class MercadoPagoOrderRequestFactory
 {
@@ -45,7 +49,16 @@ class MercadoPagoOrderRequestFactory
 
         $externalReference = 'ID'.$orderDTO->localId;
 
-        $externalPosId = config('services.mercadopago.external_pos_id', env('MP_EXTERNAL_POS_ID', 'CAJA1'));
+        //Obtiene el external identifier de la caja
+        $medioDeCobroSucursalConfiguracionDataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor($orderDTO->sucursal->id, $orderDTO->modoDeCobro->id);
+        $medioDeCobroSucursalConfiguracion = $medioDeCobroSucursalConfiguracionDataAccessor->getConfiguracionValidated();
+        $externalPosId = Arr::get($medioDeCobroSucursalConfiguracion->metadata, 'caja.external_id');
+
+        if(!$externalPosId)
+        {
+            throw new MediosDeCobroConfiguracionException('No se encontro la caja para enviar la orden');
+        }
+
         $mode = config('services.mercadopago.qr_mode', env('MP_QR_MODE', 'static'));
         $description = 'Order QR - Sucursal ' . $orderDTO->sucursal->id;
 

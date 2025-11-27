@@ -15,6 +15,7 @@ import {
     testToken, updateModoDeCobroSucursalConfiguracion
 } from "@/dataAccess/ModoDeCobroSucursalConfiguracionDataAccess.jsx";
 import {LabelError} from "@/components/Label.jsx";
+import {AlertDanger, AlertSuccess} from "@/components/Alerts.jsx";
 
 const AccionesEspeciales = ({
                                 transferirMovimientos,
@@ -44,10 +45,10 @@ const AccionesEspeciales = ({
     }));
 
     useEffect(() => {
-        console.log('usr list', usuariosList, usuarioCaja);
+
         if(usuarioCaja && usuariosList && usuariosList.length > 0 && !usuariosList.reduce((exists, ul) => (usuarioCaja === ul.id || exists), false))
         {
-            console.log('remove usr');
+
             setUsuarioCaja(false);
         }
     }, [usuariosList]);
@@ -89,26 +90,50 @@ const AccionesEspeciales = ({
     </div>);
 }
 
+const PanelConfiguracionChecked = ({originalData, checkMercadoPagoQRConfiguracion, errorMessage}) =>
+{
+    if(!(originalData?.id))
+    {
+        return '';
+    }
+
+    const ConfiguracionNoCheckeada = <AlertDanger>
+        La configuracion no ha sido checkeada. El medio de pago no estará disponible hasta entonces.
+        {errorMessage && ( <>
+            <br /><b>{errorMessage}</b> <br />
+        </>)}
+        <Button format={'xs'} onClick={() => checkMercadoPagoQRConfiguracion(originalData.id)} >Checkear configuracion</Button>
+    </AlertDanger>;
+
+    const ConfiguracionCheckeada = <AlertSuccess>
+        La configuracion ha sido checkeada correctamente. Todo listo para comenzar!
+    </AlertSuccess>;
+
+    return originalData.configuration_checked ? ConfiguracionCheckeada : ConfiguracionNoCheckeada;
+}
 export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) => {
     const darkMode = useSystemTheme();
     const [mercadoPagoHabilitado, setMercadoPagoHabilitado] = useState(false);
     const [transferirMovimientos, setTransferirMovimientos] = useState(false);
-    const [sucursalCaja, setSucursalCaja] = useState(false);
-    const [usuarioCaja, setUsuarioCaja] = useState(false);
+    const [sucursalCaja, setSucursalCaja] = useState(0);
+    const [usuarioCaja, setUsuarioCaja] = useState(0);
     const [errorMessage, setErrorMessage] = useState(false);
+    const [checkConfigurationErrorMessage, setCheckConfigurationErrorMessage] = useState(false);
     const [validMessage, setValidMessage] = useState(false);
     const [loading, setLoading] = useState(false);
     const [token, setToken] = useState('');
+    const [userId, setUserId] = useState('');
     const [originalData, setOriginalData] = useState(false);
 
     const loadDataFromDB =  (entity) => {
         setOriginalData(entity);
 
-        setSucursalCaja(entity.idsucursalcajadestino ?? false);
-        setUsuarioCaja(entity.idusuariocajadestino ?? false);
+        setSucursalCaja(entity.idsucursalcajadestino ?? 0);
+        setUsuarioCaja(entity.idusuariocajadestino ?? 0);
         setMercadoPagoHabilitado(entity.habilitarconfiguracion ?? false);
         setTransferirMovimientos(entity.transferirmonto ?? false);
         setToken(entity.metadata?.token ?? '');
+        setUserId(entity.metadata?.userId ?? '');
     }
 
     useEffect(() => {
@@ -121,7 +146,6 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
         });
     }, [])
 
-    originalData
     const datosValidos = () => {
         setErrorMessage('');
         if (mercadoPagoHabilitado) {
@@ -141,12 +165,6 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
         setLoading(true);
 
         try {
-            if(mercadoPagoHabilitado) {
-                let testResponse = await testToken(token);
-                if (testResponse.connection_valid) {
-
-                }
-            }
 
             let data = {
                 idsucursal: sucursalId,
@@ -157,47 +175,94 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
                 idusuariocajadestino: transferirMovimientos && usuarioCaja ? usuarioCaja : null,
                 metadata: {
                     token: mercadoPagoHabilitado ? token : null,
+                    userId: userId,
                 },
                 id: originalData ? originalData.id : null
             };
 
             const method = originalData ? updateModoDeCobroSucursalConfiguracion : insertModoDeCobroSucursalConfiguracion;
 
-            method({data}).then((result) => {
+            method({data}).then(async (result)  => {
                 loadDataFromDB(result);
-            }).finally(() => {
-                setLoading(false);
+
+                console.log('insert result',result);
+                if(result.habilitarconfiguracion && !result.configuration_checked) {
+                    let testResponse = onTest(result.id);
+                }else{
+                    setLoading(false);
+                }
             }).catch(error => {
                 setErrorMessage(error?.message ?? error);
+                setLoading(false);
             });
+
+
+
         } catch (error) {
             setLoading(false);
             setErrorMessage(error?.message ?? error);
         }
     }
-    const onTest = () => {
+    const onTest = async (configuracionId) => {
         if (!datosValidos()) {
             return;
         }
         setLoading(true);
-
-        testToken(token)
+        setCheckConfigurationErrorMessage('');
+        testToken(configuracionId)
             .then((response) => {
                 if (response.connection_valid) {
                     setValidMessage('Coneccion valida');
+                    setOriginalData(response.configuracion);
                 }
             })
             .finally(() => {
                 setLoading(false);
             }).catch((error) => {
-                setErrorMessage(error.message);
+                setCheckConfigurationErrorMessage(error.message);
         });
+
     }
 
     useEffect(() => {
         setValidMessage(false);
     }, [token]);
 
+
+    const isDirty =
+        !(
+        parseInt(originalData?.idsucursal) === parseInt(sucursalId) &&
+        parseInt(originalData?.idmododecobro) === parseInt(modoDeCobroId) &&
+        originalData?.habilitarconfiguracion === mercadoPagoHabilitado &&
+        originalData?.transferirmonto === transferirMovimientos &&
+        parseInt(originalData?.idsucursalcajadestino ?? 0) === parseInt(sucursalCaja ?? 0) &&
+        parseInt(originalData?.idusuariocajadestino ?? 0) === parseInt(usuarioCaja ?? 0) &&
+        originalData?.metadata?.token === token &&
+        originalData?.metadata?.userId === userId
+        )
+
+/*
+    console.log('isDirty', isDirty);
+    console.log([
+    parseInt(originalData?.idsucursal),
+    parseInt(originalData?.idmododecobro),
+    originalData?.habilitarconfiguracion,
+    originalData?.transferirmonto,
+    parseInt(originalData?.idsucursalcajadestino ?? 0),
+    parseInt(originalData?.idusuariocajadestino ?? 0),
+    originalData?.metadata?.token,
+        originalData?.metadata?.userId]);
+    console.log('isDirty?', isDirty);
+    console.log([
+    parseInt(sucursalId),
+    parseInt(modoDeCobroId),
+    mercadoPagoHabilitado,
+    transferirMovimientos,
+    parseInt(sucursalCaja ?? 0),
+    parseInt(usuarioCaja ?? 0),
+    token,
+    userId]);
+*/
     return <div className={''}>
         <ErrorBoundary>
             <Card title={
@@ -218,8 +283,14 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
                             <H3>Conectividad</H3>
                             <Input type={'text'} label={'App token'} setValue={setToken} value={token}
                                    errorMessage={errorMessage} validMessage={validMessage}/>
-                            <Button disabled={loading} onClick={onTest} format={'xs'} className={'mt-1! '}>Test
-                                Connection</Button>
+                            {/*<Button disabled={loading} onClick={onTest} format={'xs'} className={'mt-1! '}>Test
+                                Connection</Button> */}
+
+                            <Input type={'text'} label={'Collector id (user id)'} className={'mt-2'} setValue={setUserId} value={userId}/>
+
+                            <PanelConfiguracionChecked originalData={originalData}
+                                                       errorMessage={checkConfigurationErrorMessage}
+                                                       checkMercadoPagoQRConfiguracion={onSave}  />
                         </SubCard>
                         <SubCard>
                             <AccionesEspeciales
@@ -234,7 +305,7 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
 
                     </div>)
                 }
-                <Button disabled={loading} onClick={onSave} className={'w-20 float-right'}>Guardar</Button>
+                {isDirty && <Button disabled={loading} onClick={onSave} className={'w-20 float-right'}>Guardar</Button>}
             </Card>
         </ErrorBoundary>
     </div>;

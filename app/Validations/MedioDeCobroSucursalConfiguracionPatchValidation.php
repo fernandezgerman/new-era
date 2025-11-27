@@ -37,10 +37,12 @@ class MedioDeCobroSucursalConfiguracionPatchValidation
             // Flags
             'habilitarconfiguracion' => ['sometimes', 'boolean'],
             'transferirmonto' => ['sometimes', 'boolean'],
+            'configuration_checked' => ['sometimes', 'boolean'],
 
             // Conditional metadata token when habilitarconfiguracion is true
             'metadata' => ['nullable', 'array'],
-            'metadata.token' => ['nullable', 'string', 'required_if:habilitarconfiguracion,1'],
+            'metadata.token' => ['nullable', 'string', 'required_if:habilitarconfiguracion, true'],
+            'metadata.userId' => ['nullable', 'string', 'required_if:habilitarconfiguracion,true'],
 
             // Conditional requirements when transfer is enabled
             'idsucursalcajadestino' => ['nullable', 'integer', 'required_if:transferirmonto,1,true'],
@@ -68,6 +70,7 @@ class MedioDeCobroSucursalConfiguracionPatchValidation
             'transferirmonto.boolean' => 'El campo transferirmonto debe ser booleano.',
 
             'metadata.token.required_if' => 'El token de app es obligatorio cuando la configuración está habilitada.',
+            'metadata.userId.required_if' => 'El userId es obligatorio cuando la configuración está habilitada.',
 
             'idsucursalcajadestino.required_if' => 'La sucursal de caja destino es obligatoria cuando transferirmonto es verdadero.',
             'idusuariocajadestino.required_if' => 'El usuario de caja destino es obligatorio cuando transferirmonto es verdadero.',

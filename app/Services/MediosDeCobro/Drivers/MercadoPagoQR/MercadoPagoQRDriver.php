@@ -6,6 +6,7 @@ use App\Contracts\Integrations\HttpClient;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroDriverInterface;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroEventHandlerInterface;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroQRDriverInterface;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoCajaDTO;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoQRWebhookEventDTO;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Enum\MercadoPagoQRStatus;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRDynamoPersitanceException;
@@ -24,6 +25,7 @@ use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConfiguracionException;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroInvalidOrderException;
 use App\Services\MediosDeCobro\MediosDeCobroNotImplementedException;
 use Illuminate\Http\Request;
@@ -34,9 +36,18 @@ use Illuminate\Support\Facades\Log;
 class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobroEventHandlerInterface
 {
     private HttpClient $httpClient;
+    private MercadoPagoExtendedFunctionalities $extendedFunctionalities;
+
+    /**
+     * @throws MediosDeCobroConfiguracionException
+     */
     public function __construct(ConnectionDataDTO $connectionDataDTO)
     {
         $this->httpClient = new MercadoPagoHttpClient($connectionDataDTO);
+
+        $connectionDataDTO->host = config('medios_de_cobro.drivers.MercadoPagoQR.host_extended_functionalities');
+        $this->extendedFunctionalities = new MercadoPagoExtendedFunctionalities($connectionDataDTO);
+
     }
 
     /**
@@ -101,7 +112,7 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
             $id = ($request->get('id') ?? $request->get('data_id'));
             $template = "id:{$id};request-id:{$request->header('x-request-id')};ts:{$signatureContent[$tsPosition]};";
 
-            Log::info('TEMPOLATE: '.$template);
+            Log::info('TEMPLATE: '.$template);
             $key = env('MERCADO_PAGO_WEBHOOK_SECRET_KEY');
             $cyphedSignature = hash_hmac('sha256', $template, $key);
 
@@ -115,7 +126,7 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
         return true;
     }
 
-    public function processEvent(WebhookEventDTO $webhookEventDTO): ?\App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO
+    public static function processEvent(WebhookEventDTO $webhookEventDTO): ?\App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO
     {
         $mpQRWebhookEvent = MercadoPagoQRWebhookEventFactory::fromWebhook($webhookEventDTO);
         $localOrder =  MercadoPagoQROrderSql::where('externalorderid', $mpQRWebhookEvent->data->id)->first();
@@ -140,8 +151,7 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
             $orderStatusChangeDTO = new OrderStatusChangeDTO();
             $orderStatusChangeDTO->externalId = $localOrder->externalorderid;
             $orderStatusChangeDTO->localId = $localOrder->ventasucursalcobroid;
-            $orderStatusChangeDTO->status = $this->getModoDeCobroStatus($localOrder->estado);
-
+            $orderStatusChangeDTO->status = self::getModoDeCobroStatus($localOrder->estado);
 
             return $orderStatusChangeDTO;
         }
@@ -149,7 +159,7 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
         return null;
     }
 
-    private function getModoDeCobroStatus(string $mpQrStatus): MedioDeCobroEstados
+    private static function getModoDeCobroStatus(string $mpQrStatus): MedioDeCobroEstados
     {
         return match($mpQrStatus){
             MercadoPagoQRStatus::EXPIRED->value => MedioDeCobroEstados::EXPIRO,
@@ -159,17 +169,34 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
         };
     }
 
-    public function testConnection(): bool
+    public function testConnection(int $sucursalId): bool
     {
+        $mercadoPagoCajaDTO = null;
         try{
+            // 1- test token
             $this->httpClient->get('orders/AAAA1');
-            return true;
         }catch(MediosDeCobroInvalidOrderException $e)
         {
-            return true;
+        }catch(\Throwable $throwable)
+        {
+            Log::error($throwable->getMessage());
+            throw new MediosDeCobroConfiguracionException('Error al validar el token: '.$throwable->getMessage());
         }
 
+        try{
+            //2 - create caja and store
+            $mercadoPagoCajaDTO = $this->extendedFunctionalities->getOrCreateCajaForSucursal($sucursalId);
+        }catch(\Throwable $throwable)
+        {
+            Log::error($throwable->getMessage());
+            throw $throwable;
+        }
+
+
+        return !blank($mercadoPagoCajaDTO);
     }
+
 }
+
 
 

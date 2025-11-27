@@ -3,7 +3,9 @@
 namespace App\Services\MediosDeCobro;
 
 use App\Events\Events\MediosDeCobro\MediosDeCobroStatusChangeEvent;
+use App\Models\MedioDeCobroSucursalConfiguracion;
 use App\Models\ModoDeCobro;
+use App\Models\Sucursal;
 use App\Models\VentaSucursalCobro;
 use App\Models\VentaSucursalCobroArticulo;
 use App\Services\MediosDeCobro\Contracts\MedioDeCobroDriverInterface;
@@ -19,6 +21,7 @@ use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConnectionTestException;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroException;
+use App\Services\MediosDeCobro\Factories\ConnectionDataDTOFactory;
 use App\Services\MediosDeCobro\Factories\OrderDTOFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -88,7 +91,9 @@ class ModosDeCobroManager
     {
         $orderDTO = OrderDTOFactory::fromVentaSucursalCobro($ventaSucursalCobro);
         try{
-            $driver = $this->getDriverOrFail($ventaSucursalCobro);
+            $driver = $this->getDriverOrFail(
+                ConnectionDataDTOFactory::fromVentaSucursalCobro($ventaSucursalCobro)
+            );
 
             $driver->createOrder($orderDTO);
 
@@ -100,13 +105,16 @@ class ModosDeCobroManager
         {
             return;
         }
+
         $ventaSucursalCobro->estado = MedioDeCobroEstados::PENDIENTE->value;
         $ventaSucursalCobro->save();
     }
 
     public function getQRImageURL(VentaSucursalCobro $ventaSucursalCobro): ?string
     {
-        $driver = $this->getDriverOrFail($ventaSucursalCobro);
+        $driver = $this->getDriverOrFail(
+            ConnectionDataDTOFactory::fromVentaSucursalCobro($ventaSucursalCobro)
+        );
 
         if($driver instanceof MedioDeCobroQRDriverInterface)
         {
@@ -115,12 +123,12 @@ class ModosDeCobroManager
         return null;
     }
 
-    public function processEvent(Request $request, MedioDeCobroEventHandlerInterface $driver): void
+    public function processEvent(Request $request, $driverClass): void
     {
         $webhookEvent = new WebhookEventDTO($request->all());
         $newStatus = null;
         try{
-            $newStatus = $driver->processEvent($webhookEvent);
+            $newStatus = $driverClass::processEvent($webhookEvent);
         }catch(MercadoPagoQRNotFoundException|MediosDeCobroNotImplementedException|MediosDeCobroNotImplementedException $mercadoPagoQRNotFoundException)
         {
             Log::warning($mercadoPagoQRNotFoundException->getMessage());
@@ -148,15 +156,28 @@ class ModosDeCobroManager
     /**
      * @throws MediosDeCobroConnectionTestException
      */
-    public function testConnection(ConnectionDataDTO $connectionDataDTO): bool
+    public function testConnection(MedioDeCobroSucursalConfiguracion $medioDeCobroSucursalConfiguracion): bool
     {
         try
         {
-            $driver = $this->getDriverOrFail($connectionDataDTO);
-            return $driver->testConnection();
+
+            $driver = $this->getDriverOrFail(
+                ConnectionDataDTOFactory::fromMedioDeCobroSucursalConfiguracion(
+                    $medioDeCobroSucursalConfiguracion
+                )
+            );
+
+            $result = $driver->testConnection($medioDeCobroSucursalConfiguracion->idsucursal);
+
+            if($result){
+                $medioDeCobroSucursalConfiguracion->configuration_checked = true;
+                $medioDeCobroSucursalConfiguracion->save();
+            }
+
+            return $result;
 
         }catch(\Exception $e){
-            throw new MediosDeCobroConnectionTestException($e->getMessage(),);
+            throw new MediosDeCobroConnectionTestException($e->getMessage());
         }
     }
 }

@@ -11,14 +11,14 @@ class TestConnectionRequest extends AbstractApiRequest
     {
 
         return [
-            'token' => ['required', 'string'],
+            'configuracionId' => ['required', 'int'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'token.required' => 'El token de app es obligatorio.',
+            'configuracionId.required' => 'El id de configuracion de app es obligatorio.',
         ];
     }
 }

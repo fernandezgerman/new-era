@@ -2,13 +2,13 @@ import ResourcesBase from "./ResourcesBase.jsx";
 
 export default class ModosDeCobro extends ResourcesBase
 {
-    async testConnection(token)
+    async testConnection(configuracionId)
     {
         try{
 
             const response = this.processResponse(
                 await window.axios.post('/api/medios-de-cobro/test-connection', {
-                    token: token
+                    configuracionId: configuracionId
                 })
             );
 

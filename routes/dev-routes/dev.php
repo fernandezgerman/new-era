@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\GeocodeSucursalesCommand;
 use Illuminate\Support\Facades\Route;
 
 
@@ -50,3 +51,10 @@ Route::get('/ws-test', function () {
 
     return view('ws-test', compact('appKey', 'host', 'port', 'useTLS'));
 });
+
+Route::get('/geodecode-sucursal', function () {
+    $cmd = new GeocodeSucursalesCommand();
+
+    $cmd->handle();
+});
+

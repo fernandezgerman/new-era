@@ -4,6 +4,8 @@ namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Http;
 use App\Contracts\Integrations\HttpClient;
 use App\Contracts\Integrations\IntegrationResponse;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRIdempotencyKeyAlreadyTakenException;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRNotFoundException;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoExceptionMessageFactory;
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\Exceptions\ErrorInTheRequestException;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroInvalidOrderException;
@@ -23,9 +25,7 @@ class MercadoPagoHttpClient implements HttpClient
     public function __construct(ConnectionDataDTO $connectionDataDTO)
     {
         $this->accessToken = $connectionDataDTO->token;
-            //"APP_USR-6468260747376535-100914-8f38318e2797248ece7921c68900edac-2915257368";
-        $this->host = config('medios_de_cobro.drivers.MercadoPagoQR.host');
-            //"https://api.mercadopago.com/v1/";
+        $this->host = $connectionDataDTO->host;
     }
 
     public function delete(string $uri, array $data): IntegrationResponse
@@ -95,9 +95,17 @@ class MercadoPagoHttpClient implements HttpClient
                 throw new MediosDeCobroInvalidOrderException('Los parametros definidos no son correctos');
             }
 
+            if($response->status() === 403){
+                throw new ErrorInTheRequestException('Request error: accesso restringido');
+            }
+            if(Arr::get($body, 'error') === 'store_not_found')
+            {
+                throw new MercadoPagoQRNotFoundException('store_not_found');
+            }
+
             if($response->status() > 399 && $response->status() < 500)
             {
-                throw new ErrorInTheRequestException(Arr::get($body, 'errors.0.message') ?? 'Request error');
+                throw new ErrorInTheRequestException(MercadoPagoExceptionMessageFactory::fromBodyRequest($body)  ?? 'Request error');
             }
 
             throw new Exception('Unexpected HTTP status code '.$response->status());

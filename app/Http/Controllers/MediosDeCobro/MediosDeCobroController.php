@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\MediosDeCobro;
 
+use App\DataAccessor\MedioDeCobroSucursalConfiguracionDataAccessor;
 use App\Http\Controllers\BaseController;
-use App\Http\Exceptions\Api\Exceptions\ApiValidationException;
 use App\Http\Requests\MediosDePago\GenerateOrderByDataRequest;
 use App\Http\Requests\MediosDePago\GenerateOrderRequest;
 use App\Http\Requests\MediosDePago\OrderPreviewRequest;
 use App\Http\Requests\MediosDePago\TestConnectionRequest;
+use App\Models\MedioDeCobroSucursalConfiguracion;
 use App\Models\ModoDeCobro;
 use App\Models\VentaSucursalCobro;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDTOFactory;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoExtendedFunctionalities;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoQRDriver;
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\Factories\OrderDTOFactory;
 use App\Services\MediosDeCobro\ModosDeCobroManager;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 
@@ -62,7 +64,16 @@ class MediosDeCobroController extends BaseController
     {
         $modosDeCobroManager = app(ModosDeCobroManager::class);
 
-        $modosDeCobroManager->processEvent($request, app(MercadoPagoQRDriver::class));
+        $modosDeCobroManager->processEvent($request, MercadoPagoQRDriver::class);
+
+        return 'ok';
+    }
+
+    public function processEventValidated(string $validationToken, Request $request)
+    {
+        $modosDeCobroManager = app(ModosDeCobroManager::class);
+
+        $modosDeCobroManager->processEvent($request, MercadoPagoQRDriver::class);
 
         return 'ok';
     }
@@ -74,10 +85,8 @@ class MediosDeCobroController extends BaseController
 
         $modosDeCobroManager = app(ModosDeCobroManager::class);
 
-        $ventaSucursalCobro = $modosDeCobroManager->generarOrden(
-            OrderDTOFactory::fromRequest($orderPreviewRequest)
-        );
-
+        $orderDto = OrderDTOFactory::fromRequest($orderPreviewRequest);
+        $ventaSucursalCobro = $modosDeCobroManager->generarOrden($orderDto);
 
         $modosDeCobroManager = app(ModosDeCobroManager::class);
         $modosDeCobroManager->generarCobro($ventaSucursalCobro);
@@ -94,8 +103,15 @@ class MediosDeCobroController extends BaseController
         if (!$ventaSucursalCobro) {
             return response('Orden no encontrada', 404);
         }
-        //ToDo: cargar el QR correcto
-        $qr = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Commons_QR_code.png";
+
+        //Tomo la configuracion ya validada
+        $dataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor($ventaSucursalCobro->idsucursal, $ventaSucursalCobro->idmododecobro);
+        $medioDeCobroSucursalConfiguracion = $dataAccessor->getConfiguracionValidated();
+
+        //Creo el dto
+        $mercadoPagoCajaDTOFactory = MercadoPagoCajaDTOFactory::fromArray($medioDeCobroSucursalConfiguracion->metadata['caja']);
+        $qr = MercadoPagoExtendedFunctionalities::getOrCreateQrImage($mercadoPagoCajaDTOFactory);
+
         return view('mediosDePago.MercadoPago.legacy-preview', compact('ventaSucursalCobro','qr'));
     }
 
@@ -108,23 +124,32 @@ class MediosDeCobroController extends BaseController
     {
         $result = false;
         $errorMessage = '';
+        $medioDeCobroSucursalConfiguracion = '';
         try {
             $connectionData = new ConnectionDataDTO();
             $localId = config('medios_de_cobro.drivers.MercadoPagoQR.local_id');
             if (blank($localId)) {
                 throw new Exception('No se encontro ningun medio de cobro para Mercado pago QR');
             }
-            $connectionData->modoDeCobro = ModoDeCobro::where('id', $localId)->first();
-            $connectionData->token = $request->get('token');
+
+            $medioDeCobroSucursalConfiguracion = MedioDeCobroSucursalConfiguracion::where('id', $request->get('configuracionId'))->first();
+
+            if(blank($medioDeCobroSucursalConfiguracion))
+            {
+                throw new Exception('no se encontro MedioDeCobroSucursalConfiguracion');
+            }
 
             $manager = new ModosDeCobroManager();
-            $result = $manager->testConnection($connectionData);
+            $result = $manager->testConnection($medioDeCobroSucursalConfiguracion);
+
+            $medioDeCobroSucursalConfiguracion = MedioDeCobroSucursalConfiguracion::where('id', $request->get('configuracionId'))->first();
         }catch(Throwable $t){
             $errorMessage = $t->getMessage();
         }
         return [
             'connection_valid' => $result,
-            'error' => $errorMessage
+            'error' => $errorMessage,
+            'configuracion' => $medioDeCobroSucursalConfiguracion
         ];
     }
 }

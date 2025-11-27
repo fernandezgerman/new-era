@@ -59,6 +59,8 @@ class Sucursal extends Model
         'restringirarqueoperfilpermitido',
         'restringirarqueodiasexcepcion',
         'restringirarqueoperfilexcepcion',
+        'latitud',
+        'longitud',
     ];
 
     /**

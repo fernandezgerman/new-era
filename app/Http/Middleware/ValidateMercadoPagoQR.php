@@ -6,6 +6,7 @@ use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQREve
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoQRDriver;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ValidateMercadoPagoQR
 {
@@ -19,10 +20,14 @@ class ValidateMercadoPagoQR
      */
     public function handle( Request $request, Closure $next)
     {
-        $driver = app(MercadoPagoQRDriver::class);
 
-        //$driver->validateEventOrigin($request);
-
+        if(request()->route('validationToken') !== env('MERCADO_PAGO_URL_VALIDATION_TOKEN'))
+        {
+            Log::warning('MercadoPagoQR request validation token is invalid.');
+            return response()->json([
+                'message' => 'User not found',
+            ], 403);
+        }
 
         return $next($request);
     }

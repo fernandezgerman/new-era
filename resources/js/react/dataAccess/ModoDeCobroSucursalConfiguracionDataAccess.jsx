@@ -10,9 +10,9 @@ const getModoDeCobroSucursalConfiguracion = ({sucursalId, modoDeCobroId}) => {
     ;
 }
 
-const testToken = (token) => {
+const testToken = (configuracionId) => {
     const repository = new ModosDeCobro();
-    return repository.testConnection(token)
+    return repository.testConnection(configuracionId)
 }
 
 const insertModoDeCobroSucursalConfiguracion = async ({data}) => {

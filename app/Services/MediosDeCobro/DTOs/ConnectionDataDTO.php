@@ -10,5 +10,7 @@ class ConnectionDataDTO
 
     public string $token;
 
+    public string $externalUserId;
+
     public ModoDeCobro $modoDeCobro;
 }
