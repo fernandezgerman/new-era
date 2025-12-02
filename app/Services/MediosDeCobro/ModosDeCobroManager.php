@@ -143,10 +143,12 @@ class ModosDeCobroManager
                 throw new MediosDeCobroException('No se pudo localizar una ventaSucursalCobro en la notificacion.');
             }
 
+            Log::info('nuevo estado: '.$ventaSucursalCobro->estado.' - '.$newStatus->status->value);
             if($ventaSucursalCobro->estado !== $newStatus->status->value)
             {
                 $ventaSucursalCobro->estado = $newStatus->status->value;
                 $ventaSucursalCobro->save();
+
 
                 event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
             }

@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Services\Actualizaciones\Contracts\ActualizableItem;
+use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
+use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Articulo extends CustomModel
+class Articulo extends CustomModel implements ActualizableItem
 {
     use HasFactory;
 
@@ -55,5 +58,13 @@ class Articulo extends CustomModel
     public function rubro()
     {
         return $this->belongsTo(Rubro::class, 'idrubro');
+    }
+
+    public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
+    {
+        return new ActualizacionIdentifierDTO(
+            CodigoMotivoActualizacion::GET_ARTICULOS,
+            $this->id
+        );
     }
 }

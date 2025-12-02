@@ -1,6 +1,8 @@
 <?php
 
 use App\Console\Commands\GeocodeSucursalesCommand;
+use App\Events\Events\MediosDeCobro\MediosDeCobroStatusChangeEvent;
+use App\Services\Actualizaciones\ActualizacionesManager;
 use Illuminate\Support\Facades\Route;
 
 
@@ -52,9 +54,33 @@ Route::get('/ws-test', function () {
     return view('ws-test', compact('appKey', 'host', 'port', 'useTLS'));
 });
 
-Route::get('/geodecode-sucursal', function () {
-    $cmd = new GeocodeSucursalesCommand();
+Route::get('/test-actualizaciones', function () {
+    $actualizacionesManager = app(ActualizacionesManager::class);
+    $movimientoCaja = \App\Models\MovimientoCaja::first();
 
-    $cmd->handle();
+    $actualizacionesManager->insertarActualizacion($movimientoCaja);
 });
 
+Route::get('/test-actualizacion-sucursal', function () {
+    $actualizacionesManager = app(ActualizacionesManager::class);
+    $sucursal = \App\Models\Sucursal::where('id', 27)->first();
+
+    $actualizacionesManager->insertarActualizacion($sucursal, $sucursal);
+});
+
+Route::get('/test-actualizacion-usuario', function () {
+    $actualizacionesManager = app(ActualizacionesManager::class);
+    $usuario = \App\Models\User::where('id', 1)->first();
+
+    $sucursal = \App\Models\Sucursal::where('id', 4)->first();
+
+    $actualizacionesManager->insertarActualizacion($usuario, $sucursal);
+});
+
+Route::get('/test-mov', function () {
+    $ventaSucursalCobro = \App\Models\VentaSucursalCobro::query()->where('id', 54)->first();
+    $ventaSucursalCobro->estado = \App\Services\MediosDeCobro\Enums\MedioDeCobroEstados::APROBADO;
+    $ventaSucursalCobro->save();
+
+    event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
+});

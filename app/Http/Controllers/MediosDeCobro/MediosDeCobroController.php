@@ -69,15 +69,6 @@ class MediosDeCobroController extends BaseController
         return 'ok';
     }
 
-    public function processEventValidated(string $validationToken, Request $request)
-    {
-        $modosDeCobroManager = app(ModosDeCobroManager::class);
-
-        $modosDeCobroManager->processEvent($request, MercadoPagoQRDriver::class);
-
-        return 'ok';
-    }
-
     public function generateOrderByData(GenerateOrderByDataRequest $orderPreviewRequest)
     {
         // For now, just echo back the validated payload as JSON

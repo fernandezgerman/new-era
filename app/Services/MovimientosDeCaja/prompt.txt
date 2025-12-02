@@ -1,0 +1,107 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `new_era`.`insMovimientoCaja`(
+        in pidusuario bigint(20),
+        in pidusuariodestino bigint(20),
+        in pidsucursal bigint(20),
+        in pidsucursaldestino bigint(20),
+        in pidmotivo bigint(20),
+        in pimporte decimal(20,3),
+        in pobservaciones varchar(200),
+        in pestadoid bigint(20),
+        in p_fecha_hora_movimiento datetime)
+begin
+
+        declare v_idestado BIGINT(20);
+        declare v_numerocajadestino BIGINT(20) ;
+        declare v_numerocaja BIGINT(20);
+        declare v_requiere_aprobacion TINYINT(1);
+        declare v_es_retiro TINYINT(1);
+        declare v_es_aporte TINYINT(1);
+        declare fechaActual DATETIME;
+        DECLARE v_destinatario_correcto bigint(20);
+        declare v_suc_nom varchar(500);
+
+        SET v_numerocajadestino = NULL ;
+        SET v_numerocaja  = NULL;
+
+
+        SELECT
+            ABS(requiereaprobacion),
+            IF (esretirodecaja IS NULL, 0,esretirodecaja),
+            IF (esaportedecaja IS NULL, 0,esaportedecaja)
+        INTO
+            v_requiere_aprobacion,
+            v_es_retiro,
+            v_es_aporte
+        FROM
+            motivosmovimientoscaja
+        WHERE
+                id = pidmotivo;
+
+
+
+        SELECT usc.id
+        INTO v_destinatario_correcto
+        FROM usuariossucursalescajas as usc
+        WHERE usc.activo = 1 and idsucursal =pidsucursaldestino AND idusuario = pidusuariodestino ;
+
+        if v_destinatario_correcto is null and not v_es_retiro = 1 THEN
+
+            select concat( 'ATENCION! No se pudo insertar el movimiento. EL usuario no puede abrir caja en ',suc.nombre)
+            into v_suc_nom
+            from sucursales as suc
+            where suc.id = pidsucursaldestino;
+
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT =v_suc_nom;
+
+
+        end if;
+
+
+
+
+
+        IF v_requiere_aprobacion = 1 THEN
+            IF v_es_retiro = 1 or v_es_aporte = 1 THEN
+                set v_idestado = 2;
+            ELSE
+                set v_idestado = pestadoid;
+            END IF;
+        ELSE
+            set v_idestado = 2;
+        END IF;
+
+
+        if NOT pidusuariodestino IS NULL AND v_idestado = 2 AND v_es_retiro = 0  THEN
+            call getNumeroCaja(pidusuariodestino,pidsucursaldestino,v_numerocajadestino);
+        END IF;
+
+        IF v_idestado = 2 AND  v_es_aporte = 0 THEN
+            call getNumeroCaja(pidusuario,pidsucursal,v_numerocaja);
+        END IF;
+
+        if(p_fecha_hora_movimiento is null)then
+            set fechaActual =NOW();
+        else
+            set fechaACtual = p_fecha_hora_movimiento;
+        end if;
+
+        if NOT pidsucursaldestino IS NULL THEN
+            call insActualizacionSucursalConFecha('GET-MOVCAJA',pidusuario,pidsucursaldestino,fechaActual);
+        END IF;
+        call insActualizacionSucursalConFecha('GET-MOVCAJA',pidusuario,pidsucursal,fechaActual);
+
+
+
+        insert into movimientoscaja(idusuario, idsucursal, idmotivo, numerocaja, numerocajadestino, fechahoramovimiento, fechahorarecibida, importe,idestado,idusuariodestino,idsucursaldestino )
+        values (pidusuario, pidsucursal, pidmotivo, v_numerocaja, v_numerocajadestino, fechaActual, null, pimporte,v_idestado,pidusuariodestino,pidsucursaldestino);
+
+        insert into movimientoscajaestado(idusuario,idsucursal,idestado,fechahoraestado,fechahoramovimiento,descripcionestado)
+        values (pidusuario, pidsucursal, v_idestado, fechaActual,fechaActual,pobservaciones);
+
+        SELECT 1,
+               idusuario as usuarioId,
+               idsucursal as sucursalId,
+               fechaHoraMovimiento
+        from movimientoscaja
+        where idsucursal = pidsucursal and idusuario = pidusuario and fechahoramovimiento = fechaActual;
+END;
