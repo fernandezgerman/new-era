@@ -83,7 +83,7 @@ class MediosDeCobroController extends BaseController
         $modosDeCobroManager->generarCobro($ventaSucursalCobro);
 
         return [
-            'link' => url('medios-de-pago/order/'.$ventaSucursalCobro->idunicolegacy.'/legacy-preview'),
+            'link' => env('APP_URL').'/medios-de-pago/order/'.$ventaSucursalCobro->idunicolegacy.'/legacy-preview',
             'ventaSucursalCobro' => $ventaSucursalCobro
         ];
     }
