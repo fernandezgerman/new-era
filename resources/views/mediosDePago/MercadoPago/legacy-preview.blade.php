@@ -110,6 +110,6 @@ else if ($estado === 'error') $color = '#F50002';
         <div id="error-box"></div>
     </div>
 </div>
-<script type="text/javascript" src="{{env('APP_URL')}}/js/legacy-order-poller.js"></script>
+<script type="text/javascript" src="/js/legacy-order-poller.js"></script>
 </body>
 </html>

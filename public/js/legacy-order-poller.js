@@ -42,6 +42,17 @@
         if (!content) return;
 
         var pollUrl = content.getAttribute('data-poll-url');
+        // Ensure HTTPS is used for polling
+        if (pollUrl) {
+            // If URL is protocol-relative (e.g., //example.com/path), prefix with https:
+            if (pollUrl.indexOf('//') === 0) {
+                pollUrl = 'https:' + pollUrl; // -> https://...
+            }
+            // If URL explicitly uses http, upgrade to https
+            if (pollUrl.indexOf('http://') === 0) {
+                pollUrl = 'https://' + pollUrl.substring(7);
+            }
+        }
         var currentEstado = toLower(content.getAttribute('data-initial-estado'));
         var statusBox = byId('content');
         var statusText = byId('status-text');
