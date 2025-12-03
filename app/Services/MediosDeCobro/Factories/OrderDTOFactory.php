@@ -32,7 +32,7 @@ class OrderDTOFactory
         $dto->usuario = $venta->usuario;   // App\Models\User
         $dto->sucursal = $venta->sucursal; // App\Models\Sucursal
         $dto->modoDeCobro = $venta->mododecobro; // App\Models\ModoDeCobro
-        $dto->idempotencyKey = $venta->id;
+        $dto->idempotencyKey = (env('APP_DEBUG') ? 'prod' : 'dev').$venta->id;
         $dto->localId = $venta->id;
         $dto->externalId = null;
 
