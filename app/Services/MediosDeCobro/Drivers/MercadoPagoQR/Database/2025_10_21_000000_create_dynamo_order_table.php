@@ -6,7 +6,7 @@ return new class extends AbstractDynamoDBMigrationBase {
     public function up(): void
     {
         //No es momento para lidirar con DYNAMO, nos vemos en mysql :(
-        exit;
+        return;
         $tableName = env('DYNAMODB_ORDERS_TABLE', 'MercadoPagoQROrder');
 
         $existing = $this->client->listTables();

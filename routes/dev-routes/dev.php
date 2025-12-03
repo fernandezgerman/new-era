@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\GeocodeSucursalesCommand;
+use App\Console\Commands\TriggerMediosDeCobroStatusChange;
 use App\Events\Events\MediosDeCobro\MediosDeCobroStatusChangeEvent;
 use App\Services\Actualizaciones\ActualizacionesManager;
 use Illuminate\Support\Facades\Route;
@@ -84,3 +85,9 @@ Route::get('/test-mov', function () {
 
     event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
 });
+
+Route::get('/test-command', function () {
+    $cmd = new TriggerMediosDeCobroStatusChange();
+    $cmd->handle();
+});
+

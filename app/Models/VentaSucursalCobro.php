@@ -14,6 +14,7 @@ class VentaSucursalCobro extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        'id',
         'idusuario',
         'idsucursal',
         'idmododecobro',

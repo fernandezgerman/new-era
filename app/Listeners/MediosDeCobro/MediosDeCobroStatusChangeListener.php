@@ -24,10 +24,8 @@ class MediosDeCobroStatusChangeListener
         // Minimal, safe behavior: structured log for observability.
         $cobro = $event->ventaSucursalCobro;
 
-        Log::info('listener....'.$event->ventaSucursalCobro->estado);
         if($event->ventaSucursalCobro->estado === MedioDeCobroEstados::APROBADO || $event->ventaSucursalCobro->estado === MedioDeCobroEstados::APROBADO->value)
         {
-            Log::info('in 1');
             $medioDeCobroSucursalConfiguracionDataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor(
                 $cobro->idsucursal,
                 $cobro->idmododecobro
@@ -41,7 +39,6 @@ class MediosDeCobroStatusChangeListener
 
             if(blank($existe))
             {
-                Log::info('in 2');
                 $movimientoCaja = $this->movimientosCajaManager->createMovimientosCaja(
                     $cobro->idsucursal,
                     $cobro->idusuario,

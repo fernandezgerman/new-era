@@ -17,6 +17,7 @@ return new class extends Migration
 
         if (! $exists) {
             DB::table('motivosmovimientoscaja')->insert([
+                'id' => 17,
                 'descripcion' => 'Mercado Pago QR',
                 'requiereaprobacion' => 1,
                 'activo' => 1,
