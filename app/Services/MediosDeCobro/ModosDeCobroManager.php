@@ -103,6 +103,7 @@ class ModosDeCobroManager
         }
         catch (MercadoPagoQRIdempotencyKeyAlreadyTakenException $e)
         {
+            Log::warning('Modos de cobro error: '.$e->getMessage());
             return;
         }
 
