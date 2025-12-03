@@ -1,0 +1,11 @@
+<?php
+
+use App\Http\Controllers\MediosDeCobro\MediosDeCobroController;
+use Illuminate\Support\Facades\Route;
+
+// POST endpoint that the /test button should call
+Route::post('/order/preview', [MediosDeCobroController::class, 'orderPreview'])->name('medios-de-pago.order-preview');
+Route::post('/order/generate', [MediosDeCobroController::class, 'orderGenerate'])->name('medios-de-pago.order-generate');
+
+Route::get('/order/{idunicolegacy}/legacy-preview', [MediosDeCobroController::class, 'orderLegacyPreview'])->name('medios-de-pago.order-legacy-preview');
+Route::get('/{idventasucursalcobro}/order', [MediosDeCobroController::class, 'getOrder'])->name('medios-de-pago.get-order');

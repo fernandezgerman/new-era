@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Services\Actualizaciones\Contracts\ActualizableItem;
+use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
+use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
-class Sucursal extends Model
+class Sucursal extends Model implements ActualizableItem
 {
     use HasFactory;
 
@@ -58,6 +62,8 @@ class Sucursal extends Model
         'restringirarqueoperfilpermitido',
         'restringirarqueodiasexcepcion',
         'restringirarqueoperfilexcepcion',
+        'latitud',
+        'longitud',
     ];
 
     /**
@@ -121,8 +127,18 @@ class Sucursal extends Model
     public function usuarios()
     {
         return $this->belongsToMany(User::class, 'usuariossucursales', 'idsucursal', 'idusuario')
-                    ->withPivot('activo')
-                    ->withTimestamps();
+                    ->wherePivot('activo', true)
+                    ->wherePivot('usuarios.activo', true)
+                    ->withPivot('activo');
+    }
+
+    public function usuariosCajas()
+    {
+        return $this->belongsToMany(User::class, 'usuariossucursalescajas', 'idsucursal', 'idusuario')
+            ->wherePivot('activo', true)
+            ->wherePivot('usuarios.activo', true)
+            ->withPivot('activo')
+            ->orderBy(db::raw('concat(usuarios.nombre, usuarios.apellido)'));
     }
 
     /**
@@ -139,5 +155,13 @@ class Sucursal extends Model
     public function comprasCaja()
     {
         return $this->hasMany(Compra::class, 'idsucursalcaja');
+    }
+
+    public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
+    {
+        return new ActualizacionIdentifierDTO(
+            CodigoMotivoActualizacion::GET_SUCURSALES,
+            $this->id
+        );
     }
 }

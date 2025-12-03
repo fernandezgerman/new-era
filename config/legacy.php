@@ -61,5 +61,10 @@ return [
             'usuario' => "notificacionessistemas@gmail.com",
             'from' => "notificacionessistemas@gmail.com",
             'reply' => "notificacionessistemas@gmail.com",
+        ],
+    'tailwind' => [
+        'pages-to-include-tailwind' => [
+            'sucm' => true
         ]
+    ]
 ];

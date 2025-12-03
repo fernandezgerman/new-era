@@ -1,6 +1,7 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useLayoutEffect, useRef} from "react";
 import Choices from "choices.js";
-import "choices.js/public/assets/styles/choices.min.css"; // Import default styles
+import "choices.js/public/assets/styles/choices.min.css";
+import {Label} from "@/components/Label.jsx"; // Import default styles
 
 // Generic Select component powered by Choices.js
 // Props:
@@ -24,15 +25,22 @@ const Select = ({
                     id,
                     name,
                     isLoading = false,
-                    onChange = () => {}
+                    onChange = () => {},
+                    label
                 }) => {
     const selectRef = useRef(null);
     const choicesRef = useRef(null);
     const localClassName = className + " " + (isLoading ? "opacity-50 !color-gray cursor-not-allowed" : "");
 
-    // Initialize Choices.js
-    useEffect(() => {
+    // Initialize Choices.js synchronously to avoid DOM teardown race conditions
+    useLayoutEffect(() => {
         if (!selectRef.current) return;
+
+        // If React StrictMode remounts, ensure previous instance is gone
+        if (choicesRef.current) {
+            try { choicesRef.current.destroy(); } catch {}
+            choicesRef.current = null;
+        }
 
         choicesRef.current = new Choices(selectRef.current, {
             removeItemButton: allowRemove,
@@ -45,7 +53,7 @@ const Select = ({
 
         return () => {
             if (choicesRef.current) {
-                choicesRef.current.destroy();
+                try { choicesRef.current.destroy(); } catch {}
                 choicesRef.current = null;
             }
         };
@@ -91,31 +99,19 @@ const Select = ({
     }, [setValue, multiple]);
 
     return (
-        <select
-            id={id}
-            name={name}
-            ref={selectRef}
-            onChange={onChange}
-            disabled={isLoading}
-            multiple={multiple}
-            className={`focus:shadow-soft-primary-outline dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none ${localClassName}`}
-        >
-            {/* Render plain options initially for non-JS and initial hydration; Choices.js will take over */}
-            {placeholder && !multiple && (
-                <option value="" disabled={true} selected={value === undefined || value === null || value === ""}>
-                    {placeholder}
-                </option>
-            )}
-            {options.map((opt) => (
-                <option key={String(opt.value)} value={String(opt.value)} disabled={!!opt.disabled} selected={
-                    value !== undefined && value !== null
-                        ? String(value) === String(opt.value)
-                        : !!opt.selected
-                }>
-                    {opt.label}
-                </option>
-            ))}
-        </select>
+        <>
+            {label && <Label className="cursor-pointer pl-2 ">{label}</Label>}
+
+            <select
+                id={id}
+                name={name}
+                ref={selectRef}
+                onChange={onChange}
+                disabled={isLoading}
+                multiple={multiple}
+                className={`focus:shadow-soft-primary-outline dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none ${localClassName}`}
+            />
+        </>
     );
 };
 

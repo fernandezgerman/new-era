@@ -1,7 +1,7 @@
 <?php
 
+use App\Events\Events\MediosDeCobro\MediosDeCobroUpdatedEvent;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Legacy\DefaultController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,3 +17,18 @@ Route::middleware('auth:sanctum')->group(function () {
         require_once $file;
     }
 });
+
+// Routes protected by custom credentials middleware
+Route::middleware(['custom.auth'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+    ->prefix('medios-de-pago')->group(function () {
+        foreach (Storage::disk('routes')->allFiles('customAuthProtected') as $file) {
+            require_once $file;
+        }
+    });
+
+if(env('APP_ENV') == 'local'){
+    foreach (Storage::disk('routes')->allFiles('dev-routes') as $file) {
+        require_once $file;
+    }
+}

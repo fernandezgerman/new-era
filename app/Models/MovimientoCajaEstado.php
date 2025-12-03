@@ -21,6 +21,7 @@ class MovimientoCajaEstado extends Model
         'idestado',
         'fechahoramovimiento',
         'fechahoraestado',
+        'descripcionestado',
     ];
 
     public function usuario()

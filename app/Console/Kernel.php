@@ -30,6 +30,10 @@ class Kernel extends ConsoleKernel
         /*$schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronTest.php')))
             ->everyMinute()->name('cronTest')->withoutOverlapping();*/
 
+
+        $schedule->command('medios:trigger-status-change')
+            ->everyMinute()->withoutOverlapping()->name('VentasCobrosTriggerStatusChange')->withoutOverlapping();
+
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronDiario.php')))
             ->dailyAt('00:03')->name('cronDiario')->withoutOverlapping();
 

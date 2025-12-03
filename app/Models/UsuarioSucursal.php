@@ -28,7 +28,7 @@ class UsuarioSucursal extends Pivot
      *
      * @var bool
      */
-    public $timestamps = true;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

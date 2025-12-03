@@ -4,6 +4,7 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
@@ -16,8 +17,9 @@
     --dark-font-color: white;
 
     /* LIGHT THEME*/
-    --bg-color: white;
+    --bg-color: #F3F4F5;
     --font-color: rgb(103 116 142 / var(--tw-text-opacity));
+
 
     /*
     screens:{
@@ -37,6 +39,7 @@
     background-color: var(--dark-bg-color);
     color: var(--dark-font-color);
 }
+
 @utility ne-body {
     background-color: var(--bg-color);
     color: rgb(103 116 142 / var(--tw-text-opacity));

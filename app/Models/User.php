@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Services\Actualizaciones\Contracts\ActualizableItem;
+use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
+use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements ActualizableItem
 {
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -77,8 +80,8 @@ class User extends Authenticatable
     public function sucursales()
     {
         return $this->belongsToMany(Sucursal::class, 'usuariossucursales', 'idusuario', 'idsucursal')
-                    ->where('sucursales.activo', 1)
-                    ->where('usuariossucursales.activo', 1);
+            ->where('sucursales.activo', 1)
+            ->where('usuariossucursales.activo', 1);
     }
 
     public function sucursalesCaja()
@@ -138,5 +141,13 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
         ];
+    }
+
+    public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
+    {
+        return new ActualizacionIdentifierDTO(
+            CodigoMotivoActualizacion::GET_USUARIO,
+            $this->id
+        );
     }
 }

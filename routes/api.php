@@ -22,3 +22,4 @@ Route::middleware(['auth:sanctum', CheckLegacyPermissions::class])->group(functi
 
 Route::post('/login', [\App\Http\ApiResources\Authentication::class, 'login']);
 Route::post('/logout', [\App\Http\ApiResources\Authentication::class, 'logout'])->name('api.logout');
+

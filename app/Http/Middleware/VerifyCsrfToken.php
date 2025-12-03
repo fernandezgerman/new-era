@@ -12,7 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        '*.php', // Exclude all .php routes from CSRF protection
+        'medios-de-pago/*', '*.php',
     ];
 
 }
