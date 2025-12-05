@@ -4,6 +4,7 @@ namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR;
 
 use App\Contracts\Integrations\HttpClient;
 use App\Models\MedioDeCobroSucursalConfiguracion;
+use App\Models\Sucursal;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoStoreDTO;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoCajaDTO;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRNotFoundException;
@@ -379,9 +380,10 @@ class MercadoPagoExtendedFunctionalities
      */
     public function insCaja(int $idsucursal): MercadoPagoCajaDTO
     {
+        $sucursal = Sucursal::where('id', $idsucursal)->first();
         // Build request payload as per spec
         $payload = [
-            'name' => 'Caja para sucursal n ' . $idsucursal,
+            'name' => 'Caja '.$sucursal->nombre,
             'fixed_amount' => true,
             'external_store_id' => 'SUC' . $idsucursal,
             'external_id' => 'SUC' . $idsucursal . 'CAJA1',
