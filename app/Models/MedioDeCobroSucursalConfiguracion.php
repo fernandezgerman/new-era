@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDTOFactory;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoExtendedFunctionalities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -91,5 +93,23 @@ class MedioDeCobroSucursalConfiguracion extends Model
     public function usuarioCajaDestino()
     {
         return $this->belongsTo(User::class, 'idusuariocajadestino');
+    }
+
+    public function getLocalQRLinkAttribute(): string
+    {
+        if (!$this->configuration_checked) {
+            return '';
+        }
+
+        $mercadoPagoCajaDTOFactory = MercadoPagoCajaDTOFactory::fromArray($this->metadata['caja']);
+        return MercadoPagoExtendedFunctionalities::getOrCreateQrImage($mercadoPagoCajaDTOFactory);
+    }
+
+    public function getWebHookLinkAttribute(): string
+    {
+        return $this->configuration_checked
+            ? env('APP_URL') . '/api/medios-de-cobro/mercado-pago-qr/event/' . env('MERCADO_PAGO_URL_VALIDATION_TOKEN')
+            : '';
+
     }
 }

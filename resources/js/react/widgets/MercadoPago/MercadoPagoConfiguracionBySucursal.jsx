@@ -16,6 +16,8 @@ import {
 } from "@/dataAccess/ModoDeCobroSucursalConfiguracionDataAccess.jsx";
 import {LabelError} from "@/components/Label.jsx";
 import {AlertDanger, AlertSuccess} from "@/components/Alerts.jsx";
+import {A} from "@/components/A.jsx";
+import {TextDecorator} from "@/components/TextDecorator.jsx";
 
 const AccionesEspeciales = ({
                                 transferirMovimientos,
@@ -106,8 +108,22 @@ const PanelConfiguracionChecked = ({originalData, checkMercadoPagoQRConfiguracio
     </AlertDanger>;
 
     const ConfiguracionCheckeada = <AlertSuccess>
+
         La configuracion ha sido checkeada correctamente. Todo listo para comenzar!
+        <p className={'mt-3'}>
+            Para imprimir QR:<br />
+            <TextDecorator >
+                <A target="_blank" href={originalData.localQRLink}>{originalData.localQRLink}</A>
+            </TextDecorator>
+        </p>
+        <p className={'mt-3'}>
+            Para configurar notificaciones en mercado pago, copie el siguiente link:<br />
+            <TextDecorator >
+                <A  target="_blank" href={originalData.localQRLink}>{originalData.webHookLink}</A>
+            </TextDecorator >
+        </p>
     </AlertSuccess>;
+
 
     return originalData.configuration_checked ? ConfiguracionCheckeada : ConfiguracionNoCheckeada;
 }

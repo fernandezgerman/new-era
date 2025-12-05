@@ -47,7 +47,7 @@ class ApiResourceBaseGetEntity extends AbstractApiRequest
                     return;
                 }
                 $instance = new $modelClass();
-                if (! method_exists($instance, $value)) {
+                if (! method_exists($instance, $value) && ! method_exists($instance, 'get'.ucfirst($value).'Attribute') ){
                     $fail("The include '$value' is not a relation of the model.");
                 }
             }],

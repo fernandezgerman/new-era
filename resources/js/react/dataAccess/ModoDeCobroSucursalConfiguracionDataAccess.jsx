@@ -1,13 +1,21 @@
 import ModosDeCobro from "@/resources/ModosDeCobro.jsx";
 import Resource from "@/resources/Resource.jsx";
 
+const includes = [
+    [
+        'sucursalCajaDestino',
+        'usuarioCajaDestino',
+        'usuarioCajaDestino',
+        'localQRLink',
+        'webHookLink'
+    ]
+];
 const getModoDeCobroSucursalConfiguracion = ({sucursalId, modoDeCobroId}) => {
     const resource = new Resource();
     return resource.getEntities(
         'MedioDeCobroSucursalConfiguracion',
-        ['sucursalCajaDestino', 'usuarioCajaDestino'],
+        includes,
         {idsucursal: sucursalId, idmododecobro: modoDeCobroId});
-    ;
 }
 
 const testToken = (configuracionId) => {
@@ -20,7 +28,7 @@ const insertModoDeCobroSucursalConfiguracion = async ({data}) => {
     return resource.insertEntity(
         'MedioDeCobroSucursalConfiguracion',
         data,
-        ['sucursalCajaDestino', 'usuarioCajaDestino']);
+        includes);
 }
 
 const updateModoDeCobroSucursalConfiguracion = async ({data}) => {
@@ -29,7 +37,12 @@ const updateModoDeCobroSucursalConfiguracion = async ({data}) => {
         'MedioDeCobroSucursalConfiguracion',
         data?.id,
         data,
-        ['sucursalCajaDestino', 'usuarioCajaDestino']);
+        includes);
 }
 
-export {getModoDeCobroSucursalConfiguracion, testToken, insertModoDeCobroSucursalConfiguracion, updateModoDeCobroSucursalConfiguracion};
+export {
+    getModoDeCobroSucursalConfiguracion,
+    testToken,
+    insertModoDeCobroSucursalConfiguracion,
+    updateModoDeCobroSucursalConfiguracion
+};

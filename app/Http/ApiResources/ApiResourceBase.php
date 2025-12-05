@@ -16,7 +16,7 @@ class ApiResourceBase extends AbstractApiHandler
     {
         $entity = $request->validated('entity');
         $id = $request->validated('id');
-        $includes = $request->validated('includes' ) ?? [];
+        $includes = $request->validated('includes') ?? [];
         $filtros = $request->validated('filtros') ?? [];
         $orden = $request->validated('orden') ?? [];
 
@@ -25,29 +25,51 @@ class ApiResourceBase extends AbstractApiHandler
         // Build query with includes if provided
         /** @var \Illuminate\Database\Eloquent\Builder $query */
         $query = $modelClass::query();
+        $customAttributes = [];
         if (!empty($includes)) {
-            $query->with($includes);
+            foreach ($includes as $include) {
+                if (method_exists($modelClass, $include)) {
+                    $query->with($include);
+                } else {
+                    //custom attributes sent as includes
+                    if (method_exists($modelClass, 'get'.ucfirst($include).'Attribute')) {
+                        $customAttributes[] = $include;
+                    }
+                };
+            }
         }
 
-        foreach($filtros as $key => $value)
-        {
+        foreach ($filtros as $key => $value) {
             $query->where($key, $value);
         }
 
-        foreach($orden as $o)
-        {
+        foreach ($orden as $o) {
             $query->orderBy($o);
         }
 
         $data = null;
         if ($id) {
             $data = $query->find($id);
-            if (! $data) {
+            if (!$data) {
                 return $this->sendResponsePageNotFound();
+            }
+
+            foreach ($customAttributes as $attribute) {
+                $data['$attribute'] = $data->getAttribute($attribute);
             }
         } else {
             $data = $query->get();
+            $data->toArray();
+            foreach($data as $key => $item) {
+                foreach ($customAttributes as $attribute) {
+                    $item[$attribute] = $item->$attribute;
+                    $data[$key] = $item;
+                }
+            }
         }
+
+        //$modelClass->{$include}
+
 
         return $this->sendResponse($data);
 
@@ -75,7 +97,7 @@ class ApiResourceBase extends AbstractApiHandler
 
         /** @var \Illuminate\Database\Eloquent\Model|null $model */
         $model = $modelClass::query()->find($id);
-        if (! $model) {
+        if (!$model) {
             return $this->sendResponsePageNotFound();
         }
 
@@ -112,7 +134,7 @@ class ApiResourceBase extends AbstractApiHandler
 
         /** @var \Illuminate\Database\Eloquent\Model|null $model */
         $model = $modelClass::query()->find($id);
-        if (! $model) {
+        if (!$model) {
             return $this->sendResponsePageNotFound();
         }
 
@@ -170,7 +192,7 @@ class ApiResourceBase extends AbstractApiHandler
         $baseIsAssoc = $this->isAssoc($base);
         $overrideIsAssoc = $this->isAssoc($override);
 
-        if (! $baseIsAssoc || ! $overrideIsAssoc) {
+        if (!$baseIsAssoc || !$overrideIsAssoc) {
             // If either is a list, prefer override (patch semantics for lists)
             return $override;
         }
