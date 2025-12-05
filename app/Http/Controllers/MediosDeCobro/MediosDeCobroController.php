@@ -133,7 +133,10 @@ class MediosDeCobroController extends BaseController
             $manager = new ModosDeCobroManager();
             $result = $manager->testConnection($medioDeCobroSucursalConfiguracion);
 
-            $medioDeCobroSucursalConfiguracion = MedioDeCobroSucursalConfiguracion::where('id', $request->get('configuracionId'))->first();
+            $medioDeCobroSucursalConfiguracion = MedioDeCobroSucursalConfiguracion::where('id', $request->get('configuracionId'))
+                ->first()
+            ->toArray();
+
         }catch(Throwable $t){
             $errorMessage = $t->getMessage();
         }

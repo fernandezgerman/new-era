@@ -48,6 +48,11 @@ class MedioDeCobroSucursalConfiguracion extends Model
         'configuration_checked',
     ];
 
+    protected $appends = [
+        'web_hook_link',
+        'local_qr_link'
+    ];
+
     /**
      * The attributes that should be cast.
      *

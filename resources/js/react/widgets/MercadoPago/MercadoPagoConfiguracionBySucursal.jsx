@@ -113,13 +113,13 @@ const PanelConfiguracionChecked = ({originalData, checkMercadoPagoQRConfiguracio
         <p className={'mt-3'}>
             Para imprimir QR:<br />
             <TextDecorator >
-                <A target="_blank" href={originalData.localQRLink}>{originalData.localQRLink}</A>
+                <A target="_blank" href={originalData.local_qr_link}>{originalData.local_qr_link}</A>
             </TextDecorator>
         </p>
         <p className={'mt-3'}>
             Para configurar notificaciones en mercado pago, copie el siguiente link:<br />
             <TextDecorator >
-                <A  target="_blank" href={originalData.localQRLink}>{originalData.webHookLink}</A>
+                <A  target="_blank" href={originalData.web_hook_link}>{originalData.web_hook_link}</A>
             </TextDecorator >
         </p>
     </AlertSuccess>;
