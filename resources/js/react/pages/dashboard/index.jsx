@@ -3,7 +3,6 @@ import {LeftMenuBar, MobileRightMenu} from "@/widgets/menu/Menu.jsx";
 import {Header} from "@/widgets/menu/Header.jsx";
 import {LegacyFrame} from "@/widgets/Legacy/LegacyIframe.jsx";
 import {isMobile} from "react-device-detect";
-import {CollapsibleRightMenu} from "@/widgets/menu/CollapsibleRightMenu.jsx";
 
 export const Dashboard = () => {
     const getInitialPagina = () => {
