@@ -38,6 +38,7 @@ class MercadoPagoOrderResponseFactory
             $p->id = Arr::get($payment, 'id');
             $p->amount = Arr::get($payment, 'amount');
             $p->status = Arr::get($payment, 'status');
+            $p->reference_id = Arr::get($payment, 'reference_id');
             $p->status_detail = Arr::get($payment, 'status_detail');
             $transactions->payments[] = $p;
         }

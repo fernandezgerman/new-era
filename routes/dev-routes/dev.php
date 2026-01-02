@@ -91,3 +91,11 @@ Route::get('/test-command', function () {
     $cmd->handle();
 });
 
+Route::get('/test-payment', function () {
+    $manager = new \App\Services\MediosDeCobro\ModosDeCobroManager();
+
+    //6
+    $ventaSucursalCobro = \App\Models\VentaSucursalCobro::query()->where('id', 6)->first();
+    $manager->processTaxesAndFees($ventaSucursalCobro);
+});
+

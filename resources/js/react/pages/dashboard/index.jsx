@@ -3,6 +3,7 @@ import {LeftMenuBar, MobileRightMenu} from "@/widgets/menu/Menu.jsx";
 import {Header} from "@/widgets/menu/Header.jsx";
 import {LegacyFrame} from "@/widgets/Legacy/LegacyIframe.jsx";
 import {isMobile} from "react-device-detect";
+import {CollapsibleRightMenu} from "@/widgets/menu/CollapsibleRightMenu.jsx";
 
 export const Dashboard = () => {
     const getInitialPagina = () => {
@@ -44,12 +45,13 @@ export const Dashboard = () => {
     const MarginLeft = isMobile ? " " : "  ml-[90px]  ";
 
     return (
-        <div className="flex flex-row w-full max-w-[1250px] h-[calc(100vh-0px)] nexl:ml-[calc(50vw-625px)]">
+        <div className="flex flex-row w-full max-w-[1250px] h-[calc(100vh-0px)] nexl:ml-[calc(50vw-625px)] ">
             <LeftMenuBar onMenuSelected={onMenuSelected}/>
             {isMobile && <MobileRightMenu  onMenuSelected={onMenuSelected} breadCrumbFirst={breadcrumb1} breadCrumbSecond={breadcrumb2}/>}
             <div className={"nexl:ml-0 flex-1 min-w-0 max-w-[990px] h-full overflow-hidden " + MarginLeft}>
                 {!isMobile && <Header onMenuSelected={onMenuSelected} breadCrumbFirst={breadcrumb1} breadCrumbSecond={breadcrumb2}/>}
                 <LegacyFrame iframeHrefs={iframeHrefs}/>
             </div>
+            {/*<CollapsibleRightMenu /> */}
         </div>);
 }

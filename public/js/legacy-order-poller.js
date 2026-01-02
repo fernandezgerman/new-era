@@ -42,6 +42,7 @@
         if (!content) return;
 
         var pollUrl = content.getAttribute('data-poll-url');
+        var httpProtocol = content.getAttribute('data-http-protocol');
         // Ensure HTTPS is used for polling
         if (pollUrl) {
             // If URL is protocol-relative (e.g., //example.com/path), prefix with https:
@@ -52,6 +53,10 @@
             if (pollUrl.indexOf('http://') === 0) {
                 pollUrl = 'https://' + pollUrl.substring(7);
             }
+        }
+        if(httpProtocol)
+        {
+            pollUrl = pollUrl.replace('https://', 'http://');
         }
         var currentEstado = toLower(content.getAttribute('data-initial-estado'));
         var statusBox = byId('content');

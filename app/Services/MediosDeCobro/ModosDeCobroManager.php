@@ -17,6 +17,7 @@ use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRNot
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDetalleDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
+use App\Services\MediosDeCobro\DTOs\OrderPaymentDetailDTO;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConnectionTestException;
@@ -183,4 +184,16 @@ class ModosDeCobroManager
             throw new MediosDeCobroConnectionTestException($e->getMessage());
         }
     }
+
+    public function processTaxesAndFees(VentaSucursalCobro $ventaSucursalCobro): OrderPaymentDetailDTO
+    {
+        $driver = $this->getDriverOrFail(
+            ConnectionDataDTOFactory::fromVentaSucursalCobro($ventaSucursalCobro)
+        );
+
+        $orderDTO = $driver->getOrder($ventaSucursalCobro->id);
+
+        return $driver->syncPaymentDetails($orderDTO);
+    }
+
 }

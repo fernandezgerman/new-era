@@ -19,9 +19,13 @@ use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQROrde
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQROrderSqlFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoQRWebhookEventFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Http\MercadoPagoHttpClient;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Models\MercadoPagoQROrder;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Models\MercadoPagoQROrderSql;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoPaymentDetailFactory;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Models\MercadoPagoQRPayment;
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
+use App\Services\MediosDeCobro\DTOs\OrderPaymentDetailDTO;
 use App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
@@ -29,6 +33,7 @@ use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConfiguracionException;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroInvalidOrderException;
 use App\Services\MediosDeCobro\MediosDeCobroNotImplementedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 
@@ -78,6 +83,28 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
         if(MercadoPagoQROrderSql::where('externalorderid',$data['id'])->doesntExist())
         {
             $mercadoPagoQROrder->save();
+        }
+
+        return $orderDTO;
+    }
+
+    public function getOrder(string $localId): OrderDTO
+    {
+        $mercadoPagoQROrderSql = MercadoPagoQROrderSql::where('ventasucursalcobroid', $localId)->first();
+        // Call Mercado Pago Orders API
+        $response = $this->httpClient->get('orders/'.$mercadoPagoQROrderSql->externalorderid);
+        $data = method_exists($response, 'getData') ? (array) $response->getData() : [];
+
+        // Build OrderDTO using the existing factory for the gateway response
+        $orderDTO = new OrderDTO();
+        $orderDTO->externalId = $mercadoPagoQROrderSql->externalorderid;
+        $orderDTO->gatewayResponse = MercadoPagoOrderResponseFactory::fromArray($data);
+        $orderDTO->idempotencyKey = '';
+
+        // If we have a local record, fill localId
+        $local = MercadoPagoQROrderSql::where('externalorderid', $mercadoPagoQROrderSql->externalorderid)->first();
+        if ($local) {
+            $orderDTO->localId = $local->ventasucursalcobroid;
         }
 
         return $orderDTO;
@@ -196,7 +223,34 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
         return !blank($mercadoPagoCajaDTO);
     }
 
+    public function syncPaymentDetails(OrderDTO $orderDTO): OrderPaymentDetailDTO
+    {
+        // Extract payment id from the original gateway response
+        $payments = $orderDTO->gatewayResponse->transactions->payments;
+        $paymentId = $payments[0]->reference_id;
+
+        if(!$paymentId){
+            throw new MediosDeCobroInvalidOrderException('Payment id not found in order gateway response');
+        }
+
+        // Call Mercado Pago Payments API
+        $response = $this->httpClient->get('payments/'.$paymentId);
+        $data = method_exists($response, 'getData') ? (array) $response->getData() : [];
+
+        $orderPaymentDetailDTO = MercadoPagoPaymentDetailFactory::fromArray($data, $orderDTO);
+
+        $mercadoPagoQRPayment = MercadoPagoQRPayment::where('externalpaymentid', $orderPaymentDetailDTO->externalId)->first();
+
+        if(blank($mercadoPagoQRPayment)){
+            $mercadoPagoQRPayment = new MercadoPagoQRPayment();
+            $mercadoPagoQRPayment->mercadopagoqrorderid = $orderDTO->localId;
+            $mercadoPagoQRPayment->externalpaymentid = $orderPaymentDetailDTO->externalId;
+            $mercadoPagoQRPayment->externalpaymentdata = $orderPaymentDetailDTO->metadata;
+
+            $mercadoPagoQRPayment->save();
+        }
+
+        // Build OrderPaymentDetailDTO using factories
+        return $orderPaymentDetailDTO;
+    }
 }
-
-
-

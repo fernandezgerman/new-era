@@ -16,7 +16,7 @@ const Button = ({
             case 'xs':
                 return ' px-3 py-1.5 text-[10px] w-auto bg-gray-500 ';
             default:
-                return ' px-6 py-3 text-xs bg-pink-500 ';
+                return ' px-6 py-3 text-xs bg-pink-500';
         }
     }
     return (

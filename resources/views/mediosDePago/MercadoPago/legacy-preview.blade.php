@@ -88,7 +88,8 @@ else if ($estado === 'error') $color = '#F50002';
     <div id="content"
          style="background-color: <?php echo $color; ?>"
          data-initial-estado="{{ $ventaSucursalCobro->estado }}"
-         data-poll-url="{{ route('medios-de-pago.get-order', ['idventasucursalcobro' => $ventaSucursalCobro->id]) }}">
+         data-poll-url="{{ route('medios-de-pago.get-order', ['idventasucursalcobro' => $ventaSucursalCobro->id]) }}"
+         data-http-protocol="{{ env('APP_DEBUG') }}">
         <div style="height: 10px;"></div>
         <img id="header-logo" src="/img/dark-logo.png" alt="logo"/>
         <div style="height: 2px;"></div>
