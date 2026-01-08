@@ -36,7 +36,7 @@ FROM(
 	WHERE  fechaenvio >= p_fechadesde AND
 	        fechaenvio <=p_fechahasta and
 	        rbr.id in (2,4,94,32,33,94, 142)
-	GROUP BY   art.id,suc.id,art.codigo,suc.nombre,art.nombre ,month(fechaenvio)
+	GROUP BY   art.id,suc.id,art.codigo,suc.nombre,art.nombre ,month(fechaenvio),rbr.id
 	ORDER BY   suc.nombre,art.nombre ,month(fechaenvio)
 ) as tabla
 where
