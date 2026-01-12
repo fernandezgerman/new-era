@@ -96,7 +96,7 @@ return [
     */
 
     'middleware' => [
-        'auth:sanctum',
+        //'auth:sanctum',
     ],
 
     /*
