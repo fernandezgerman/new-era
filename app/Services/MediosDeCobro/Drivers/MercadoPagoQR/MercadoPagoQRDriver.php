@@ -243,9 +243,13 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
 
         if(blank($mercadoPagoQRPayment)){
             $mercadoPagoQRPayment = new MercadoPagoQRPayment();
-            $mercadoPagoQRPayment->mercadopagoqrorderid = $orderDTO->localId;
+
+            $mercadoPagoQROrderSql =  MercadoPagoQROrderSql::where('ventasucursalcobroid', $orderDTO->localId)->first();
+
+            $mercadoPagoQRPayment->mercadopagoqrorderid = $mercadoPagoQROrderSql->id;
             $mercadoPagoQRPayment->externalpaymentid = $orderPaymentDetailDTO->externalId;
             $mercadoPagoQRPayment->externalpaymentdata = $orderPaymentDetailDTO->metadata;
+
 
             $mercadoPagoQRPayment->save();
         }
