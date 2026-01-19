@@ -4,6 +4,9 @@ import {Header} from "@/widgets/menu/Header.jsx";
 import {LegacyFrame} from "@/widgets/Legacy/LegacyIframe.jsx";
 import {isMobile} from "react-device-detect";
 import {CollapsibleRightMenu} from "@/widgets/menu/CollapsibleRightMenu.jsx";
+import {GenerateComponent, ReactMenu} from "@/widgets/menu/ReactMenu.jsx";
+import {get} from "lodash";
+import {RendicionesStock} from "@/pages/rendicionesStock/index.jsx";
 
 export const Dashboard = () => {
     const getInitialPagina = () => {
@@ -17,6 +20,7 @@ export const Dashboard = () => {
     };
 
     const [iframeHrefs, setIframeHrefs] = React.useState(() => ({url: `iframe-content.php?pagina=${getInitialPagina()}`}));
+    const [component, setComponent] = useState(null);
     const [flag, setFlag] = useState(0);
     const [breadcrumb1, setBreadcrumb1] = useState('Inicio');
     const [breadcrumb2, setBreadcrumb2] = useState('');
@@ -33,13 +37,20 @@ export const Dashboard = () => {
             ? postData.filter((item) => (item?.type || item?.method || '').toString().toUpperCase() !== 'GET')
             : postData;
 
-        setIframeHrefs({
-            url: 'iframe-content.php?f=' + flag + '&pagina=' + codigo,
-            method: method,
-            getData: getData,
-            postData: remainingPostData
-        });
-        setFlag(flag + 1);
+        if(get(ReactMenu, codigo)){
+            setIframeHrefs(null);
+            setComponent(codigo);
+        }else {
+            setComponent(null);
+            setIframeHrefs({
+                url: 'iframe-content.php?f=' + flag + '&pagina=' + codigo,
+                method: method,
+                getData: getData,
+                postData: remainingPostData
+            });
+            setFlag(flag + 1);
+        }
+
     }
 
     const MarginLeft = isMobile ? " " : "  ml-[90px]  ";
@@ -50,7 +61,11 @@ export const Dashboard = () => {
             {isMobile && <MobileRightMenu  onMenuSelected={onMenuSelected} breadCrumbFirst={breadcrumb1} breadCrumbSecond={breadcrumb2}/>}
             <div className={"nexl:ml-0 flex-1 min-w-0 max-w-[990px] h-full overflow-hidden " + MarginLeft}>
                 {!isMobile && <Header onMenuSelected={onMenuSelected} breadCrumbFirst={breadcrumb1} breadCrumbSecond={breadcrumb2}/>}
-                <LegacyFrame iframeHrefs={iframeHrefs}/>
+                {iframeHrefs !== null && <LegacyFrame iframeHrefs={iframeHrefs}/>}
+                {component !== null && <div className={'m-4 ne-body dark:ne-dark-body h-full'}>
+                    <GenerateComponent pageCode={component} />
+                </div>}
+
             </div>
             {/*<CollapsibleRightMenu /> */}
         </div>);

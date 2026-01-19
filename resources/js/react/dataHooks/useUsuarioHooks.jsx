@@ -17,4 +17,19 @@ const useUsuarioSucursalesCaja = ({ usuarioId }) => {
 
 }
 
-export { useUsuarioSucursalesCaja };
+const useUsuarioSucursalesHabilitadas = ({ usuarioId }) => {
+    return useQuery({
+        queryKey: ['usuario-sucursales-habilitadas'+usuarioId],
+        queryFn: async () => {
+            const resource = new Resource();
+            return await resource.getEntity('user', usuarioId, ['sucursales']);
+        },
+        enabled: !!usuarioId && usuarioId !== undefined ,
+        select: (data) =>
+            Object.values(data.sucursales),
+        staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    });
+
+}
+
+export { useUsuarioSucursalesCaja, useUsuarioSucursalesHabilitadas };

@@ -39,7 +39,7 @@ class ApiResourceBaseGetEntity extends AbstractApiRequest
             }],
             'filtros' => ['nullable', 'array'],
             'orden' => ['nullable', 'array'],
-            'includes' => ['sometimes', 'array'],
+            'includes' => ['nullable', 'sometimes', 'array'],
             'includes.*' => ['string', function ($attribute, $value, $fail) {
                 $modelClass = $this->resolveModelClass($this->route('entity'));
                 if (! class_exists($modelClass)) {

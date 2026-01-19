@@ -25,6 +25,7 @@ SELECT
 	truncate(cantidad * calcularMultiploVentasNobleza(articuloId,rubroid) ,0) as cantidad,
 	mes
 FROM(
+
 	SELECT
 	    suc.nombre as sucursal, art.codigo,art.nombre,art.id as articuloId,rbr.id as rubroid,
 	    truncate(sum(cantidad),0) as cantidad,

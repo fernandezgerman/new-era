@@ -17,6 +17,7 @@ class HelperServiceProvider extends ServiceProvider
         $helpers = [
             app_path('Helpers/AuthHelper.php'),
             app_path('Helpers/QueryHelper.php'),
+            app_path('Helpers/GeneralHelpers.php'),
         ];
 
         foreach ($helpers as $file) {
