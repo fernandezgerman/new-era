@@ -53,3 +53,9 @@ if (! function_exists('query_builder_to_raw_sql')) {
         return $sql;
     }
 }
+if (! function_exists('get_comillas')) {
+    function get_comillas()
+    {
+        return '"';
+    }
+}
