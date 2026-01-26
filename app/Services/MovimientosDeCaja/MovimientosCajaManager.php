@@ -32,7 +32,7 @@ class MovimientosCajaManager
         if (!$destOk) {
             $suc = Sucursal::query()->find($sucursalDestinoId);
             $nombreSuc = $suc?->nombre ?? (string)$sucursalDestinoId;
-            throw new ValidationException('ATENCION! No se pudo insertar el movimiento. EL usuario no puede abrir caja en ' . $nombreSuc);
+            throw new ValidationException('ATENCION! No se pudo insertar el movimiento. EL usuario '.$userDest->nombre. ' '.$userDest->apellido.' no puede abrir caja en ' . $nombreSuc);
         }
     }
     public function createMovimientosCaja(

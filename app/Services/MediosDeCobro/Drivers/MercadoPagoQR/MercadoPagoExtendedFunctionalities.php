@@ -91,7 +91,6 @@ class MercadoPagoExtendedFunctionalities
 
         try{
             $logURL = self::getOrCreateQrImage($cajaDto);
-            Log::info('URL QR: '.$logURL);
         }catch (MercadoPagoQRFileSyncException $e)
         {
             //If an error happens when sync qr, ignore it since the system must try again each time is needed

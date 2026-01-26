@@ -21,7 +21,6 @@ class ValidateMercadoPagoQR
     public function handle( Request $request, Closure $next)
     {
 
-        Log::info('TOuch point');
         if(request()->route('validationToken') !== env('MERCADO_PAGO_URL_VALIDATION_TOKEN'))
         {
             Log::warning('MercadoPagoQR request validation token is invalid.');

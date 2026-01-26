@@ -99,3 +99,8 @@ Route::get('/test-payment', function () {
     $manager->processTaxesAndFees($ventaSucursalCobro);
 });
 
+Route::get('/anular-venta', function () {
+
+    $usuario = get_entity_or_fail('User', 1);
+    app(\App\Services\Ventas\VentasManager::class)->anularVentaPorIdUnico($usuario, '202512022048326921475');
+});

@@ -14,6 +14,7 @@ use App\Services\MediosDeCobro\Enums\OrderPaymentChargeDetailTypeEnum;
 use App\Services\MediosDeCobro\ModosDeCobroManager;
 use App\Services\MovimientosDeCaja\Enums\MovimientoCajaEstados;
 use App\Services\MovimientosDeCaja\MovimientosCajaManager;
+use App\Services\Ventas\VentasManager;
 use Illuminate\Support\Facades\Log;
 
 class MediosDeCobroStatusChangeListener
@@ -29,8 +30,10 @@ class MediosDeCobroStatusChangeListener
     {
         // Minimal, safe behavior: structured log for observability.
         $cobro = $event->ventaSucursalCobro;
+        $isReembolso = $event->ventaSucursalCobro->estado === MedioDeCobroEstados::REEMBOLSADO || $event->ventaSucursalCobro->estado === MedioDeCobroEstados::REEMBOLSADO->value;
 
-        if($event->ventaSucursalCobro->estado === MedioDeCobroEstados::APROBADO || $event->ventaSucursalCobro->estado === MedioDeCobroEstados::APROBADO->value)
+        $isAprobado = $event->ventaSucursalCobro->estado === MedioDeCobroEstados::APROBADO || $event->ventaSucursalCobro->estado === MedioDeCobroEstados::APROBADO->value;
+        if($isReembolso || $isAprobado)
         {
             $medioDeCobroSucursalConfiguracionDataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor(
                 $cobro->idsucursal,
@@ -43,11 +46,19 @@ class MediosDeCobroStatusChangeListener
                 ->where('idventasucursalcobro', $cobro->id)
                 ->first();
 
-            if(blank($existe))
+            if(blank($existe) || $isReembolso)
             {
                 $this->generarMovimientoDeCaja($cobro, $configuracion);
                 $this->generarGastos($cobro, $configuracion);
 
+                if($isReembolso)
+                {
+                    //anularVentaPorIdUnico
+                    foreach($cobro->articulos as $articulo)
+                    {
+                        app(VentasManager::class)->anularVentaPorIdUnico($cobro->usuario, $articulo->idunicoventa);
+                    }
+                }
             }
         }
     }
@@ -56,6 +67,8 @@ class MediosDeCobroStatusChangeListener
     {
         $manager = app(ModosDeCobroManager::class);
         $paymentDetails = $manager->processTaxesAndFees($cobro);
+
+        $isRefund = $cobro->estado === MedioDeCobroEstados::REEMBOLSADO || $cobro->estado === MedioDeCobroEstados::REEMBOLSADO->value;
 
         $amount = 0.0;
         $observaciones = '';
@@ -84,8 +97,8 @@ class MediosDeCobroStatusChangeListener
             app(GastosManager::class)->createGastoByTipo(
                 $configuracion->idusuariocajadestino,
                 $configuracion->idsucursalcajadestino,
-                $amount,
-                $observaciones,
+                $amount * ($isRefund ? -1 : 1),
+                ($isRefund ? 'REEMBOLSO: '.PHP_EOL : '').$observaciones,
                 TiposGastos::MERCADO_PAGO,
                 $paymentDetails->orderDTO->externalId ?? 'N/A'
             );
@@ -94,14 +107,16 @@ class MediosDeCobroStatusChangeListener
     }
     private function generarMovimientoDeCaja(VentaSucursalCobro $cobro, MedioDeCobroSucursalConfiguracion $configuracion): void
     {
+        $isRefund = $cobro->estado === MedioDeCobroEstados::REEMBOLSADO || $cobro->estado === MedioDeCobroEstados::REEMBOLSADO->value;
+
         $movimientoCaja = $this->movimientosCajaManager->createMovimientosCaja(
-            $cobro->idsucursal,
-            $cobro->idusuario,
+            $isRefund ? $configuracion->idsucursalcajadestino: $cobro->idsucursal,
+            $isRefund ? $configuracion->idusuariocajadestino : $cobro->idusuario,
             config('medios_de_cobro.drivers.MercadoPagoQR.id_motivo_movimiento_caja'),
             $cobro->importe,
-            $configuracion->idsucursalcajadestino,
-            $configuracion->idusuariocajadestino,
-            'Movimiento automatico por venta con QR',
+            $isRefund ? $cobro->idsucursal : $configuracion->idsucursalcajadestino,
+            $isRefund ? $cobro->idusuario : $configuracion->idusuariocajadestino,
+            'Movimiento automatico por '.($isRefund ? 'REEMBOLSO' : 'VENTA').'.',
             null,
             MovimientoCajaEstados::APROBADO
         );

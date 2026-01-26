@@ -14,10 +14,14 @@
         estado = toLower(estado);
         if (estado === 'pendiente') return '#2C5DA2'; // blue
         if (estado === 'nueva') return '#808080'; // gray
-        if (estado === 'expiro') return '##F88E15'; // orange
+
+        document.getElementById('qr-image').style.display = "none";
+        if (estado === 'expiro') return '#F88E15'; // orange
         if (estado === 'aprobado') return '#185A2C'; // green
         if (estado === 'rechazado') return '#F50002'; // red
         if (estado === 'error') return '#F50002'; // red
+        if (estado === 'reembolsado') return '#8c00ff'; // violet
+        if (estado === 'procesando_reembolso') return '#c9ae44'; // violet
         return '#000000';
     }
 
@@ -35,6 +39,24 @@
         }
         // Very old IE fallback
         try { return eval('(' + text + ')'); } catch (e2) { return null; }
+    }
+
+    // Read a query parameter from the current page URL (old-browser friendly)
+    function getQueryParam(name) {
+        var search = window.location ? (window.location.search || '') : '';
+        if (!search || search.length < 2) return null;
+        // Remove leading '?'
+        var qs = search.substring(1).split('&');
+        for (var i = 0; i < qs.length; i++) {
+            var part = qs[i] || '';
+            var eqIdx = part.indexOf('=');
+            var key = eqIdx >= 0 ? part.substring(0, eqIdx) : part;
+            if (key === name) {
+                var val = eqIdx >= 0 ? part.substring(eqIdx + 1) : '';
+                try { return decodeURIComponent(val.replace(/\+/g, ' ')); } catch (e) { return val; }
+            }
+        }
+        return null;
     }
 
     function init() {
@@ -63,6 +85,8 @@
         var statusText = byId('status-text');
         var errorBox = byId('error-box');
         var inFlight = false;
+        // Token comes from main page; prefer data attribute, then URL query param
+        var token = content.getAttribute('data-token') || getQueryParam('token');
 
         function showError(msg) {
             if (!errorBox) return;
@@ -76,8 +100,16 @@
         }
         function updateUI(estado) {
             if (!statusBox || !statusText) return;
+
             statusBox.style.backgroundColor = mapColor(estado);
-            setText(statusText, estado);
+
+            if(estado === "procesando_reembolso")
+            {
+                setText(statusText, "PROCESANDO REEMBOLSO");
+            }else {
+                setText(statusText, estado);
+            }
+
         }
 
         // Set initial UI states (in case CSS/HTML not covering)
@@ -85,7 +117,7 @@
 
         function tick() {
             // Only poll when estado is pendiente and no overlapping requests
-            if ((currentEstado !== 'pendiente' && currentEstado !== 'nueva') || inFlight) return;
+            if ((currentEstado !== 'pendiente' && currentEstado !== 'nueva' && currentEstado !== 'procesando_reembolso') || inFlight) return;
             if (!pollUrl) return;
 
             var xhr = makeRequest();
@@ -95,7 +127,13 @@
             }
             inFlight = true;
             hideError();
-            xhr.open('GET', pollUrl + (pollUrl.indexOf('?') === -1 ? '?' : '&') + '_ts=' + new Date().getTime(), true);
+            var sep = (pollUrl.indexOf('?') === -1 ? '?' : '&');
+            var url = pollUrl + sep + '_ts=' + new Date().getTime();
+            if (token) {
+                // append token param from main page
+                url += '&token=' + encodeURIComponent(token);
+            }
+            xhr.open('GET', url, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState !== 4) return;
                 inFlight = false;

@@ -9,3 +9,8 @@ Route::post('/order/generate', [MediosDeCobroController::class, 'orderGenerate']
 
 Route::get('/order/{idunicolegacy}/legacy-preview', [MediosDeCobroController::class, 'orderLegacyPreview'])->name('medios-de-pago.order-legacy-preview');
 Route::get('/{idventasucursalcobro}/order', [MediosDeCobroController::class, 'getOrder'])->name('medios-de-pago.get-order');
+
+Route::get('/sucursal/{idSucursal}/usuario/{idUsuario}/order/refund/list', [MediosDeCobroController::class, 'getOrdersToRefund'])->name('medios-de-pago.sucursal.get-orders-refund');
+
+Route::get('/order/{orderId}/refund', [MediosDeCobroController::class, 'showOrderToRefund'])->name('medios-de-pago.sucursal.get-order-to-refund');
+Route::post('/order/{orderId}/refund', [MediosDeCobroController::class, 'refundOrder'])->name('medios-de-pago.refund-order');

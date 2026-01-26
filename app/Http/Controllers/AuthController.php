@@ -7,6 +7,7 @@ use App\Repositories\Legacy\PermisosRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\LoginRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use phpDocumentor\Parser\Exception;
 
 class AuthController extends Controller
@@ -61,6 +62,38 @@ class AuthController extends Controller
         return back()->withErrors([
             'auth_result' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
         ])->onlyInput('usuario');
+    }
+
+    /**
+     * Generate and return an API token for a valid user.
+     *
+     * Expected POST params: 'usuario', 'clave'
+     */
+    public function getToken(Request $request)
+    {
+        $data = $request->validate([
+            'usuario' => ['required', 'string'],
+            'clave'   => ['required', 'string'],
+        ]);
+
+        // Locate active user by usuario
+        $user = \App\Models\User::where('usuario', $data['usuario'])
+            ->where('activo', 1)
+            ->first();
+
+        if (!($user && $data['clave'] === $user->clave)) {
+            return response()->json([
+                'message' => 'Credenciales inválidas o usuario inactivo.'
+            ], 401);
+        }
+
+        // Create Sanctum token
+        $token = $user->createToken('api')->plainTextToken;
+
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
     /**
      * Log the user out of the application.

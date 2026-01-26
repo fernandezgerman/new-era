@@ -10,7 +10,10 @@ enum MedioDeCobroEstados: string
     case APROBADO = 'aprobado';
     case RECHAZADO = 'rechazado';
     case CANCELADO_POR_EL_USUARIO = 'cancelado_por_el_usuario';
-
     case EXPIRO = 'expiro';
+
+    case REEMBOLSADO = 'reembolsado';
+
+    case PROCESANDO_REEMBOLSO = 'procesando_reembolso';
 
 }

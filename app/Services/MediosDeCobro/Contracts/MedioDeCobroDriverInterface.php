@@ -12,6 +12,8 @@ interface MedioDeCobroDriverInterface
 
     public function getOrder(string $localId): OrderDTO;
 
+    public function refundOrder(string $localId): OrderDTO;
+
     public function testConnection(int $sucursalId): bool;
 
     public function syncPaymentDetails(OrderDTO $orderDTO): OrderPaymentDetailDTO;

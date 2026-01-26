@@ -25,6 +25,8 @@ class MercadoPagoOrderResponseDTO
     public array $taxes = [];
     /** @var MPOrderItemDTO[] */
     public array $items = [];
+    /** @var MPRefund[] */
+    public array $refunds = [];
     public ?MPOrderDiscountsDTO $discounts = null;
     public ?MPTypeResponseDTO $type_response = null;
 }

@@ -2,7 +2,7 @@
 
 namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories;
 
-use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\{MPOrderConfigQRDTO, MPOrderDiscountsDTO, MPOrderItemDTO, MPOrderPaymentDTO, MPOrderTaxDTO, MPOrderTransactionsDTO, MPTypeResponseDTO, MercadoPagoOrderResponseDTO};
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\{MPOrderConfigQRDTO, MPOrderDiscountsDTO, MPOrderItemDTO, MPOrderPaymentDTO, MPOrderTaxDTO, MPOrderTransactionsDTO, MPRefund, MPTypeResponseDTO, MercadoPagoOrderResponseDTO};
 use Illuminate\Support\Arr;
 
 class MercadoPagoOrderResponseFactory
@@ -43,6 +43,18 @@ class MercadoPagoOrderResponseFactory
             $transactions->payments[] = $p;
         }
         $dto->transactions = $transactions;
+
+        // refunds (from transactions.refunds)
+        $dto->refunds = [];
+        foreach ((array) Arr::get($data, 'transactions.refunds', []) as $refund) {
+            $r = new MPRefund();
+            $r->id = Arr::get($refund, 'id');
+            $r->transaction_id = Arr::get($refund, 'transaction_id');
+            $r->amount = Arr::get($refund, 'amount');
+            $r->status = Arr::get($refund, 'status');
+            $r->reference_id = Arr::get($refund, 'reference_id');
+            $dto->refunds[] = $r;
+        }
 
         // taxes
         foreach ((array) Arr::get($data, 'taxes', []) as $tax) {

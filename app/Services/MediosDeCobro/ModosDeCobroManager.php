@@ -36,6 +36,26 @@ class ModosDeCobroManager
 
     }
 
+    public function reembolsarOrden(VentaSucursalCobro $ventaSucursalCobro): VentaSucursalCobro
+    {
+
+        if($ventaSucursalCobro->created_at->isBefore(Carbon::now()->subMinutes(10)))
+        {
+            //throw new MediosDeCobroException('No se puede reembolsar una orden cuando pasaron más de 10 minutos');
+        }
+
+        db::transaction(function () use (&$ventaSucursalCobro) {
+            $ventaSucursalCobro->estado = MedioDeCobroEstados::PROCESANDO_REEMBOLSO;
+            $this->getDriverOrFail(
+                ConnectionDataDTOFactory::fromVentaSucursalCobro($ventaSucursalCobro)
+            )->refundOrder($ventaSucursalCobro->id);
+
+            $ventaSucursalCobro->save();
+        });
+
+        return $ventaSucursalCobro;
+    }
+
     public function generarOrden(OrderDTO $order): VentaSucursalCobro
     {
 
@@ -145,7 +165,6 @@ class ModosDeCobroManager
                 throw new MediosDeCobroException('No se pudo localizar una ventaSucursalCobro en la notificacion.');
             }
 
-            Log::info('nuevo estado: '.$ventaSucursalCobro->estado.' - '.$newStatus->status->value);
             if($ventaSucursalCobro->estado !== $newStatus->status->value)
             {
                 $ventaSucursalCobro->estado = $newStatus->status->value;

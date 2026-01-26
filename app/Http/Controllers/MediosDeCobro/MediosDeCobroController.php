@@ -7,6 +7,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\MediosDePago\GenerateOrderByDataRequest;
 use App\Http\Requests\MediosDePago\GenerateOrderRequest;
 use App\Http\Requests\MediosDePago\OrderPreviewRequest;
+use App\Http\Requests\MediosDePago\ReembolsarOrderByDataRequest;
 use App\Http\Requests\MediosDePago\TestConnectionRequest;
 use App\Models\MedioDeCobroSucursalConfiguracion;
 use App\Models\ModoDeCobro;
@@ -15,6 +16,7 @@ use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDT
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoExtendedFunctionalities;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoQRDriver;
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
+use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
 use App\Services\MediosDeCobro\Factories\OrderDTOFactory;
 use App\Services\MediosDeCobro\ModosDeCobroManager;
 use Exception;
@@ -43,7 +45,7 @@ class MediosDeCobroController extends BaseController
             'ventaSucursalCobro' => $ventaSucursalCobro
         ];
 
-        return view('mediosDePago.MercadoPago.order-preview',compact('data'));
+        return view('mediosDePago.MercadoPago.orders.order-preview',compact('data'));
     }
 
     public function orderGenerate(GenerateOrderRequest $orderPreviewRequest)
@@ -57,7 +59,7 @@ class MediosDeCobroController extends BaseController
         $modosDeCobroManager = app(ModosDeCobroManager::class);
         $modosDeCobroManager->generarCobro($ventaSucursalCobro);
 
-        return view('mediosDePago.MercadoPago.order-waiting-payment',compact('ventaSucursalCobro'));
+        return view('mediosDePago.MercadoPago.orders.order-waiting-payment',compact('ventaSucursalCobro'));
     }
 
     public function processEvent(Request $request)
@@ -145,5 +147,36 @@ class MediosDeCobroController extends BaseController
             'error' => $errorMessage,
             'configuracion' => $medioDeCobroSucursalConfiguracion
         ];
+    }
+
+    public function refundOrder(ReembolsarOrderByDataRequest $orderPreviewRequest)
+    {
+        $ventaSucursalCobro = VentaSucursalCobro::where('id', $orderPreviewRequest->orderId)->first();
+        $isReembolsado = $ventaSucursalCobro->estado === MedioDeCobroEstados::REEMBOLSADO || $ventaSucursalCobro->estado === MedioDeCobroEstados::REEMBOLSADO->value;
+        $isReembolsando = $ventaSucursalCobro->estado === MedioDeCobroEstados::PROCESANDO_REEMBOLSO || $ventaSucursalCobro->estado === MedioDeCobroEstados::PROCESANDO_REEMBOLSO->value;
+        $isPendiente = $ventaSucursalCobro->estado === MedioDeCobroEstados::PENDIENTE || $ventaSucursalCobro->estado === MedioDeCobroEstados::PENDIENTE->value;
+        if(!($isReembolsado || $isReembolsando || $isPendiente)){
+            app(ModosDeCobroManager::class)->reembolsarOrden(
+                $ventaSucursalCobro
+            );
+        }
+
+        $qr = '';
+        return view('mediosDePago.MercadoPago.legacy-preview', compact('ventaSucursalCobro','qr'));
+    }
+
+    public function showOrderToRefund($orderId)
+    {
+        $ventaSucursalCobro = get_entity_or_fail('VentaSucursalCobro', $orderId);
+        return view('mediosDePago.MercadoPago.orders.order-to-refund', compact('ventaSucursalCobro'));
+    }
+
+    public function getOrdersToRefund(int $idSucursal, int $idUsuario)
+    {
+        $ventaSucursalCobros = VentaSucursalCobro::where('idsucursal', $idSucursal)
+            ->where('idusuario', $idUsuario)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('mediosDePago.MercadoPago.orders.orders-to-refund', compact('ventaSucursalCobros'));
     }
 }

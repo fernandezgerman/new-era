@@ -1,0 +1,42 @@
+.estado{
+    padding: 4px;
+    border-radius: 5px;
+    height: auto;
+}
+
+.pendiente{
+    background-color: blue;
+    color: white;
+}
+
+.aprobado{
+    background-color: green;
+    color: white;
+}
+
+.nueva{
+    background-color: gray;
+    color: white;
+}
+
+.rechazado{
+    background-color: red;
+    color: white;
+}
+
+.reembolsado{
+    background-color: deeppink;
+    color: white;
+}
+
+.procesando_reembolso{
+    background-color: transparent;
+    color: white;
+}
+.expiro{
+    background-color: orangered;
+    color: white;
+}
+.label{
+    color:gray;
+}

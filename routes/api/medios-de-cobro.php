@@ -22,6 +22,11 @@ route::prefix('medios-de-cobro')->group(function () {
         ->middleware('custom.auth')
         ->name('medios-de-cobro.order-legacy-generate');
 
+    Route::post('/order/{idventasucursalcobro}/refund', [MediosDeCobroController::class, 'refundOrder'])
+        ->withoutMiddleware(['auth:sanctum', CheckLegacyPermissions::class])
+        ->middleware('custom.auth')
+        ->name('medios-de-cobro.order-legacy-refund');
+
     Route::post('/test-connection', [MediosDeCobroController::class, 'testQRConnection'])
         ->name('medios-de-cobro.test-connection');
 });

@@ -38,7 +38,7 @@ class MercadoPagoHttpClient implements HttpClient
         return $this->getResponse($this->callHttpMethod('get', $uri, $data));
     }
 
-    public function post(string $uri, array $data, array $queryParameters = [], string $idempotencyKey = null): IntegrationResponse
+    public function post(string $uri, ?array $data = null, array $queryParameters = [], string $idempotencyKey = null): IntegrationResponse
     {
         return $this->getResponse($this->callHttpMethod('post', $uri, $data, $queryParameters, $idempotencyKey ));
     }
@@ -49,7 +49,7 @@ class MercadoPagoHttpClient implements HttpClient
     }
 
     private function callHttpMethod(string $method, string $uri,
-                                    array $data = [], array $queryParameters = [], string $idempotencyKey = null): \Illuminate\Http\Client\Response
+                                    ?array $data = null, array $queryParameters = [], string $idempotencyKey = null): \Illuminate\Http\Client\Response
     {
         return Http::withToken($this->accessToken)
             //We set verify = false on non production environments to not get certificate issues from guzzle.

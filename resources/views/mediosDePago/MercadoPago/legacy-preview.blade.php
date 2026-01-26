@@ -75,7 +75,7 @@
 <body>
 <?php
 // PHP-side color mapping for initial render
-$estado = strtolower($ventaSucursalCobro->estado);
+$estado = strtolower($ventaSucursalCobro->estado?->value ?? $ventaSucursalCobro->estado);
 $color = '#000000';
 if ($estado === 'pendiente') $color = '#2C5DA2';
 else if ($estado === 'nueva') $color = '#808080';
@@ -83,6 +83,8 @@ else if ($estado === 'expiro') $color = '#F88E15';
 else if ($estado === 'aprobado') $color = '#185A2C';
 else if ($estado === 'rechazado') $color = '#F50002';
 else if ($estado === 'error') $color = '#F50002';
+else if ($estado === 'reembolsado') $color = '#8c00ff';
+else if ($estado === 'procesando_reembolso') $color = '#c9ae44';
 ?>
 <div id="center-wrapper">
     <div id="content"
@@ -100,12 +102,12 @@ else if ($estado === 'error') $color = '#F50002';
                         <img id="mp-iso" src="/img/mercado-pago-iso.png" alt="Mercado Pago"/>
                     </td>
                     <td>
-                        <div id="status-text">{{ $ventaSucursalCobro->estado }}</div>
+                        <div id="status-text">{{ $ventaSucursalCobro->estado === "procesando_reembolso" ? "Procesando reembolso" : $ventaSucursalCobro->estado}}</div>
                     </td>
                 </tr>
             </table>
         </div>
-        <img id="header-logo" src="{{$qr}}" alt="logo"/>
+        <img id="qr-image" src="{{$qr}}" alt="logo" style="max-width: 280px;margin-top: 10px;"/>
         <div style="height: 5px;"></div>
         <div id="importe-box">Importe: ${{ $ventaSucursalCobro->importe }}</div>
         <div id="error-box"></div>

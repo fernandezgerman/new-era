@@ -35,6 +35,7 @@ use App\Services\MediosDeCobro\MediosDeCobroNotImplementedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 
 
@@ -88,9 +89,32 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
         return $orderDTO;
     }
 
+    public function refundOrder(string $localId): OrderDTO
+    {
+        $mercadoPagoQROrderSql = $this->getMercadoPagoQROrderSqlByLocalId($localId);
+        // Build refund endpoint and perform POST with a fresh idempotency key
+        $idempotencyKey = (string) Str::uuid();
+        $response = $this->httpClient->post('orders/'.$mercadoPagoQROrderSql->externalorderid.'/refund', null, [], $idempotencyKey);
+        $data = method_exists($response, 'getData') ? (array) $response->getData() : [];
+
+        // Build and return OrderDTO populated with the gateway response
+        $orderDTO = new OrderDTO();
+        $orderDTO->externalId = $mercadoPagoQROrderSql->externalorderid;
+        $orderDTO->localId = $mercadoPagoQROrderSql->ventasucursalcobroid;
+        $orderDTO->gatewayResponse = MercadoPagoOrderResponseFactory::fromArray($data);
+        $orderDTO->idempotencyKey = $idempotencyKey;
+
+        return $orderDTO;
+    }
+
+    private function getMercadoPagoQROrderSqlByLocalId(string $localId): MercadoPagoQROrderSql
+    {
+        return MercadoPagoQROrderSql::where('ventasucursalcobroid', $localId)->first();
+    }
+
     public function getOrder(string $localId): OrderDTO
     {
-        $mercadoPagoQROrderSql = MercadoPagoQROrderSql::where('ventasucursalcobroid', $localId)->first();
+        $mercadoPagoQROrderSql = $this->getMercadoPagoQROrderSqlByLocalId($localId);
         // Call Mercado Pago Orders API
         $response = $this->httpClient->get('orders/'.$mercadoPagoQROrderSql->externalorderid);
         $data = method_exists($response, 'getData') ? (array) $response->getData() : [];
@@ -139,7 +163,6 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
             $id = ($request->get('id') ?? $request->get('data_id'));
             $template = "id:{$id};request-id:{$request->header('x-request-id')};ts:{$signatureContent[$tsPosition]};";
 
-            Log::info('TEMPLATE: '.$template);
             $key = env('MERCADO_PAGO_WEBHOOK_SECRET_KEY');
             $cyphedSignature = hash_hmac('sha256', $template, $key);
 
@@ -192,6 +215,7 @@ class MercadoPagoQRDriver implements MedioDeCobroQRDriverInterface, MedioDeCobro
             MercadoPagoQRStatus::EXPIRED->value => MedioDeCobroEstados::EXPIRO,
             MercadoPagoQRStatus::CREATED->value => MedioDeCobroEstados::PENDIENTE,
             MercadoPagoQRStatus::PROCESSED->value => MedioDeCobroEstados::APROBADO,
+            MercadoPagoQRStatus::REFUNDED->value => MedioDeCobroEstados::REEMBOLSADO,
             default => throw new MediosDeCobroNotImplementedException('Mercado pago qr driver does not implement this kind of status: '. $mpQrStatus),
         };
     }

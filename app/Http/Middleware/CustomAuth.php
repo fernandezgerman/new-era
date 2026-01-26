@@ -4,51 +4,83 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use phpDocumentor\Parser\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class CustomAuth
 {
     /**
      * Handle an incoming request.
      *
-     * Expect JSON or x-www-form-urlencoded body containing 'user' and 'password'.
-     * If a matching user does not exist or password is invalid, return 403.
+     * Validate Sanctum token provided as query parameter 'token' and
+     * authenticate the associated active user.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        //ToDo: Create a custom way to auth the mercado pago notifications
-        return $next($request);
+        // Read token from query string
+        $tokenString = $request->query('token');
 
-        // Accept either 'user'/'password' or 'usuario'/'clave'
-        $username = $request->input('user', $request->input('usuario'));
-        $password = $request->input('password', $request->input('clave'));
+        if (!$tokenString) {
+            // If no token provided, try to authenticate using usuario & clave from query params
+            $usuario = $request->query('usuario');
+            $clave   = $request->query('clave');
 
-        if (!$username || !$password) {
-            throw new Exception('Missing credentials');
-            /*
+            if ($usuario && $clave) {
+                $user = User::where('usuario', $usuario)
+                    ->where('activo', 1)
+                    ->first();
+
+                if ($user && $clave === $user->clave) {
+                    // Authenticate the request with the resolved user
+                    Auth::setUser($user);
+                    $request->setUserResolver(function () use ($user) {
+                        return $user;
+                    });
+
+                    return $next($request);
+                }
+
+                return response()->json([
+                    'message' => 'Credenciales invalidas o usuario inactivo '.$usuario.' '.$clave,
+                ], 401);
+            }
+
             return response()->json([
-                'message' => 'Missing credentials',
-            ], 403);*/
+                'message' => 'Token requerido en query string (?token=...) o proporcione usuario y clave',
+            ], 401);
         }
 
-        $query = User::query();
-        $query->where('usuario', $username);
-        $query->where('clave', $password);
-        $query->where('activo', 1);
+        // Resolve the personal access token using Sanctum
+        $accessToken = PersonalAccessToken::findToken($tokenString);
 
-        $user = $query->first();
-
-        if (!$user) {
-            throw new Exception('User not found');
-            /*
+        if (!$accessToken) {
             return response()->json([
-                'message' => 'User not found',
-            ], 403); */
+                'message' => 'Token inválido',
+            ], 401);
         }
 
-        auth()->setUser($user);
+        $tokenable = $accessToken->tokenable;
+
+        if (!($tokenable instanceof User)) {
+            return response()->json([
+                'message' => 'Token no asociado a un usuario válido',
+            ], 401);
+        }
+
+        if ((int) $tokenable->activo !== 1) {
+            // Ensure user is active (activo = 1)
+            return response()->json([
+                'message' => 'Usuario inactivo',
+            ], 401);
+        }
+
+        // Authenticate the request with the resolved user
+        Auth::setUser($tokenable);
+        $request->setUserResolver(function () use ($tokenable) {
+            return $tokenable;
+        });
 
         return $next($request);
     }
