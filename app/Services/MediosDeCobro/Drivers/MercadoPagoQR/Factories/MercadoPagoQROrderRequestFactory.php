@@ -26,15 +26,14 @@ class MercadoPagoQROrderRequestFactory
 
         $description = 'Order QR - Sucursal ' . $orderDTO->sucursal->id;
 
-        return [
-            ...$data,
-            [
-                'description' => $description,
-                'qr' => [
-                    'external_pos_id' => $externalPosId,
-                    'mode' => 'static',
-                ],
+        $data['description'] = $description;
+        $data['config'] = [
+            'qr' => [
+                'external_pos_id' => $externalPosId,
+                'mode' => 'static',
             ]
         ];
+
+        return $data;
     }
 }
