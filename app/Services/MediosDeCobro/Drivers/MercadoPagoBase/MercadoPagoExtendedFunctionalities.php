@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR;
+namespace App\Services\MediosDeCobro\Drivers\MercadoPagoBase;
 
 use App\Contracts\Integrations\HttpClient;
 use App\Models\MedioDeCobroSucursalConfiguracion;
 use App\Models\Sucursal;
-use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoStoreDTO;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoCajaDTO;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoStoreDTO;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRFileSyncException;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRNotFoundException;
-use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoStoreDTOFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDTOFactory;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoStoreDTOFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoStoreRequestFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Http\MercadoPagoHttpClient;
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConfiguracionException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Http;
-use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Exceptions\MercadoPagoQRFileSyncException;
 use phpDocumentor\Parser\Exception;
 
 
@@ -35,19 +35,11 @@ class MercadoPagoExtendedFunctionalities
         $this->httpClient = new MercadoPagoHttpClient($connectionDataDTO);
 
     }
-    public function getOrCreateCajaForSucursal(int $idSucursal): MercadoPagoCajaDTO
+    public function getOrCreateCajaForSucursal(MedioDeCobroSucursalConfiguracion $configuracionPorSucursal): MercadoPagoCajaDTO
     {
-        $driverConfig = config('medios_de_cobro.drivers.MercadoPagoQR');
+        $driverConfig = $configuracionPorSucursal->modoDeCobro->config;
         if (blank($driverConfig)) {
             throw new MediosDeCobroConfiguracionException('No se encontro el driver');
-        }
-
-        $configuracionPorSucursal = MedioDeCobroSucursalConfiguracion::where('idmododecobro', $driverConfig['local_id'])
-            ->where('idsucursal', $idSucursal)
-            ->first();
-
-        if (blank($configuracionPorSucursal)) {
-            throw new MediosDeCobroConfiguracionException('No hay configuracion asociada a la sucursal y medio de cobro');
         }
 
         // Ensure metadata is an array structure we can modify
@@ -65,8 +57,8 @@ class MercadoPagoExtendedFunctionalities
         $cajaDto = is_array($cajaFromMeta) ? MercadoPagoCajaDTOFactory::fromArray($cajaFromMeta) : null;
 
         // 3 - if some dto were not filled, try getting or saving it from MP
-        $storeDtoToBeSaved = $storeDto === null ? $this->getOrCreateStore($idSucursal) : null;
-        $cajaDtoToBeSaved = $cajaDto === null ? $this->getOrCreateCaja($idSucursal) : null;
+        $storeDtoToBeSaved = $storeDto === null ? $this->getOrCreateStore($configuracionPorSucursal->idsucursal) : null;
+        $cajaDtoToBeSaved = $cajaDto === null ? $this->getOrCreateCaja($configuracionPorSucursal->idsucursal) : null;
 
         //4 - if some of those vars were getted, save it
         if($storeDtoToBeSaved !== null || $cajaDtoToBeSaved !== null){
@@ -147,95 +139,6 @@ class MercadoPagoExtendedFunctionalities
         return $storeDto;
     }
 
-    public function getOrCreateCajaForSucursal2(int $idSucursal): MercadoPagoCajaDTO
-    {
-        $driverConfig = config('medios_de_cobro.drivers.MercadoPagoQR');
-        if (blank($driverConfig)) {
-            throw new MediosDeCobroConfiguracionException('No se encontro el driver');
-        }
-
-        $configuracionPorSucursal = MedioDeCobroSucursalConfiguracion::where('idmododecobro', $driverConfig['local_id'])
-            ->where('idsucursal', $idSucursal)
-            ->first();
-
-        if (blank($configuracionPorSucursal)) {
-            throw new MediosDeCobroConfiguracionException('No hay configuracion asociada a la sucursal y medio de cobro');
-        }
-
-        // Ensure metadata is an array structure we can modify
-        $metadata = $configuracionPorSucursal->metadata ?? [];
-        if (!is_array($metadata)) {
-            $metadata = [];
-        }
-
-        // 1) Try from metadata first
-        $storeFromMeta = Arr::get($metadata, 'store');
-        $cajaFromMeta = Arr::get($metadata, 'caja');
-
-        $storeDto = null;
-        if (is_array($storeFromMeta)) {
-            try {
-                $storeDto = MercadoPagoStoreDTOFactory::fromArray($storeFromMeta);
-            } catch (\Throwable $e) {
-                $storeDto = null; // ignore malformed
-            }
-        }
-
-        if (is_array($cajaFromMeta)) {
-            try {
-                $cajaDto = MercadoPagoCajaDTOFactory::fromArray($cajaFromMeta);
-                // If caja was in metadata, ensure store is also set; if not, attempt to load it
-                if (!$storeDto && $cajaDto->external_store_id) {
-                    try {
-                        // external_store_id has the external id like 'SUCSUCID'; fetch the store
-                        $storeDto = $this->getStore((string)$idSucursal);
-                    } catch (MercadoPagoQRNotFoundException $e) {
-                        // will re-create below
-                        $storeDto = null;
-                    }
-                }
-                // We have caja; make sure to return after persisting metadata as needed
-                // Persist both if not present
-                if (!Arr::get($metadata, 'store') && $storeDto) {
-                    $metadata['store'] = get_object_vars($storeDto);
-                }
-                // Ensure caja saved too (normalize data)
-                $metadata['caja'] = get_object_vars($cajaDto);
-                $configuracionPorSucursal->metadata = $metadata;
-                $configuracionPorSucursal->save();
-                return $cajaDto;
-            } catch (\Throwable $e) {
-                // ignore malformed caja in metadata; proceed to fetch/create
-            }
-        }
-
-        // 2) Store: try to get from API using external_id; if not found, create
-        if (!$storeDto) {
-            try {
-                $storeDto = $this->getStore((string)$idSucursal);
-            } catch (MercadoPagoQRNotFoundException $e) {
-                $storeDto = $this->insStore((string)$idSucursal);
-            }
-            // Persist store in metadata
-            $metadata['store'] = get_object_vars($storeDto);
-            $configuracionPorSucursal->metadata = $metadata;
-            $configuracionPorSucursal->save();
-        }
-
-        // 3) Caja: try to get from API; if not found, create
-        try {
-            $cajaDto = $this->getCaja($idSucursal);
-        } catch (MercadoPagoQRNotFoundException $e) {
-            $cajaDto = $this->insCaja($idSucursal);
-        }
-
-        // Persist caja in metadata
-        $metadata['caja'] = get_object_vars($cajaDto);
-        $configuracionPorSucursal->metadata = $metadata;
-        $configuracionPorSucursal->save();
-
-        return $cajaDto;
-    }
 
     /**
      * Get a Mercado Pago store by sucursal id.

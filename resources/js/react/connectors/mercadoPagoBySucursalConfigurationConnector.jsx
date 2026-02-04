@@ -22,10 +22,13 @@ export default () =>
 
     const modoDeCobroId = Number(NODE_TO_INYECT.getAttribute('modo-de-cobro-id'));
 
+    const modoDeCobroPointId = Number(NODE_TO_INYECT.getAttribute('modo-de-cobro-point-id'));
+
     NODE.render(
         <QueryClientProvider client={queryClient}>
             <LegacyDivContainer>
-                <MercadoPagoConfiguracionBySucursal sucursalId={sucursalId} modoDeCobroId={modoDeCobroId} />
+                <MercadoPagoConfiguracionBySucursal sucursalId={sucursalId} modoDeCobroId={modoDeCobroId} modoDeCobroPointId={modoDeCobroPointId} tipo={'QR'} />
+                <MercadoPagoConfiguracionBySucursal sucursalId={sucursalId} modoDeCobroId={modoDeCobroPointId} tipo={'POINT'}/>
             </LegacyDivContainer>
         </QueryClientProvider>
     );

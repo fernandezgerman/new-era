@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+
+use App\Services\MediosDeCobro\Drivers\MercadoPagoBase\MercadoPagoExtendedFunctionalities;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDTOFactory;
-use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoExtendedFunctionalities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -103,6 +104,11 @@ class MedioDeCobroSucursalConfiguracion extends Model
     public function getLocalQRLinkAttribute(): string
     {
         if (!$this->configuration_checked) {
+            return '';
+        }
+
+        if(!isset($this->metadata['caja']))
+        {
             return '';
         }
 

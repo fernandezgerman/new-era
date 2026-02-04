@@ -2,6 +2,7 @@
 
 namespace App\Services\MediosDeCobro\Factories;
 
+use App\Http\Exceptions\Legacy\Exception;
 use App\Http\Requests\MediosDePago\GenerateOrderByDataRequest;
 use App\Http\Requests\MediosDePago\GenerateOrderRequest;
 use App\Http\Requests\MediosDePago\OrderPreviewRequest;
@@ -35,6 +36,8 @@ class OrderDTOFactory
         $dto->idempotencyKey = (env('APP_DEBUG') ? 'prod' : 'dev').$venta->id;
         $dto->localId = $venta->id;
         $dto->externalId = null;
+        //throw new Exception('Tipo : '.$venta->modoDeCobro->config['tipo']);
+        $dto->tipo = strtolower($venta->modoDeCobro->config['tipo'] ?? OrderDTO::TYPE_QR);
 
         // Detalles
         $detalles = new OrderDetalleDTOCollection();

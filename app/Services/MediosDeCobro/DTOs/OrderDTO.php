@@ -10,9 +10,13 @@ use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoOrderRespon
 
 class OrderDTO
 {
+    public const TYPE_POINT = 'point';
+    public const TYPE_QR = 'qr';
     public ?int $localId;
     public ?string $externalId;
     public ?string $idunicolegacy;
+
+    public string $tipo = self::TYPE_QR; //point or qr
     public Sucursal $sucursal;
     public User $usuario;
     public ?ModoDeCobro $modoDeCobro;

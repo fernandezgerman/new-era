@@ -12,6 +12,13 @@ class MercadoPagoOrderRequestFactory
 {
     public static function make(OrderDTO $orderDTO): array
     {
+
+        $class = $orderDTO->tipo === OrderDTO::TYPE_QR ? MercadoPagoQROrderRequestFactory::class : MercadoPagoPointOrderRequestFactory::class;
+        return $class::make($orderDTO);
+    }
+
+    public static function makeOrderBase(OrderDTO $orderDTO): array
+    {
         $total = 0.0;
         $items = [];
         $payments = [];
@@ -49,8 +56,10 @@ class MercadoPagoOrderRequestFactory
 
         $externalReference = 'ID'.$orderDTO->localId;
 
+
         //Obtiene el external identifier de la caja
-        $medioDeCobroSucursalConfiguracionDataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor($orderDTO->sucursal->id, $orderDTO->modoDeCobro->id);
+        $driverConfig = config('medios_de_cobro.drivers.'.$orderDTO->modoDeCobro->driver);
+        $medioDeCobroSucursalConfiguracionDataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor($orderDTO->sucursal->id, $driverConfig['config_id']);
         $medioDeCobroSucursalConfiguracion = $medioDeCobroSucursalConfiguracionDataAccessor->getConfiguracionValidated();
         $externalPosId = Arr::get($medioDeCobroSucursalConfiguracion->metadata, 'caja.external_id');
 
@@ -59,26 +68,15 @@ class MercadoPagoOrderRequestFactory
             throw new MediosDeCobroConfiguracionException('No se encontro la caja para enviar la orden');
         }
 
-        $mode = config('services.mercadopago.qr_mode', env('MP_QR_MODE', 'static'));
-        $description = 'Order QR - Sucursal ' . $orderDTO->sucursal->id;
 
-        return [
-            'type' => 'qr',
-            'total_amount' => number_format($total, 2, '.', ''),
-            'description' => $description,
+        return  [
+            'type' => $orderDTO->tipo,
             'external_reference' => $externalReference,
             'expiration_time' => 'PT16M',
-            'config' => [
-                'qr' => [
-                    'external_pos_id' => $externalPosId,
-                    'mode' => $mode,
-                ],
-            ],
             'transactions' => [
                 'payments' => $payments,
             ],
             'items' => $items,
-            //'notification_url' => 'https://flat-ducks-wink.loca.lt/api/medios-de-cobro/mercado-pago-qr/order/event?source_news=webhooks'
         ];
     }
 }

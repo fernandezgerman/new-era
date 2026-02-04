@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Http;
 
 class MercadoPagoHttpClient implements HttpClient
 {
-    private string $host;
+    public string $host;
 
 
     private string $accessToken;
@@ -46,6 +46,11 @@ class MercadoPagoHttpClient implements HttpClient
     public function put(string $uri, array $data): IntegrationResponse
     {
         return $this->getResponse($this->callHttpMethod('put', $uri, $data));
+    }
+
+    public function patch(string $uri, array $data): IntegrationResponse
+    {
+        return $this->getResponse($this->callHttpMethod('patch', $uri, $data));
     }
 
     private function callHttpMethod(string $method, string $uri,
@@ -84,6 +89,7 @@ class MercadoPagoHttpClient implements HttpClient
 
         if (! in_array($response->status(), $httpOkResponsesStatus))
         {
+            Log::error('Mercado pago error: '.json_encode($body));
             if($response->status() === HttpResponse::HTTP_CONFLICT) //409 idempotenci already used
             {
                 throw new MercadoPagoQRIdempotencyKeyAlreadyTakenException('Idempotency Key Already Taken');

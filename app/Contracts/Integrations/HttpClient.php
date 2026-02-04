@@ -11,4 +11,6 @@ interface HttpClient
     public function post(string $uri, array $data, array $queryParameters = []):IntegrationResponse;
 
     public function put(string $uri, array $data):IntegrationResponse;
+
+    public function patch(string $uri, array $data):IntegrationResponse;
 }

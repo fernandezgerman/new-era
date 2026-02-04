@@ -13,7 +13,6 @@ use App\Models\MedioDeCobroSucursalConfiguracion;
 use App\Models\ModoDeCobro;
 use App\Models\VentaSucursalCobro;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDTOFactory;
-use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoExtendedFunctionalities;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoQRDriver;
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
@@ -97,15 +96,20 @@ class MediosDeCobroController extends BaseController
             return response('Orden no encontrada', 404);
         }
 
+        $modoDeCobro = $ventaSucursalCobro->modoDeCobro;
+
+        $driverConfig = config('medios_de_cobro.drivers.'. $modoDeCobro->driver);
+
         //Tomo la configuracion ya validada
-        $dataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor($ventaSucursalCobro->idsucursal, $ventaSucursalCobro->idmododecobro);
+        $dataAccessor = new MedioDeCobroSucursalConfiguracionDataAccessor($ventaSucursalCobro->idsucursal, $modoDeCobro->driver_config_id);
         $medioDeCobroSucursalConfiguracion = $dataAccessor->getConfiguracionValidated();
 
         //Creo el dto
         $mercadoPagoCajaDTOFactory = MercadoPagoCajaDTOFactory::fromArray($medioDeCobroSucursalConfiguracion->metadata['caja']);
-        $qr = MercadoPagoExtendedFunctionalities::getOrCreateQrImage($mercadoPagoCajaDTOFactory);
 
-        return view('mediosDePago.MercadoPago.legacy-preview', compact('ventaSucursalCobro','qr'));
+        $qr = $modoDeCobro->getImage($mercadoPagoCajaDTOFactory);
+
+        return view('mediosDePago.MercadoPago.legacy-preview', compact('ventaSucursalCobro','qr', 'driverConfig'));
     }
 
     public function getOrder($idventasucursalcobro)
@@ -117,15 +121,15 @@ class MediosDeCobroController extends BaseController
     {
         $result = false;
         $errorMessage = '';
-        $medioDeCobroSucursalConfiguracion = '';
+        $medioDeCobroSucursalConfiguracion = MedioDeCobroSucursalConfiguracion::where('id', $request->get('configuracionId'))->first();
         try {
             $connectionData = new ConnectionDataDTO();
-            $localId = config('medios_de_cobro.drivers.MercadoPagoQR.local_id');
+            $localId = $request->configuracionId; //config('medios_de_cobro.drivers.MercadoPagoQR.local_id');
             if (blank($localId)) {
                 throw new Exception('No se encontro ningun medio de cobro para Mercado pago QR');
             }
 
-            $medioDeCobroSucursalConfiguracion = MedioDeCobroSucursalConfiguracion::where('id', $request->get('configuracionId'))->first();
+
 
             if(blank($medioDeCobroSucursalConfiguracion))
             {

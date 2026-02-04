@@ -1,7 +1,7 @@
 import React from "react";
 import {get} from "lodash";
 const colors = {
-    success: 'bg-lime-500',
+    success: 'bg-green-700',
     danger: 'bg-red-500',
     neutral: 'bg-slate-700',
     new_era: 'bg-fuchsia-500',

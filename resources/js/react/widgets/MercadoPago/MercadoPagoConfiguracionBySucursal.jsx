@@ -48,8 +48,7 @@ const AccionesEspeciales = ({
 
     useEffect(() => {
 
-        if(usuarioCaja && usuariosList && usuariosList.length > 0 && !usuariosList.reduce((exists, ul) => (usuarioCaja === ul.id || exists), false))
-        {
+        if (usuarioCaja && usuariosList && usuariosList.length > 0 && !usuariosList.reduce((exists, ul) => (usuarioCaja === ul.id || exists), false)) {
 
             setUsuarioCaja(false);
         }
@@ -61,73 +60,75 @@ const AccionesEspeciales = ({
                   value={transferirMovimientos}
                   className={' mb-4'} onChange={setTransferirMovimientos}/>
 
-            {transferirMovimientos && (
-                <>
-                    <Select
-                        options={sucursales?.map((sucursal) => ({key: uuid(), value: sucursal.id, label: sucursal.nombre}))}
-                        value={sucursalCaja}
-                        className={'mt-4'}
-                        setValue={(sucursalId) => setSucursalCaja(parseInt(sucursalId))}
-                        placeholder="Seleccione una sucursal"
-                        label={'Sucursal'}
-                    />
-                    {sucursalCaja && (
-                        <>
-                            <Select
-                                options={selectUsuariosList}
-                                className={'mt-4'}
-                                value={usuarioCaja}
-                                setValue={setUsuarioCaja}
-                                placeholder="Seleccione un usuario destinatario"
-                                label={'Usuario'}
-                            />
-                        </>
-                    )}
+        {transferirMovimientos && (
+            <>
+                <Select
+                    options={sucursales?.map((sucursal) => ({key: uuid(), value: sucursal.id, label: sucursal.nombre}))}
+                    value={sucursalCaja}
+                    className={'mt-4'}
+                    setValue={(sucursalId) => setSucursalCaja(parseInt(sucursalId))}
+                    placeholder="Seleccione una sucursal"
+                    label={'Sucursal'}
+                />
+                {sucursalCaja && (
+                    <>
+                        <Select
+                            options={selectUsuariosList}
+                            className={'mt-4'}
+                            value={usuarioCaja}
+                            setValue={setUsuarioCaja}
+                            placeholder="Seleccione un usuario destinatario"
+                            label={'Usuario'}
+                        />
+                    </>
+                )}
 
-                    {!sucursalCaja && (
-                        <div className={'mt-4'}> Seleccione una sucursal para ver los usuarios</div>
-                    )}
-                </>
-            )}
+                {!sucursalCaja && (
+                    <div className={'mt-4'}> Seleccione una sucursal para ver los usuarios</div>
+                )}
+            </>
+        )}
     </div>);
 }
 
-const PanelConfiguracionChecked = ({originalData, checkMercadoPagoQRConfiguracion, errorMessage}) =>
-{
-    if(!(originalData?.id))
-    {
+const PanelConfiguracionChecked = ({originalData, checkMercadoPagoQRConfiguracion, errorMessage, tipo}) => {
+    if (!(originalData?.id)) {
         return '';
     }
 
     const ConfiguracionNoCheckeada = <AlertDanger>
         La configuracion no ha sido checkeada. El medio de pago no estará disponible hasta entonces.
-        {errorMessage && ( <>
-            <br /><b>{errorMessage}</b> <br />
+        {errorMessage && (<>
+            <br/><b>{errorMessage}</b> <br/>
         </>)}
-        <Button format={'xs'} onClick={() => checkMercadoPagoQRConfiguracion(originalData.id)} >Checkear configuracion</Button>
+        <Button format={'xs'} onClick={() => checkMercadoPagoQRConfiguracion(originalData.id)}>Checkear
+            configuracion</Button>
     </AlertDanger>;
 
     const ConfiguracionCheckeada = <AlertSuccess>
 
         La configuracion ha sido checkeada correctamente. Todo listo para comenzar!
-        <p className={'mt-3'}>
-            Para imprimir QR:<br />
-            <TextDecorator >
-                <A target="_blank" href={originalData.local_qr_link}>{originalData.local_qr_link}</A>
-            </TextDecorator>
-        </p>
-        <p className={'mt-3'}>
-            Para configurar notificaciones en mercado pago, copie el siguiente link:<br />
-            <TextDecorator >
-                <A  target="_blank" href={originalData.web_hook_link}>{originalData.web_hook_link}</A>
-            </TextDecorator >
-        </p>
+        {tipo === 'QR' && (
+            <>
+                <p className={'mt-3'}>
+                    Para imprimir QR:<br/>
+                    <TextDecorator>
+                        <A target="_blank" href={originalData.local_qr_link}>{originalData.local_qr_link}</A>
+                    </TextDecorator>
+                </p>
+                <p className={'mt-3'}>
+                    Para configurar notificaciones en mercado pago, copie el siguiente link:<br/>
+                    <TextDecorator>
+                        <A target="_blank" href={originalData.web_hook_link}>{originalData.web_hook_link}</A>
+                    </TextDecorator>
+                </p>
+            </>)}
     </AlertSuccess>;
 
 
     return originalData.configuration_checked ? ConfiguracionCheckeada : ConfiguracionNoCheckeada;
 }
-export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) => {
+export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId, tipo}) => {
     const darkMode = useSystemTheme();
     const [mercadoPagoHabilitado, setMercadoPagoHabilitado] = useState(false);
     const [transferirMovimientos, setTransferirMovimientos] = useState(false);
@@ -141,7 +142,7 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
     const [userId, setUserId] = useState('');
     const [originalData, setOriginalData] = useState(false);
 
-    const loadDataFromDB =  (entity) => {
+    const loadDataFromDB = (entity) => {
         setOriginalData(entity);
 
         setSucursalCaja(entity.idsucursalcajadestino ?? 0);
@@ -154,8 +155,7 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
 
     useEffect(() => {
         getModoDeCobroSucursalConfiguracion({sucursalId, modoDeCobroId}).then((result) => {
-            if(result &&  result?.length > 0)
-            {
+            if (result && result?.length > 0) {
                 const entity = result[0];
                 loadDataFromDB(entity);
             }
@@ -198,20 +198,19 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
 
             const method = originalData ? updateModoDeCobroSucursalConfiguracion : insertModoDeCobroSucursalConfiguracion;
 
-            method({data}).then(async (result)  => {
+            method({data}).then(async (result) => {
                 loadDataFromDB(result);
 
-                console.log('insert result',result);
-                if(result.habilitarconfiguracion && !result.configuration_checked) {
+                console.log('insert result', result);
+                if (result.habilitarconfiguracion && !result.configuration_checked) {
                     let testResponse = onTest(result.id);
-                }else{
+                } else {
                     setLoading(false);
                 }
             }).catch(error => {
                 setErrorMessage(error?.message ?? error);
                 setLoading(false);
             });
-
 
 
         } catch (error) {
@@ -235,7 +234,7 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
             .finally(() => {
                 setLoading(false);
             }).catch((error) => {
-                setCheckConfigurationErrorMessage(error.message);
+            setCheckConfigurationErrorMessage(error.message);
         });
 
     }
@@ -247,52 +246,52 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
 
     const isDirty =
         !(
-        parseInt(originalData?.idsucursal) === parseInt(sucursalId) &&
-        parseInt(originalData?.idmododecobro) === parseInt(modoDeCobroId) &&
-        originalData?.habilitarconfiguracion === mercadoPagoHabilitado &&
-        originalData?.transferirmonto === transferirMovimientos &&
-        parseInt(originalData?.idsucursalcajadestino ?? 0) === parseInt(sucursalCaja ?? 0) &&
-        parseInt(originalData?.idusuariocajadestino ?? 0) === parseInt(usuarioCaja ?? 0) &&
-        originalData?.metadata?.token === token &&
-        originalData?.metadata?.userId === userId
+            parseInt(originalData?.idsucursal) === parseInt(sucursalId) &&
+            parseInt(originalData?.idmododecobro) === parseInt(modoDeCobroId) &&
+            originalData?.habilitarconfiguracion === mercadoPagoHabilitado &&
+            originalData?.transferirmonto === transferirMovimientos &&
+            parseInt(originalData?.idsucursalcajadestino ?? 0) === parseInt(sucursalCaja ?? 0) &&
+            parseInt(originalData?.idusuariocajadestino ?? 0) === parseInt(usuarioCaja ?? 0) &&
+            originalData?.metadata?.token === token &&
+            originalData?.metadata?.userId === userId
         )
 
-/*
-    console.log('isDirty', isDirty);
-    console.log([
-    parseInt(originalData?.idsucursal),
-    parseInt(originalData?.idmododecobro),
-    originalData?.habilitarconfiguracion,
-    originalData?.transferirmonto,
-    parseInt(originalData?.idsucursalcajadestino ?? 0),
-    parseInt(originalData?.idusuariocajadestino ?? 0),
-    originalData?.metadata?.token,
-        originalData?.metadata?.userId]);
-    console.log('isDirty?', isDirty);
-    console.log([
-    parseInt(sucursalId),
-    parseInt(modoDeCobroId),
-    mercadoPagoHabilitado,
-    transferirMovimientos,
-    parseInt(sucursalCaja ?? 0),
-    parseInt(usuarioCaja ?? 0),
-    token,
-    userId]);
-*/
-    return <div className={''}>
+    /*
+        console.log('isDirty', isDirty);
+        console.log([
+        parseInt(originalData?.idsucursal),
+        parseInt(originalData?.idmododecobro),
+        originalData?.habilitarconfiguracion,
+        originalData?.transferirmonto,
+        parseInt(originalData?.idsucursalcajadestino ?? 0),
+        parseInt(originalData?.idusuariocajadestino ?? 0),
+        originalData?.metadata?.token,
+            originalData?.metadata?.userId]);
+        console.log('isDirty?', isDirty);
+        console.log([
+        parseInt(sucursalId),
+        parseInt(modoDeCobroId),
+        mercadoPagoHabilitado,
+        transferirMovimientos,
+        parseInt(sucursalCaja ?? 0),
+        parseInt(usuarioCaja ?? 0),
+        token,
+        userId]);
+    */
+    return <div className={'mt-4'}>
         <ErrorBoundary>
             <Card title={
                 <div className={'inline-flex items-center gap-2'}>
-                    <CardTitleWithImage image={mercadoPagoLogo} title={'Mercado Pago'}/>
+                    <CardTitleWithImage image={mercadoPagoLogo} title={'Mercado Pago ' + tipo}/>
                 </div>
             } loading={loading}>
-                <p className="mb-4 leading-normal text-sm">Configuracion de mercado pago (solo QR) para la sucursal
+                <p className="mb-4 leading-normal text-sm">Configuracion de mercado pago para la sucursal
                     seleccionada.</p>
 
                 <Checkbox label={'Habilitar Mercado Pago'} value={mercadoPagoHabilitado} className={'ml-2'}
                           onChange={setMercadoPagoHabilitado}/>
 
-                {!mercadoPagoHabilitado && errorMessage && (<LabelError >{errorMessage}</LabelError>)}
+                {!mercadoPagoHabilitado && errorMessage && (<LabelError>{errorMessage}</LabelError>)}
                 {mercadoPagoHabilitado &&
                     (<div className={'mt-2'}>
                         <SubCard>
@@ -302,11 +301,13 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId}) 
                             {/*<Button disabled={loading} onClick={onTest} format={'xs'} className={'mt-1! '}>Test
                                 Connection</Button> */}
 
-                            <Input type={'text'} label={'Collector id (user id)'} className={'mt-2'} setValue={setUserId} value={userId}/>
+                            <Input type={'text'} label={'Collector id (user id)'} className={'mt-2'}
+                                   setValue={setUserId} value={userId}/>
 
                             <PanelConfiguracionChecked originalData={originalData}
+                                                       tipo={tipo}
                                                        errorMessage={checkConfigurationErrorMessage}
-                                                       checkMercadoPagoQRConfiguracion={onSave}  />
+                                                       checkMercadoPagoQRConfiguracion={onSave}/>
                         </SubCard>
                         <SubCard>
                             <AccionesEspeciales

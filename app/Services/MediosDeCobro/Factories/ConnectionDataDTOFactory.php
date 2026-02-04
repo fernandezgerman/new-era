@@ -31,13 +31,13 @@ class ConnectionDataDTOFactory
             throw new MediosDeCobroConfiguracionException('No se encontro el driver');
         }
 
-        $configuracionPorSucursal = MedioDeCobroSucursalConfiguracion::where('idmododecobro', $venta->idmododecobro)
+        $configuracionPorSucursal = MedioDeCobroSucursalConfiguracion::where('idmododecobro', $driverConfig['config_id'] ?? $driverConfig['local_id'])
             ->where('idsucursal', $venta->idsucursal)
             ->first();
 
         if(blank($configuracionPorSucursal))
         {
-            throw new MediosDeCobroConfiguracionException('No hay configuracion asociada a la sucursal y medio de cobro');
+            throw new MediosDeCobroConfiguracionException('No hay configuracion asociada a la sucursal y medio de cobro: ');
         }
 
         if(!($configuracionPorSucursal->habilitarconfiguracion))
