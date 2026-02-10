@@ -2,14 +2,14 @@ import React from "react";
 import Resource from "../resources/Resource.jsx";
 import {useQuery} from "@tanstack/react-query";
 
-const useSucursales = () => {
+const useRubros = () => {
     return useQuery({
-        queryKey: ['sucursales-activas'],
+        queryKey: ['rubros-activos-noGasto'],
         queryFn: async () => {
             const resource = new Resource();
             let filtros = [];
             filtros['activo'] = true;
-            return await resource.getEntities('sucursal', ['usuariosCajas'], {'activo': true}, ['sucursales.nombre']);
+            return await resource.getEntities('rubro', [], { 'esrubrogastos': 0}, ['rubros.nombre']);
         },
         enabled: true,
         select: (data) => data,
@@ -18,4 +18,4 @@ const useSucursales = () => {
 
 }
 
-export { useSucursales };
+export { useRubros };

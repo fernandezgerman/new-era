@@ -14,7 +14,7 @@ const Button = ({
         switch (format)
         {
             case 'xs':
-                return ' px-3 py-1.5 text-[10px] w-auto bg-gray-500 ';
+                return ' px-3 py-1.5 text-[8px] w-auto bg-gray-500 ';
             default:
                 return ' px-6 py-3 text-xs bg-pink-500';
         }
@@ -31,4 +31,12 @@ const Button = ({
     );
 }
 
-export { Button };
+const IconButton = ({icon, className, onClick}) => {
+    return <span className={'mr-1 p-1 bg-pink-500 rounded-lg cursor-pointer ' + className} onClick={onClick}><FontAwesomeIcon icon={icon} /></span>
+}
+
+const EditIconButton = ({className, onClick}) => {
+    return <IconButton icon={faPencil} className={className} onClick={onClick} />
+}
+
+export { Button, EditIconButton, IconButton };

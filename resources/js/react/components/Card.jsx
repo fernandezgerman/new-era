@@ -3,7 +3,7 @@ import {H2} from "@/components/H.jsx";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-export const Card = ({loading, children, title, titleClassName = ''}) => {
+export const Card = ({loading, children, title, titleClassName = '', childrenClassName = '', onRefresh = null, className}) => {
 
     const overlayDiv = (<div
         className={'rounded-2xl absolute top-0 left-0 w-full h-full opacity-50 bg-gray-300 z-999 '}
@@ -13,7 +13,7 @@ export const Card = ({loading, children, title, titleClassName = ''}) => {
     />);
 
     return (<div
-        className={" relative flex flex-col h-full min-w-0 break-words bg-white border-0 dark:bg-gray-800 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border"}>
+        className={" relative flex flex-col min-w-0 break-words  border-0 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border dark:ne-dark-card dark:shadow-soft-dark-xl mt-2 " + className}>
         {loading && overlayDiv}
         <div className="p-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
             <div className="flex flex-wrap -mx-3">
@@ -21,12 +21,13 @@ export const Card = ({loading, children, title, titleClassName = ''}) => {
                     <div
                         className={"mb-0 text-[18px] font-bold text-gray-800 dark:text-white underline  " + titleClassName}>
                         {title}
-                        {loading && (<FontAwesomeIcon icon={faSyncAlt} className={'animate-spin absolute right-3 '}/>)}
+                        {onRefresh !== null && <FontAwesomeIcon icon={faSyncAlt} className={' absolute right-3 cursor mt-2 ' + (loading ? ' animate-spin ' : '')} onClick={onRefresh} />}
+                        {loading && onRefresh === null && (<FontAwesomeIcon icon={faSyncAlt} className={'animate-spin absolute right-3 '}/>)}
                     </div>
                 </div>
             </div>
         </div>
-        <div className="flex-auto p-4 text-gray-800 dark:text-white">
+        <div className={"flex-auto p-4 text-gray-800 dark:text-white " + childrenClassName}>
             {children}
         </div>
     </div>);

@@ -16,6 +16,7 @@
     --dark-bg-color: #282828;
     --dark-font-color: white;
 
+    --dark-bg-card: #2b2929;
     /* LIGHT THEME*/
     --bg-color: #F3F4F5;
     --font-color: rgb(103 116 142 / var(--tw-text-opacity));
@@ -39,6 +40,12 @@
     background-color: var(--dark-bg-color);
     color: var(--dark-font-color);
 }
+
+@utility ne-dark-card {
+    background-color: var(--dark-bg-card);
+    color: var(--dark-font-color);
+}
+
 
 @utility ne-body {
     background-color: var(--bg-color);
@@ -119,5 +126,8 @@
     .scrollbar-hidden {
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
+    }
+    .ReactModal__Overlay{
+        z-index:1010
     }
 }
