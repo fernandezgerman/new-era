@@ -19,6 +19,7 @@
         if (estado === 'expiro') return '#F88E15'; // orange
         if (estado === 'aprobado') return '#185A2C'; // green
         if (estado === 'rechazado') return '#F50002'; // red
+        if (estado === 'cancelado_por_el_usuario') return '#000000'; // red
         if (estado === 'error') return '#F50002'; // red
         if (estado === 'reembolsado') return '#8c00ff'; // violet
         if (estado === 'procesando_reembolso') return '#c9ae44'; // violet
@@ -107,9 +108,13 @@
             {
                 setText(statusText, "PROCESANDO REEMBOLSO");
             }else {
-                setText(statusText, estado);
+                if(estado === "cancelado_por_el_usuario")
+                {
+                    setText(statusText, "CANCELADO");
+                }else {
+                    setText(statusText, estado);
+                }
             }
-
         }
 
         // Set initial UI states (in case CSS/HTML not covering)

@@ -51,25 +51,25 @@ class MercadoPagoPointDriver extends MercadoPagoBaseDriver
             $terminal = $terminals->first();
             if ($terminal->operating_mode !== 'PDV') {
                 //Set terminal as PDV
-                 $this->setTerminalAsPDV($terminal);
-
-                $driverConfig = config('medios_de_cobro.drivers.' . $this->connectionDataDTO->modoDeCobro->driver);
-                $configuracionPorSucursal = MedioDeCobroSucursalConfiguracion::where('idmododecobro', $driverConfig['local_id'])
-                    ->where('idsucursal', $sucursalId)
-                    ->first();
-
-                $metadata = $configuracionPorSucursal->metadata ?? [];
-                $metadata['terminal'] = [
-                    'id' => $terminal->id,
-                    'pos_id' => $terminal->pos_id,
-                    'store_id' => $terminal->store_id,
-                    'external_pos_id' => $terminal->external_pos_id,
-                    'operating_mode' => $terminal->operating_mode,
-                ];
-
-                $configuracionPorSucursal->metadata = $metadata;
-                $configuracionPorSucursal->save();
+                $this->setTerminalAsPDV($terminal);
             }
+            $driverConfig = config('medios_de_cobro.drivers.' . $this->connectionDataDTO->modoDeCobro->driver);
+            $configuracionPorSucursal = MedioDeCobroSucursalConfiguracion::where('idmododecobro', $driverConfig['local_id'])
+                ->where('idsucursal', $sucursalId)
+                ->first();
+
+            $metadata = $configuracionPorSucursal->metadata ?? [];
+            $metadata['terminal'] = [
+                'id' => $terminal->id,
+                'pos_id' => $terminal->pos_id,
+                'store_id' => $terminal->store_id,
+                'external_pos_id' => $terminal->external_pos_id,
+                'operating_mode' => $terminal->operating_mode,
+            ];
+
+            $configuracionPorSucursal->metadata = $metadata;
+            $configuracionPorSucursal->save();
+
             return true;
 
         } catch (\Throwable $throwable) {

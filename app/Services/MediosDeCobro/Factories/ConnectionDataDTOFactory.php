@@ -37,7 +37,7 @@ class ConnectionDataDTOFactory
 
         if(blank($configuracionPorSucursal))
         {
-            throw new MediosDeCobroConfiguracionException('No hay configuracion asociada a la sucursal y medio de cobro: ');
+            throw new MediosDeCobroConfiguracionException('No hay configuracion asociada a la sucursal y medio de cobro: '.$driverConfig['id']);
         }
 
         if(!($configuracionPorSucursal->habilitarconfiguracion))

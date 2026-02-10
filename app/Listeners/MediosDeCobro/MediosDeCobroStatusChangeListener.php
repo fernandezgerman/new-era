@@ -10,6 +10,7 @@ use App\Models\VentaSucursalCobro;
 use App\Services\Gastos\Enums\TiposGastos;
 use App\Services\Gastos\GastosManager;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\Enums\MedioDeCobroTipos;
 use App\Services\MediosDeCobro\Enums\OrderPaymentChargeDetailTypeEnum;
 use App\Services\MediosDeCobro\ModosDeCobroManager;
 use App\Services\MovimientosDeCaja\Enums\MovimientoCajaEstados;
@@ -68,6 +69,8 @@ class MediosDeCobroStatusChangeListener
         $manager = app(ModosDeCobroManager::class);
         $paymentDetails = $manager->processTaxesAndFees($cobro);
 
+        $cobro->tipo = $paymentDetails->tipoDeCobro ?? MedioDeCobroTipos::NO_DETERMINADO->value;
+        $cobro->save();
         $isRefund = $cobro->estado === MedioDeCobroEstados::REEMBOLSADO || $cobro->estado === MedioDeCobroEstados::REEMBOLSADO->value;
 
         $amount = 0.0;

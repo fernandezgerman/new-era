@@ -20,6 +20,7 @@ use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\MediosDeCobro\DTOs\OrderPaymentDetailDTO;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\Enums\MedioDeCobroTipos;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConnectionTestException;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroException;
 use App\Services\MediosDeCobro\Factories\ConnectionDataDTOFactory;
@@ -66,7 +67,8 @@ class ModosDeCobroManager
             $ventaSucursalCobro->idsucursal = $order->sucursal->id;
             $ventaSucursalCobro->idmododecobro = $order->modoDeCobro?->id;
             $ventaSucursalCobro->idunicolegacy = $order->idunicolegacy;
-
+            $ventaSucursalCobro->idmododecobro = $order->modoDeCobro?->id;
+            $ventaSucursalCobro->tipo = MedioDeCobroTipos::NO_DETERMINADO->value;
             $ventaSucursalCobro->estado = MedioDeCobroEstados::NUEVA->value;
 
             $totalOrden = 0;

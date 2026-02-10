@@ -5,6 +5,7 @@ namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\DTOs\MercadoPagoQRWebhookEventDTO;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class MercadoPagoQRWebhookEventFactory
 {

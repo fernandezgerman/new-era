@@ -33,6 +33,11 @@
     background-color: transparent;
     color: white;
 }
+
+.cancelado_por_el_usuario{
+    background-color: black;
+    color: white;
+}
 .expiro{
     background-color: orangered;
     color: white;

@@ -27,7 +27,7 @@ export default () =>
     NODE.render(
         <QueryClientProvider client={queryClient}>
             <LegacyDivContainer>
-                <MercadoPagoConfiguracionBySucursal sucursalId={sucursalId} modoDeCobroId={modoDeCobroId} modoDeCobroPointId={modoDeCobroPointId} tipo={'QR'} />
+                {/*<MercadoPagoConfiguracionBySucursal sucursalId={sucursalId} modoDeCobroId={modoDeCobroId} modoDeCobroPointId={modoDeCobroPointId} tipo={'QR'} /> */}
                 <MercadoPagoConfiguracionBySucursal sucursalId={sucursalId} modoDeCobroId={modoDeCobroPointId} tipo={'POINT'}/>
             </LegacyDivContainer>
         </QueryClientProvider>

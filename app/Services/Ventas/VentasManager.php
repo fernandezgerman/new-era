@@ -7,8 +7,8 @@ use App\Models\VentaSucursal;
 use App\Models\VentaSucursalAnulacion;
 use App\Services\Actualizaciones\ActualizacionesManager;
 use App\Services\Cajas\CajaManager;
+use Exception;
 use Illuminate\Support\Carbon;
-use phpDocumentor\Parser\Exception;
 
 class VentasManager
 {

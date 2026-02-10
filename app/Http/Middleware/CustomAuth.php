@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class CustomAuth
     public function handle(Request $request, Closure $next): Response
     {
         // Read token from query string
-        $tokenString = $request->query('token');
+        $tokenString = base64_decode($request->query('token'));
 
         if (!$tokenString) {
             // If no token provided, try to authenticate using usuario & clave from query params
@@ -75,6 +76,17 @@ class CustomAuth
                 'message' => 'Usuario inactivo',
             ], 401);
         }
+
+
+        //$c = Carbon::instance($tokenable->expires_at);
+
+        if (isset($accessToken->expires_at) && Carbon::parse($accessToken->expires_at)->isPast()) {
+            // Ensure user is active (activo = 1)
+            return response()->json([
+                'message' => 'Expiro',
+            ], 401);
+        }
+
 
         // Authenticate the request with the resolved user
         Auth::setUser($tokenable);

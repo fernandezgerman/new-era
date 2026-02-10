@@ -27,6 +27,7 @@ use App\Services\MediosDeCobro\DTOs\OrderPaymentDetailDTO;
 use App\Services\MediosDeCobro\DTOs\OrderStatusChangeDTO;
 use App\Services\MediosDeCobro\DTOs\WebhookEventDTO;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
+use App\Services\MediosDeCobro\Enums\MedioDeCobroTipos;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroConfiguracionException;
 use App\Services\MediosDeCobro\Exceptions\MediosDeCobroInvalidOrderException;
 use App\Services\MediosDeCobro\MediosDeCobroNotImplementedException;
@@ -192,6 +193,7 @@ class MercadoPagoBaseDriver implements MedioDeCobroQRDriverInterface, MedioDeCob
             $orderStatusChangeDTO->externalId = $localOrder->externalorderid;
             $orderStatusChangeDTO->localId = $localOrder->ventasucursalcobroid;
             $orderStatusChangeDTO->status = self::getModoDeCobroStatus($localOrder->estado);
+            $orderStatusChangeDTO->tipo = self::getModoDeCobroTipo($mpQRWebhookEvent->type);
 
             return $orderStatusChangeDTO;
         }
@@ -204,9 +206,19 @@ class MercadoPagoBaseDriver implements MedioDeCobroQRDriverInterface, MedioDeCob
         return match ($mpQrStatus) {
             MercadoPagoQRStatus::EXPIRED->value => MedioDeCobroEstados::EXPIRO,
             MercadoPagoQRStatus::CREATED->value => MedioDeCobroEstados::PENDIENTE,
+            MercadoPagoQRStatus::CANCELED->value => MedioDeCobroEstados::CANCELADO_POR_EL_USUARIO,
             MercadoPagoQRStatus::PROCESSED->value => MedioDeCobroEstados::APROBADO,
             MercadoPagoQRStatus::REFUNDED->value => MedioDeCobroEstados::REEMBOLSADO,
             default => throw new MediosDeCobroNotImplementedException('Mercado pago qr driver does not implement this kind of status: ' . $mpQrStatus),
+        };
+    }
+
+    protected static function getModoDeCobroTipo(?string $mpQrTipo): MedioDeCobroTipos
+    {
+        return match ($mpQrTipo) {
+            "point" => MedioDeCobroTipos::TARJETAS ,
+            "qr" => MedioDeCobroTipos::QR,
+            default => MedioDeCobroTipos::NO_DETERMINADO,
         };
     }
 

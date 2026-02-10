@@ -8,6 +8,8 @@ enum MercadoPagoQRStatus: string
 
     case CREATED = "created";
 
+    case CANCELED = "canceled";
+
     case REFUNDED = "refunded";
 
 }

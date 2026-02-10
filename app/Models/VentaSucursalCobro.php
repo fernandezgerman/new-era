@@ -20,6 +20,7 @@ class VentaSucursalCobro extends Model
         'idmododecobro',
         'estado',
         'importe',
+        'tipo',
         'created_at',
         'updated_at',
     ];

@@ -5,6 +5,7 @@ namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories;
 use App\Services\MediosDeCobro\DTOs\Collections\OrderPaymentChargeDetailDTOCollection;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\MediosDeCobro\DTOs\OrderPaymentDetailDTO;
+use App\Services\MediosDeCobro\Enums\MedioDeCobroTipos;
 use Illuminate\Support\Arr;
 
 class MercadoPagoPaymentDetailFactory
@@ -25,6 +26,8 @@ class MercadoPagoPaymentDetailFactory
         // Basic payment info
         $dto->paymentTypeId = (string) (Arr::get($data, 'payment_type_id') ?? '');
         $dto->transactionAmount = (float) (Arr::get($data, 'transaction_amount') ?? 0);
+        $dto->tipoDeCobro = (Arr::get($data, 'point_of_interaction.business_info.branch') ?? 0) === "QR"
+            ? MedioDeCobroTipos::QR->value : MedioDeCobroTipos::TARJETAS->value;
         $dto->orderDTO = $orderDTO;
         /*
         $meta = [

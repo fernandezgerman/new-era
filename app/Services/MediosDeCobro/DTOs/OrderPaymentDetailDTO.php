@@ -18,5 +18,5 @@ class OrderPaymentDetailDTO
     public OrderDTO $orderDTO;
     public \stdClass $metadata;
     public string $paymentTypeId;
-    public float $transactionAmount;
+    public string $tipoDeCobro;
 }

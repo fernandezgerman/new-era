@@ -87,11 +87,11 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Create Sanctum token
-        $token = $user->createToken('api')->plainTextToken;
+        // Create Sanctum token with 3-minute expiration
+        $token = $user->createToken('api', ['*'], now()->addMinutes(3))->plainTextToken;
 
         return response()->json([
-            'token' => $token,
+            'token' => base64_encode($token),
             'token_type' => 'Bearer',
         ]);
     }
