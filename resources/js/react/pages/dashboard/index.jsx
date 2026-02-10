@@ -6,7 +6,6 @@ import {isMobile} from "react-device-detect";
 import {CollapsibleRightMenu} from "@/widgets/menu/CollapsibleRightMenu.jsx";
 import {GenerateComponent, ReactMenu} from "@/widgets/menu/ReactMenu.jsx";
 import {get} from "lodash";
-import {RendicionesStock} from "@/pages/rendicionesStock/index.jsx";
 
 export const Dashboard = () => {
     const getInitialPagina = () => {
@@ -62,7 +61,7 @@ export const Dashboard = () => {
             <div className={"nexl:ml-0 flex-1 min-w-0 max-w-[990px] h-full overflow-hidden " + MarginLeft}>
                 {!isMobile && <Header onMenuSelected={onMenuSelected} breadCrumbFirst={breadcrumb1} breadCrumbSecond={breadcrumb2}/>}
                 {iframeHrefs !== null && <LegacyFrame iframeHrefs={iframeHrefs}/>}
-                {component !== null && <div className={'m-4 ne-body dark:ne-dark-body h-full'}>
+                {component !== null && <div className={'m-4 ne-body dark:ne-dark-body max-h-[calc(100vh-150px)]  overflow-y-scroll'}>
                     <GenerateComponent pageCode={component} />
                 </div>}
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import {RendicionesStock} from "@/pages/rendicionesStock/index.jsx";
+import {MercadoPagoDocumentacion} from "@/pages/mercadoPagoDocumentacion/index.jsx";
+
 
 export const ReactMenu = {
-    rendstocka: RendicionesStock
+    "info-mp": MercadoPagoDocumentacion
 };
 
 export const GenerateComponent = ({pageCode}) => {
