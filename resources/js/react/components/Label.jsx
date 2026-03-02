@@ -1,8 +1,8 @@
 import React from "react";
 
-const Label = ({children}) => {
+const Label = ({children, className}) => {
     return(
-        <lavel className={'italic font-semibold text-sm'}>
+        <lavel className={'italic font-semibold text-sm ' + className}>
             {children}
         </lavel>);
 }
@@ -37,4 +37,7 @@ const LabelBySign = ({number, className, symbol = '', decimales = 2}) =>
         </div>);
 }
 
-export { Label, LabelError, LabelSuccess, LabelBySign,LabelAddNumberSign };
+const DeletedItem = ({children, deleted}) => <span
+    className={deleted ? ' text-red-500 line-through ' : ''}>{children}</span>;
+
+export { Label, LabelError, LabelSuccess, LabelBySign,LabelAddNumberSign, DeletedItem };

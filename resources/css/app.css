@@ -1,12 +1,15 @@
 @import 'tailwindcss';
 @import './fixForOKLCHForTailwind.css';
 
+@import 'flowbite-react/plugin/tailwindcss';
+@source '../../.flowbite-react/class-list.json';
+
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../views/**/*.blade.php';
 @source '../**/*.blade.php';
-@source '../**/*.js';
+@source '../**/*.{js,jsx,ts,tsx}';
 
 
 @theme {
@@ -21,7 +24,6 @@
     --bg-color: #F3F4F5;
     --font-color: rgb(103 116 142 / var(--tw-text-opacity));
 
-
     /*
     screens:{
         'xs': '480px',
@@ -33,6 +35,23 @@
 */
     --breakpoint-nexl: 80.625rem;
     --breakpoint-nelg: 66.625rem;
+
+    --color-primary: #3b82f6; /* Azul de ejemplo */
+    --color-secondary: #ec4899; /* Rosa de ejemplo */
+
+    /* Opcional: Definir escalas de color (50-950) */
+
+    --color-primary-50: rgb(253, 242, 248);
+    --color-primary-100: rgb(252, 231, 243);
+    --color-primary-200: rgb(252, 206, 232);
+    --color-primary-300: rgb(253, 165, 213);
+    --color-primary-400: rgb(251, 100, 182);
+    --color-primary-500: rgb(246, 51, 154);
+    --color-primary-600: rgb(230, 0, 118);
+    --color-primary-700: rgb(246, 51, 154); /*rgb(198, 0, 92); */
+    --color-primary-800: rgb(163, 0, 76);
+    --color-primary-900: rgb(134, 16, 67);
+    --color-primary-950: rgb(81, 4, 36);
 
 }
 

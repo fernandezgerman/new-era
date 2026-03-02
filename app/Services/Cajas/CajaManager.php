@@ -16,14 +16,18 @@ class CajaManager
      * Obtiene el número de caja abierta para un usuario en una sucursal.
      * Si no existe una caja abierta, crea una nueva siguiendo la lógica del SP `getNumeroCaja`.
      */
-    public function getCajaAbierta(int $usuarioId, int $sucursalId): Caja
+    public function getCajaAbierta(int $usuarioId, int $sucursalId, bool $openIfClose = true): Caja
     {
         // ¿Existe alguna caja que no esté cerrada? (idestado <> 1)
         $numero = Caja::query()
             ->where('idusuario', $usuarioId)
-            ->where('idsucursal', $sucursalId)
-            ->where('idestado', '<>', self::CAJA_CERRADA)
-            ->max('numero') ?? 0;
+            ->where('idsucursal', $sucursalId);
+
+        if($openIfClose){
+            $numero->where('idestado', '<>', self::CAJA_CERRADA);
+        }
+
+        $numero = $numero->max('numero') ?? 0;
 
         $existe = $numero > 0;
 
@@ -70,4 +74,5 @@ class CajaManager
             ->where('numero', $nuevoNumero)
             ->first();
     }
+
 }

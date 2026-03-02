@@ -164,7 +164,7 @@ export const MercadoPagoDocumentacion = () => {
                 siguiente paso.</i>
         </div>
 
-        <h3>Configurar lso WEBHOOKS en MERCADO PAGO</h3> <br/>
+        <h3>Configurar los WEBHOOKS en MERCADO PAGO</h3> <br/>
 
         <div className={'ml-4 mb-4'}>
             <img src={mp9A} alt={'Configuracion de sucursal'} className={'w-[800px] '}/><br/>
@@ -188,7 +188,7 @@ export const MercadoPagoDocumentacion = () => {
         <div className={'ml-4 mb-4'}>
             <img src={mp11A} alt={'Configuracion de sucursal'} className={'w-[800px] '}/><br/>
             <i>Una vez guardado, vamos a procede a checkear si MERCADO PAGO puede conectarse con NEW ERA. Hacer cick
-                en <b>Simular Notificacion</b>, completar los datos e la izquierda como están en la imagen y rpesionar
+                en <b>Simular Notificacion</b>, completar los datos e la izquierda como están en la imagen y presionar
                 el boton <b>Enviar prueba</b></i>
         </div>
 
@@ -204,7 +204,7 @@ export const MercadoPagoDocumentacion = () => {
             soporte técnico.
             <br/>
             Para temrinar de checkear la cnfiguracion es recomendable instalar la version <b>2.3.2</b> de la APP de
-            ventas o superior en al sucursal, ingresar a una caja y realizar un cobro con POINT. La misma se peude
+            ventas o superior en al sucursal, ingresar a una caja y realizar un cobro con POINT. La misma se puede
             reembolsar.
         </p>
     </>

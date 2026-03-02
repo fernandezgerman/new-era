@@ -2,6 +2,7 @@
 
 namespace App\DataAccessor;
 
+use App\Models\AgrupacionCaja;
 use App\Models\Funcion;
 use App\Models\User;
 use App\Models\Modulo;
@@ -10,6 +11,7 @@ use App\Services\Alertas\DataAccessors\AlertasDataAccessor;
 use App\Services\Alertas\Exceptions\NotImplementedException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+
 class UsuarioDataAccessor extends DataAccessorBase
 {
     public function __construct(private User $user)
@@ -40,13 +42,17 @@ class UsuarioDataAccessor extends DataAccessorBase
             $modulo->funciones = Funcion::query()
                 ->join('perfilfuncion', 'funciones.id', '=', 'perfilfuncion.idfuncion')
                 ->join('empresafuncion', 'funciones.id', '=', 'empresafuncion.idfuncion')
-                ->where('empresafuncion.activo',1)
+                ->where('empresafuncion.activo', 1)
                 ->where('perfilfuncion.idperfil', $perfilId)
-                ->where('menu',1)
-                ->where('idempresa',$empresaId)
-                ->where('idmodulo',$modulo->id)
+                ->where('menu', 1)
+                ->where('idempresa', $empresaId)
+                ->where('idmodulo', $modulo->id)
                 ->orderBy('funciones.nombre', 'asc')
                 ->get();
+
+            $result = $this->addFuncionesToModule($modulo);
+            $modulo->funciones = $modulo->funciones->merge($result);
+            //$modulo->funciones = $modulo->funciones->sortBy('nombre');
 
             if ($modulo->funciones->count() > 0) {
                 $menues->push($modulo);
@@ -56,6 +62,49 @@ class UsuarioDataAccessor extends DataAccessorBase
         return $menues;
     }
 
+    /**
+     * Retorna todas las agrupaciones de cajas que están activas (activo = 1)
+     * y vinculadas al usuario autenticado mediante la tabla agrupacioncajausuarios.
+     */
+    public function getUserAgrupacionCajas(): Collection
+    {
+        return DB::table('agrupacioncajas as ac')
+            ->select('ac.id', 'ac.descripcion', 'ac.activo', 'ac.importeinicial')
+            ->join('agrupacioncajausuarios as acu', 'ac.id', '=', 'acu.idagrupacioncaja')
+            ->where('ac.activo', 1)
+            ->where('acu.idusuario', $this->user->id)
+            ->distinct()
+            ->orderBy('ac.descripcion', 'asc')
+            ->get();
+    }
+
+    private function addFuncionesToModule(Modulo $modulo): Collection
+    {
+        $result = new Collection();
+        if ($modulo->id === 10) //Contabilidad
+        {
+            //Agregar agrupacion de caja en el menu
+            $acajasAgrupadas = $this->getUserAgrupacionCajas()->map(function ($item) use ($modulo) {
+                return new Funcion([
+                    'id' => 20000 + $item->id,
+                    'idmodulo' => $modulo->id,
+                    'codigo' => 'agrpscja' . $item->id,
+                    'nombre' => $item->descripcion,
+                    'pagina' => 'agrpscja' . $item->id,
+                    'activa' => true,
+                    'observaciones' => 'Agrupacion de caja',
+                    'menu' => 1,
+                    'neweramenu' => 1
+                ]);
+
+
+            });
+
+            return $acajasAgrupadas;
+        }
+
+        return $result;
+    }
 
     public function getAlertas(int $alertaTipoId = null)
     {

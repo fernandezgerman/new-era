@@ -323,7 +323,7 @@ export const MercadoPagoConfiguracionBySucursal = ({sucursalId, modoDeCobroId, t
 
                     </div>)
                 }
-                {isDirty && <Button disabled={loading} onClick={onSave} className={'w-20 float-right'}>Guardar</Button>}
+                {isDirty && <Button disabled={loading} onClick={onSave} className={' float-right'}>Guardar</Button>}
             </Card>
         </ErrorBoundary>
     </div>;

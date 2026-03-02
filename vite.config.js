@@ -3,6 +3,7 @@ import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import flowbiteReact from "flowbite-react/plugin/vite";
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
@@ -43,6 +44,7 @@ export default defineConfig(({ mode }) => {
                     plugins: [['@babel/plugin-transform-react-jsx']],
                 },
             }),
+            flowbiteReact(),
         ],
     };
 });

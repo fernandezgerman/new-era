@@ -38,6 +38,11 @@ class MovimientoCaja extends Model implements ActualizableItem
         return $this->belongsTo(User::class, 'idusuario');
     }
 
+    public function motivo()
+    {
+        return $this->belongsTo(MotivoMovimientoCaja::class, 'idmotivo');
+    }
+
     public function usuarioDestino()
     {
         return $this->belongsTo(User::class, 'idusuariodestino');
@@ -51,6 +56,11 @@ class MovimientoCaja extends Model implements ActualizableItem
     public function sucursalDestino()
     {
         return $this->belongsTo(Sucursal::class, 'idsucursaldestino');
+    }
+
+    public function estados()
+    {
+        return $this->hasMany(MovimientoCajaEstado::class, 'fechahoramovimiento', 'fechahoramovimiento');
     }
 
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO

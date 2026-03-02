@@ -13,7 +13,7 @@ export const Card = ({loading, children, title, titleClassName = '', childrenCla
     />);
 
     return (<div
-        className={" relative flex flex-col min-w-0 break-words  border-0 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border dark:ne-dark-card dark:shadow-soft-dark-xl mt-2 " + className}>
+        className={" relative flex flex-col min-w-0 break-words border-0 dark:shadow-soft-dark-xl shadow-soft-xl bg-white rounded-2xl bg-clip-border dark:ne-dark-card dark:shadow-soft-dark-xl mt-2 " + className}>
         {loading && overlayDiv}
         <div className="p-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
             <div className="flex flex-wrap -mx-3">

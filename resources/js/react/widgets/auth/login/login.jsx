@@ -11,7 +11,7 @@ import {Select} from "../../../components/Select.jsx";
 import {useUsuarioSucursalesCaja} from "../../../dataHooks/useUsuarioHooks.jsx";
 import ErrorBoundary from "../../../components/ErrorBoundary.jsx";
 
-
+import {Button as Bf,  Datepicker } from "flowbite-react";
 const SelectUserAndPassword = ({setAuthUser}) => {
     const [usuario, setUsuario] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -59,7 +59,7 @@ const SelectUserAndPassword = ({setAuthUser}) => {
                     )}
                     <div className="text-center">
                         <Button type="submit"
-                                       className={'w-full! float-right'}>
+                                       className={'w-full! float-right'}
                                        disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</Button>
                     </div>
                 </form>

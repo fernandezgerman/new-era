@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @viteReactRefresh
-    @vite(['resources/template/template/src/index.js'])
+    @vite(['resources/template/template/src/index.jsx'])
 </head>
 <body>
 <div id="app"> </div>

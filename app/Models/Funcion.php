@@ -30,6 +30,18 @@ class Funcion extends Model
      */
     public $timestamps = false;
 
+    protected $fillable = [
+        'id',
+        'idmodulo',
+        'codigo',
+        'nombre',
+        'pagina',
+        'activa',
+        'observaciones',
+        'menu',
+        'neweramenu'
+    ];
+
     /**
      * Get the module that the function belongs to.
      */

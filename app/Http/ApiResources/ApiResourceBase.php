@@ -6,9 +6,13 @@ use App\Http\Requests\Api\ApiResourceBaseGetEntity;
 use App\Http\Requests\Api\ApiResourceBaseInsert;
 use App\Http\Requests\Api\ApiResourceBasePatch;
 use App\Http\Requests\Api\ApiResourceBaseDelete;
+use App\Models\AgrupacionCaja;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\isArray;
 
 class ApiResourceBase extends AbstractApiHandler
 {
@@ -28,14 +32,11 @@ class ApiResourceBase extends AbstractApiHandler
         $customAttributes = [];
         if (!empty($includes)) {
             foreach ($includes as $include) {
-                if (method_exists($modelClass, $include)) {
+                if (method_exists($modelClass, 'get'.ucfirst($include).'Attribute')) {
+                    $customAttributes[] = $include;
+                }else{
                     $query->with($include);
-                } else {
-                    //custom attributes sent as includes
-                    if (method_exists($modelClass, 'get'.ucfirst($include).'Attribute')) {
-                        $customAttributes[] = $include;
-                    }
-                };
+                }
             }
         }
 
@@ -77,16 +78,62 @@ class ApiResourceBase extends AbstractApiHandler
 
     public function insertResource(ApiResourceBaseInsert $request): JsonResponse
     {
-        $entity = $request->validated('entity');
-        $modelClass = $this->resolveModelClass($entity);
-
         // Exclude route parameters from payload
-        $payload = collect($request->all())->except(['entity', 'id'])->toArray();
-
+        $payload = collect($request->all())->except(['entity', 'id', 'relations'])->toArray();
+        $entity = $request->validated('entity');
         /** @var \Illuminate\Database\Eloquent\Model $model */
-        $model = $modelClass::create($payload);
+        $model = $this->processInsert($entity, $payload);
+
+        $this->processRelations($request->all(), $model, 'id'.str_replace('-','', $entity));
+
 
         return $this->sendResponse($model);
+    }
+
+    private function processRelations(array $data, Model $belongToModel, string $belongToFieldName): void
+    {
+        $relations = Arr::get($data, 'relations', []);
+
+        foreach ($relations as $relation) {
+            $entity = Arr::get($relation, 'entity');
+
+            $payload = Arr::get($relation, 'payload');
+            $payload = isArray($payload) ? $payload : [$payload];
+
+            foreach ($payload as $item) {
+                $itemToSave = [
+                    ...$item,
+                    $belongToFieldName => $belongToModel->id,
+                ];
+
+                if(Arr::get($item, 'deleted') !== true)
+                {
+                    $relationModel = $this->processInsert($entity, $itemToSave);
+                    $this->processRelations($relation, $relationModel, 'id'.$entity);
+                }
+
+            }
+        }
+    }
+    private function processInsert($entity, $payload): Model
+    {
+        $modelClass = $this->resolveModelClass($entity);
+        return $modelClass::create($payload);
+    }
+
+    private function processUpdate($entity, $payload): Model
+    {
+        $modelClass = $this->resolveModelClass($entity);
+        return $modelClass::updateOrCreate(
+            ['id' => $payload['id']],
+            $payload
+        );
+    }
+
+    private function processDelete($entity, $payload)
+    {
+        $modelClass = $this->resolveModelClass($entity);
+        $modelClass::find($payload['id'])->delete();
     }
 
     public function updateResource(ApiResourceBasePatch $request): JsonResponse
@@ -123,7 +170,40 @@ class ApiResourceBase extends AbstractApiHandler
         $model->fill($mergedPayload);
         $model->save();
 
+        $this->processUpdateRelations($request->all(), $model, 'id'.str_replace('-','', $entity));
         return $this->sendResponse($model);
+    }
+    private function processUpdateRelations(array $data, Model $belongToModel, string $belongToFieldName): void
+    {
+        $relations = Arr::get($data, 'relations', []);
+
+        foreach ($relations as $relation) {
+            $entity = Arr::get($relation, 'entity');
+            $payload = Arr::get($relation, 'payload');
+            $payload = isArray($payload) ? $payload : [$payload];
+
+            foreach ($payload as $item) {
+                $itemToSave = [
+                    ...$item,
+                    $belongToFieldName => $belongToModel->id,
+                ];
+                if(isset($itemToSave['id'])){
+                    if(Arr::get($itemToSave,'deleted'))
+                    {
+                        $this->processDelete($entity, $itemToSave);
+                    }else{
+                        $relationModel = $this->processUpdate($entity, $itemToSave);
+                        $this->processRelations($relation, $relationModel, 'id'.$entity);
+                    }
+                }else{
+                    if(Arr::get($itemToSave,'deleted') !== true)
+                    {
+                        $relationModel = $this->processInsert($entity, $itemToSave);
+                        $this->processRelations($relation, $relationModel, 'id'.$entity);
+                    }
+                }
+            }
+        }
     }
 
     public function deleteResource(ApiResourceBaseDelete $request): JsonResponse

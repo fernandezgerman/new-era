@@ -61,7 +61,7 @@ export const Dashboard = () => {
             <div className={"nexl:ml-0 flex-1 min-w-0 max-w-[990px] h-full overflow-hidden " + MarginLeft}>
                 {!isMobile && <Header onMenuSelected={onMenuSelected} breadCrumbFirst={breadcrumb1} breadCrumbSecond={breadcrumb2}/>}
                 {iframeHrefs !== null && <LegacyFrame iframeHrefs={iframeHrefs}/>}
-                {component !== null && <div className={'m-4 ne-body dark:ne-dark-body max-h-[calc(100vh-150px)]  overflow-y-scroll'}>
+                {component !== null && <div className={'m-4 ne-body dark:ne-dark-body max-h-[calc(100vh-150px)] h-full overflow-y-scroll'}>
                     <GenerateComponent pageCode={component} />
                 </div>}
 

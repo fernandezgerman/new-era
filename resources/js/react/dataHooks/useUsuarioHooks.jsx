@@ -27,9 +27,23 @@ const useUsuarioSucursalesHabilitadas = ({ usuarioId }) => {
         enabled: !!usuarioId && usuarioId !== undefined ,
         select: (data) =>
             Object.values(data.sucursales),
-        staleTime: 1000 * 60 * 60 * 24, // 24 hours
+        staleTime: 1000 * 60 * 60 * 1, // 1 hours
     });
 
 }
 
-export { useUsuarioSucursalesCaja, useUsuarioSucursalesHabilitadas };
+const useUsuarios = (includes = [], orden = 'usuarios.nombre') => {
+    return useQuery({
+        queryKey: ['usuarioa-activos'],
+        queryFn: async () => {
+            const resource = new Resource();
+            return await resource.getEntities('user', includes, {'activo': true}, [orden]);
+        },
+        enabled: true,
+        select: (data) => data,
+        staleTime: 1000 * 60 * 60, // 1 hour
+    });
+
+}
+
+export { useUsuarioSucursalesCaja, useUsuarioSucursalesHabilitadas, useUsuarios };

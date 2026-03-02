@@ -41,15 +41,19 @@ class ApiResourceBaseGetEntity extends AbstractApiRequest
             'orden' => ['nullable', 'array'],
             'includes' => ['nullable', 'sometimes', 'array'],
             'includes.*' => ['string', function ($attribute, $value, $fail) {
+
                 $modelClass = $this->resolveModelClass($this->route('entity'));
                 if (! class_exists($modelClass)) {
                     $fail('The selected entity is invalid.');
                     return;
                 }
                 $instance = new $modelClass();
-                if (! method_exists($instance, $value) && ! method_exists($instance, 'get'.ucfirst($value).'Attribute') ){
-                    $fail("The include '$value' is not a relation of the model.");
+                if(str_replace('.', '', $value) === $value){
+                    if (! method_exists($instance, $value) && ! method_exists($instance, 'get'.ucfirst($value).'Attribute') ){
+                        $fail("The include '$value' is not a relation of the model.");
+                    }
                 }
+
             }],
         ];
     }
