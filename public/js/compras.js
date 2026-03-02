@@ -3,7 +3,7 @@ var letras ;
 function nuevoArticuloAjax()
 {
 	ajaxAbrirVentana();
-	
+
 	  $.ajax({
 		  url: 'articuloAltaCompra.php?token='+document.getElementById('mToken').value,
 		  type: 'POST',
@@ -151,12 +151,28 @@ function datosValidosCompras() {
 	if ($('#inpTipoFactura').val() == "0") {
 		mensaje = mensaje + 'Debe seleccionar un tipo de factura \n';
 	}
+
+    let lineasResult = lineasInvalidas();
+
+    if (lineasResult !== false) {
+        mensaje = mensaje + lineasResult + ' \n';
+    }
+
 	dif = calcularDiferenciaIngresado();
 	if (dif != 0) {
 		mensaje = mensaje
 				+ 'La diferencia del total de factura ingresado versus calculado debe ser cero y no '
 				+ dif + ' \n';
 	}
+
+    let totalImpuestos = totalEnImpuestos();
+    let totalFactura = parseFloat($("#inpTotalFacturado").val());
+
+    if(totalImpuestos > totalFactura * 0.4){
+        mensaje = mensaje
+            + 'Los impuestos no pueden superar el 40% del total de la factura'
+            + dif + ' \n';
+    }
 
 	letraSel = false;
 	for(l=0; l < letras.length ;l++){
@@ -167,8 +183,6 @@ function datosValidosCompras() {
 	}
 	if (letraSel){
 		totalIva = totalIVA();
-		totalImpuestos = totalEnImpuestos();
-		totalFactura = parseFloat($("#inpTotalFacturado").val());
 		totalBruto = totalFactura - totalImpuestos;
 		if(parseFloat(letraSel['discriminaiva'])==1){
 			if( ((totalBruto * 0.21) + 2) <  totalIva){
@@ -195,6 +209,20 @@ function datosValidosCompras() {
 	}
 
 }
+
+function lineasInvalidas() {
+
+    $totalArticulos = $("#inpCompraTotalArticulos").val();
+
+    for ($i = 1; $i <= $totalArticulos; $i++) {
+        if(parseInt($("#inpCompraCantidad" + $i).val()) <= 0){
+            return 'La cantidad de articulos en la linea ' + $i + ' debe ser mayor a cero'
+        }
+    }
+
+    return false;
+}
+
 function asignacionReal() {
 	$("#inpSucursalIdReal").val($("#inpSucursalId").val());
 }
@@ -269,22 +297,22 @@ function calcularCostoFinalPorLinea() {
 
 }
 function presionaTeclaEnCodigo(tecla){
-    if (tecla.keyCode == 113) { 
+    if (tecla.keyCode == 113) {
     	abrirBuscador('inpSeleccionarCompraCodigo','articulos');
     }
-	
+
 }
 function clickEnCheck(idSeleccionado,indice){
 	compra = compras.get({id : idSeleccionado});
-	
+
 	if ($('#inpActualizarPrecio'+indice).is(':checked')){
 		compra.set({actualizarCosto : 1});
 		$("#fila"+indice).removeClass();
-		$("#fila"+indice).addClass("tblFilaParVerde");		
+		$("#fila"+indice).addClass("tblFilaParVerde");
 	}else{
 		compra.set({actualizarCosto : 0});
 		$("#fila"+indice).removeClass();
-		$("#fila"+indice).addClass("tblFilaParAzul");		
+		$("#fila"+indice).addClass("tblFilaParAzul");
 	}
 }
 function mostrarDetalleFacturaCompra(compraId) {
