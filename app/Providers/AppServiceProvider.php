@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Support\Facades\URL;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
         $path = app_path('Services/MediosDeCobro/Drivers/MercadoPagoQR/Database');
         if (is_dir($path)) {
             $this->loadMigrationsFrom($path);
+        }
+
+        if (app()->environment('production', 'staging')) {
+            URL::forceHttps();           // Laravel 12 tiene forceHttps() nativo
+            // URL::forceScheme('https'); // alternativa clásica
         }
     }
 }
