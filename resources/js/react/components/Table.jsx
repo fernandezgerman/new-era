@@ -45,7 +45,7 @@ export const Table = ({
                 <tr>
                     {header.map((head) => (
                         <th key={head.name}
-                            className={"font-bold uppercase text-slate-400 text-xxs opacity-70 " + head.className ?? ''}>{head.name}</th>
+                            className={"font-bold uppercase text-slate-400 text-xxs opacity-70 " + (head.className ?? '')}>{head.name}</th>
                     ))}
                 </tr>
                 </thead>

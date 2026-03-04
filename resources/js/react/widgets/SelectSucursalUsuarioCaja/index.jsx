@@ -4,6 +4,7 @@ import uuid from "react-uuid";
 import {Select} from "@/components/Select.jsx";
 import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 
+
 export const SelectSucursalUsuarioCaja = ({setUsuario, setSucursal, usuario, sucursal}) => {
     const [usuariosList, setUsuariosList] = useState([]);
     const {data: sucursales, refetch, isLoading, isRefetching} = useSucursales();

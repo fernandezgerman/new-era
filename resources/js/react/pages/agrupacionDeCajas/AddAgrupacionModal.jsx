@@ -5,7 +5,7 @@ import {CustomModal} from "@/components/Modal.jsx";
 import {Input} from "@/components/Input.jsx";
 import {Checkbox} from "@/components/Checkbox.jsx";
 import {Hr} from "@/components/Hr.jsx";
-import {SelectSucursalUsuarioCaja} from "@/widgets/SelectSucursalUsuarioCaja/index.js";
+import {SelectSucursalUsuarioCaja} from "@/widgets/SelectSucursalUsuarioCaja/index.jsx";
 import {
     AceptarButton,
     Button,
