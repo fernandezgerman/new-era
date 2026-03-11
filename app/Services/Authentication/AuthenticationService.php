@@ -15,7 +15,9 @@ class AuthenticationService
     {
         // Since the legacy system uses MD5 for password hashing,
         // we need to handle authentication manually
-        $user = \App\Models\User::where('usuario', $usuario)->first();
+        $user = \App\Models\User::where('usuario', $usuario)
+            ->where('activo', true)
+            ->first();
 
         if (!$user)
         {
