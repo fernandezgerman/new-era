@@ -8,7 +8,9 @@ class DefaultHandler implements ExceptionHandlers
 {
 
     public function __construct(private \Throwable $throwable)
-    {}
+    {
+        $throwable->getMessage();
+    }
     public function response(): \Illuminate\Http\JsonResponse
     {
         $payload = [

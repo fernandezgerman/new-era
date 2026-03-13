@@ -326,7 +326,7 @@ export const AddAgrupacionModal = ({onSave, agrupacionSeleccionada, addAgrupacio
     }
 
     const onAceptar = async () => {
-        console.log('importeinicial', agrupacionCaja);
+
         const newError = {
             descripcion: isEmpty(agrupacionCaja.descripcion) ? 'Debe ingresar una descripcion' : null,
             activo: null,
