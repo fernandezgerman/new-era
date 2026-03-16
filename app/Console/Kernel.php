@@ -48,6 +48,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('arreglos:check-duplicity-on-detalle')
             ->everyFifteenMinutes()->name('CheckRendicionStockDuplicity')->withoutOverlapping();
 
+        $schedule->command('caja:check-congruence')
+            ->dailyAt('09:00')->name('CheckCajasCongruence')->withoutOverlapping();
+
         // 07:00 daily - cron7AM.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron7AM.php')))
             ->dailyAt('07:00')->name('cron7AM')->withoutOverlapping();
