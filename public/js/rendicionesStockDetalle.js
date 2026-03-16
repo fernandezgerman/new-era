@@ -2,6 +2,7 @@
 var articulosPendientes = new Array();
 var articulosIngresados = new Array();
 var articuloSeleccionado = false;
+var procesando = false;
 
 function generateRandomString(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -107,7 +108,7 @@ function rendirArticuloValido(){
     return true;
 }
 function rendirArticulo(){
-    if (!rendirArticuloValido()){
+    if (!rendirArticuloValido() || procesando){
         return ;
     }
     var cantidad = $('#inpCantidad').val();
@@ -123,7 +124,7 @@ function envioAjaxDeRendicion(cantidad,articuloSel){
     var token = $('#inpToken').val();
     idart = articuloSel.idarticulo;
     precioArticulo = articuloSel.precio;
-
+    procesando = true;
     if (!(articulosPendientes.length > 0)){
         $('#divDescripcionEstado').html("Finalizado");
         $('#inpCodigoArticulo').val("");
@@ -133,6 +134,7 @@ function envioAjaxDeRendicion(cantidad,articuloSel){
         $('#btnRendirArticulo').attr("disabled","disabled");
     }
     $("#divMensajeAtencion").css("display", "block");
+
     $.ajax({
         url : 'rendicionesStockArticulosGuardarJson.php?token='+token,
         type : 'POST',
@@ -158,11 +160,23 @@ function envioAjaxDeRendicion(cantidad,articuloSel){
                 actualizarArreglosRendidos(json.idarticulo ,json.cantidadsistema,json.cantidadrendida,json.idrendicion,json.hora);
             }
             checkArticulosPendientesDeImpacto();
+            procesando = false;
         },
         error : function() {
             alert('Error al establecer la rendicion!!!');
+            procesando = false
         }
     });
+
+
+}
+function disable(id, value)
+{
+    var elems = document.querySelectorAll('[id^="' + id + '"]');
+
+    for (var i = 0; i < elems.length; i++) {
+        elems[i].disabled = true;
+    }
 }
 function buscarSiguienteArticulo(idarticulo)
 {
@@ -333,6 +347,7 @@ function pierdeFocoLineaRendido(i,clase){
 }
 
 function corregirArticuloLinea(indice){
+    if(procesando) return;
     if ($('#inpCantidadLineaCorregir'+indice).val()==""){
         alert('Ingrese una cantidad ');
         return false;
@@ -360,7 +375,7 @@ function corregirArticuloLinea(indice){
 }
 
 function enterCantidadIndiceCorregir(e,indice){
-    if (presionaEnter(e)) {
+    if (presionaEnter(e) ) {
         corregirArticuloLinea(indice);
     }
 }
