@@ -131,12 +131,14 @@ class CajaManager
 
         foreach ($comparisons as $field => $data) {
             if (abs($data['calc'] - $data['caja']) > $offset) {
+                $sucursal = get_entity_or_fail('Sucursal',$caja->idsucursal);
+                $usuario = get_entity_or_fail('User',$caja->idusuario);
                 $messages[] = sprintf(
-                    "Error detected in %s for Caja (Nro: %s, Usuario: %s, Sucursal: %s). Total from caja: %s, Total calculated: %s.",
+                    "Error detected in %s for Caja (Nro: %s, Usuario: %s, Sucursal: %s ). Total from caja: %s, Total calculated: %s.",
                     $data['label'],
                     $caja->numero,
-                    $caja->idusuario,
-                    $caja->idsucursal,
+                    $caja->idusuario . ' - ' .$usuario->nombre . ' ' .$usuario->apellido,
+                    $caja->idsucursal . ' - ' .$sucursal->nombre,
                     $data['caja'],
                     $data['calc']
                 );
