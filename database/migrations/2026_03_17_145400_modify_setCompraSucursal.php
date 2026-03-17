@@ -13,7 +13,7 @@ return new class extends Migration {
         DB::unprepared('drop procedure if exists setCompraSucursal');
 
         DB::unprepared("
-          CREATE  PROCEDURE `setCompraSucursal`(
+         CREATE  PROCEDURE `setCompraSucursal`(
       IN `p_fechaemision` datetime,
       IN `p_fechahora` datetime,
       IN `p_tipofactura` varchar(40),
@@ -142,7 +142,7 @@ BEGIN
         compras.id = v_idcompra;
 
   ELSE
-      UPDATE compras SET numerocaja = p_numerocaja, observaciones = p_observaciones  WHERE idunico = p_idunico;
+      UPDATE compras SET numerocaja = p_numerocaja  WHERE idunico = p_idunico;
       SELECT -1 as id;
   END IF;
 END
