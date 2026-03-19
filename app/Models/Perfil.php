@@ -45,4 +45,12 @@ class Perfil extends Model
     {
         return $this->hasMany(User::class, 'idperfil');
     }
+
+    /**
+     * Get the accessos por hora for the perfil.
+     */
+    public function accessosPorHora()
+    {
+        return $this->morphMany(AccesosPorHora::class, 'target', 'targettype', 'targetid');
+    }
 }

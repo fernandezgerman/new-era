@@ -9,7 +9,7 @@ use App\Http\ApiResources\ApiResourceBase;
 
 // GET /api/{entity}/{id} asdasfsda
 
-route::prefix('medios-de-cobro')->group(function () {
+route::prefix('medios-de-cobro')->withoutMiddleware('restrict.access.per.hour')->group(function () {
     route::prefix('mercado-pago-qr')
         ->withoutMiddleware(['auth:sanctum', CheckLegacyPermissions::class])
         ->middleware(ValidateMercadoPagoQR::class)

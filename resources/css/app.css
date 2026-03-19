@@ -149,4 +149,38 @@
     .ReactModal__Overlay{
         z-index:1010
     }
+    /**** Flow bite datepicker ****/
+    .date-picker-wrapper input {
+        /* o directamente */
+        padding-left: 2.5rem !important;   /* 40px */
+        padding-right: 1rem !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+
+    .date-picker-wrapper-dark .inline-block
+    {
+        background-color: black !important;
+    }
+
+    .date-picker-wrapper-dark .justify-between button
+    {
+        background-color: black !important;
+    }
+
+    .date-picker-wrapper-dark .border.border-gray-300.bg-white.text-gray-900
+    {
+        background-color: rgb(156, 163, 175) !important;
+        color: black !important;
+    }
+
+    .date-picker-wrapper-dark input {
+        background-color: var(--dark-bg-color) !important;
+        color: white !important;
+    }
+    /***************************/
+
+    .choices {
+        margin-bottom: 0px !important;
+    }
 }

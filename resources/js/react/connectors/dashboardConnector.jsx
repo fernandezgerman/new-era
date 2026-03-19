@@ -3,6 +3,7 @@ import React from 'react';
 import {Login} from "../widgets/auth/login/login.jsx";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {Dashboard} from "../pages/dashboard/index.jsx";
+import ReactModal from 'react-modal';
 
 const queryClient = new QueryClient();
 
@@ -15,10 +16,12 @@ export default () =>
     if (!NODE_TO_INYECT) return;
     const NODE = ReactDOM.createRoot(NODE_TO_INYECT);
 
+    ReactModal.setAppElement('#react-dashboard-container');
 
     NODE.render(
         <QueryClientProvider client={queryClient}>
             <Dashboard />
         </QueryClientProvider>
+
     );
 };

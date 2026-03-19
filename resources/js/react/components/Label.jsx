@@ -2,9 +2,9 @@ import React from "react";
 
 const Label = ({children, className}) => {
     return(
-        <lavel className={'italic font-semibold text-sm ' + className}>
+        <div className={'italic font-semibold text-sm ' + className}>
             {children}
-        </lavel>);
+        </div>);
 }
 
 const LabelError = ({children, className}) => {

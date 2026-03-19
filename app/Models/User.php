@@ -132,6 +132,14 @@ class User extends Authenticatable implements ActualizableItem
     }
 
     /**
+     * Get the accessos por hora for the user.
+     */
+    public function accessosPorHora()
+    {
+        return $this->morphMany(AccesosPorHora::class, 'target', 'targettype', 'targetid');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

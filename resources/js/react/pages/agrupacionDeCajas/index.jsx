@@ -7,12 +7,8 @@ import {useAgrupacionCajas} from "@/dataHooks/useAgrupacionCajas.jsx";
 import {LabelError} from "@/components/Label.jsx";
 import {DeleteIconButton, EditIconButton, ViewIconButton} from "@/components/Buttons.jsx";
 import {AgrupacionCaja} from "@/widgets/AgrupacionDeCaja/index.jsx";
+import {ChipBlue} from "@/components/Chip.jsx";
 
-const ColumnaAgrupada = ({children}) => {
-    return (<div className={' p-0.5 px-2 mt-1 text-[12px] w-fit rounded-2xl bg-blue-500 text-white'}>
-        {children}
-    </div>);
-}
 export const AgrupacionDeCajasLista = () => {
 
     const [addAgrupacionCaja, setAddAgrupacionCaja] = useState(false);
@@ -80,13 +76,13 @@ export const AgrupacionDeCajasLista = () => {
             },
             {
                 content: agrupacion.usuarios.map((usuario) =>
-                    <ColumnaAgrupada>{usuario.usuario.nombre + ' ' + usuario.usuario.apellido}</ColumnaAgrupada>),
+                    <ChipBlue>{usuario.usuario.nombre + ' ' + usuario.usuario.apellido}</ChipBlue>),
                 key: agrupacion.id + '-usuario',
                 className: ' pt-2 '
             },
             {
                 content: agrupacion.cajas.map((usuario) =>
-                    <ColumnaAgrupada>{usuario.sucursal.nombre + '/' + usuario.usuario.nombre + ' ' + usuario.usuario.apellido}</ColumnaAgrupada>),
+                    <ChipBlue>{usuario.sucursal.nombre + '/' + usuario.usuario.nombre + ' ' + usuario.usuario.apellido}</ChipBlue>),
                 key: agrupacion.id + '-cajas',
                 className: ' pt-2 '
             },

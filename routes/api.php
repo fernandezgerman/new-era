@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
     return $user;
 })->middleware('auth:sanctum');
 
-Route::middleware(['auth:sanctum', CheckLegacyPermissions::class])->group(function () {
+Route::middleware(['auth:sanctum', 'restrict.access.per.hour', CheckLegacyPermissions::class])->group(function () {
     Route::post('/sucursal/{sucursalId}/establecer-actual', [\App\Http\ApiResources\Authentication::class, 'selectSucursal']);
     Route::get('/sucursal/actual', [\App\Http\ApiResources\Authentication::class, 'getSucursalActual']);
 
@@ -20,6 +20,6 @@ Route::middleware(['auth:sanctum', CheckLegacyPermissions::class])->group(functi
     }
 });
 
-Route::post('/login', [\App\Http\ApiResources\Authentication::class, 'login']);
+Route::post('/login', [\App\Http\ApiResources\Authentication::class, 'login'])->middleware('restrict.access.per.hour');
 Route::post('/logout', [\App\Http\ApiResources\Authentication::class, 'logout'])->name('api.logout');
 

@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'mobile.redirection' => \App\Http\Middleware\MobileRedirect::class,
         'custom.auth' => \App\Http\Middleware\CustomAuth::class,
+        'restrict.access.per.hour' => \App\Http\Middleware\RestringirAccesoPorHora::class,
     ];
 }

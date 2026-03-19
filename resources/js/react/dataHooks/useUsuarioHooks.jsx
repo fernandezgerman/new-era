@@ -32,14 +32,14 @@ const useUsuarioSucursalesHabilitadas = ({ usuarioId }) => {
 
 }
 
-const useUsuarios = (includes = [], orden = 'usuarios.nombre') => {
+const useUsuarios = (includes = [], orden = 'usuarios.nombre', filter = {'activo': true}, enabled = true) => {
     return useQuery({
-        queryKey: ['usuarioa-activos'],
+        queryKey: ['usuarios-' + JSON.stringify(includes) + JSON.stringify(filter) + orden],
         queryFn: async () => {
             const resource = new Resource();
-            return await resource.getEntities('user', includes, {'activo': true}, [orden]);
+            return await resource.getEntities('user', includes, filter, [orden]);
         },
-        enabled: true,
+        enabled: enabled,
         select: (data) => data,
         staleTime: 1000 * 60 * 60, // 1 hour
     });

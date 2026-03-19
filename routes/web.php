@@ -12,7 +12,7 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware('mobi
 Route::post('/login', [AuthController::class, 'login'])->middleware('mobile.redirection');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'restrict.access.per.hour'])->group(function () {
     foreach (Storage::disk('routes')->allFiles('web') as $file) {
         require_once $file;
     }
