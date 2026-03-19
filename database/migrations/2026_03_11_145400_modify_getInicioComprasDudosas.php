@@ -123,7 +123,7 @@ begin
     (v_fechahasta IS NULL OR date(cmp.fechahora) <= date(v_fechahasta) )AND
     (duda.idusuarioaudito is null OR p_todos = 1) AND
     (p_idcompradetalle is null OR p_idcompradetalle = cd.id) AND
-    (p_tipo_de_duda IS NULL OR p_tipo_de_duda = duda.tipodeduda)
+    (p_tipo_de_duda IS NULL OR p_tipo_de_duda = (duda.tipodeduda COLLATE utf8mb4_unicode_ci))
 
   ORDER BY
     suc.nombre,abs(if(cc.importe is null,
