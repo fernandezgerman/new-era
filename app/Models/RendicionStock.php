@@ -6,7 +6,7 @@ use App\Services\RendicionesStock\Enums\RendicionStockEstados;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 
-class RendicionStock extends CustomModel
+class RendicionStock extends BaseModel
 {
     use HasFactory;
 

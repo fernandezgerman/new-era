@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Services\AccesosPorHora\Enums\AccesosPorHoraAcciones;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class AccesosPorHora extends Model
+class AccesosPorHora extends BaseModel
 {
     /**
      * The table associated with the model.

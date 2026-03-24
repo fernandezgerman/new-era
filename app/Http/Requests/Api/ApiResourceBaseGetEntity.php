@@ -38,7 +38,8 @@ class ApiResourceBaseGetEntity extends AbstractApiRequest
                 }
             }],
             'filtros' => ['nullable', 'array'],
-            'orden' => ['nullable', 'array'],
+            'orden' => ['nullable'],
+            'limit' => ['nullable', 'integer'],
             'includes' => ['nullable', 'sometimes', 'array'],
             'includes.*' => ['string', function ($attribute, $value, $fail) {
 
@@ -81,8 +82,14 @@ class ApiResourceBaseGetEntity extends AbstractApiRequest
 
         $orden = $this->query('orden');
         if (is_string($orden)) {
+            $orden = json_decode($orden, true);
+            $this->merge(['orden' => $orden]);
+        }
+
+/*        $orden = $this->query('orden');
+        if (is_string($orden)) {
             $parts = array_filter(array_map('trim', explode(',', $orden)));
             $this->merge(['orden' => $parts]);
-        }
+        }*/
     }
 }

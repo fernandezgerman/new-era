@@ -23,6 +23,8 @@ class ApiResourceBase extends AbstractApiHandler
         $includes = $request->validated('includes') ?? [];
         $filtros = $request->validated('filtros') ?? [];
         $orden = $request->validated('orden') ?? [];
+        $limit = $request->validated('limit') ?? 500;
+        $offset = $request->validated('offset');
 
         $modelClass = $this->resolveModelClass($entity);
 
@@ -32,22 +34,36 @@ class ApiResourceBase extends AbstractApiHandler
         $customAttributes = [];
         if (!empty($includes)) {
             foreach ($includes as $include) {
-                if (method_exists($modelClass, 'get'.ucfirst($include).'Attribute')) {
+                if (method_exists($modelClass, 'get' . ucfirst($include) . 'Attribute')) {
                     $customAttributes[] = $include;
-                }else{
+                } else {
                     $query->with($include);
                 }
             }
         }
 
         foreach ($filtros as $key => $value) {
-            $query->where($key, $value);
+            if (is_array($value)) {
+                $operador = match ($value['operador']) {
+                    'menoroigual' => '<=',
+                    'mayoroigual' => '>=',
+                    default => '=',
+                };
+                $query->where($key, $operador, $value['valor']);
+            } else {
+                $query->where($key, $value);
+            }
+
         }
 
         foreach ($orden as $o) {
-            $query->orderBy($o);
+            if (is_array($o)) {
+                $query->orderBy($o['name'], $o['direction'] ?? 'asc');
+            } else {
+                $query->orderBy($o);
+            }
         }
-
+        $query->limit($limit);
         $data = null;
         if ($id) {
             $data = $query->find($id);
@@ -61,14 +77,13 @@ class ApiResourceBase extends AbstractApiHandler
         } else {
             $data = $query->get();
             $data->toArray();
-            foreach($data as $key => $item) {
+            foreach ($data as $key => $item) {
                 foreach ($customAttributes as $attribute) {
                     $item[$attribute] = $item->$attribute;
                     $data[$key] = $item;
                 }
             }
         }
-
         //$modelClass->{$include}
 
 
@@ -76,7 +91,8 @@ class ApiResourceBase extends AbstractApiHandler
 
     }
 
-    public function insertResource(ApiResourceBaseInsert $request): JsonResponse
+    public
+    function insertResource(ApiResourceBaseInsert $request): JsonResponse
     {
         // Exclude route parameters from payload
         $payload = collect($request->all())->except(['entity', 'id', 'relations'])->toArray();
@@ -84,13 +100,14 @@ class ApiResourceBase extends AbstractApiHandler
         /** @var \Illuminate\Database\Eloquent\Model $model */
         $model = $this->processInsert($entity, $payload);
 
-        $this->processRelations($request->all(), $model, 'id'.str_replace('-','', $entity));
+        $this->processRelations($request->all(), $model, 'id' . str_replace('-', '', $entity));
 
 
         return $this->sendResponse($model);
     }
 
-    private function processRelations(array $data, Model $belongToModel, string $belongToFieldName): void
+    private
+    function processRelations(array $data, Model $belongToModel, string $belongToFieldName): void
     {
         $relations = Arr::get($data, 'relations', []);
 
@@ -106,22 +123,24 @@ class ApiResourceBase extends AbstractApiHandler
                     $belongToFieldName => $belongToModel->id,
                 ];
 
-                if(Arr::get($item, 'deleted') !== true)
-                {
+                if (Arr::get($item, 'deleted') !== true) {
                     $relationModel = $this->processInsert($entity, $itemToSave);
-                    $this->processRelations($relation, $relationModel, 'id'.$entity);
+                    $this->processRelations($relation, $relationModel, 'id' . $entity);
                 }
 
             }
         }
     }
-    private function processInsert($entity, $payload): Model
+
+    private
+    function processInsert($entity, $payload): Model
     {
         $modelClass = $this->resolveModelClass($entity);
         return $modelClass::create($payload);
     }
 
-    private function processUpdate($entity, $payload): Model
+    private
+    function processUpdate($entity, $payload): Model
     {
         $modelClass = $this->resolveModelClass($entity);
         return $modelClass::updateOrCreate(
@@ -130,13 +149,15 @@ class ApiResourceBase extends AbstractApiHandler
         );
     }
 
-    private function processDelete($entity, $payload)
+    private
+    function processDelete($entity, $payload)
     {
         $modelClass = $this->resolveModelClass($entity);
         $modelClass::find($payload['id'])->delete();
     }
 
-    public function updateResource(ApiResourceBasePatch $request): JsonResponse
+    public
+    function updateResource(ApiResourceBasePatch $request): JsonResponse
     {
         $entity = $request->validated('entity');
         $id = $request->validated('id');
@@ -170,10 +191,12 @@ class ApiResourceBase extends AbstractApiHandler
         $model->fill($mergedPayload);
         $model->save();
 
-        $this->processUpdateRelations($request->all(), $model, 'id'.str_replace('-','', $entity));
+        $this->processUpdateRelations($request->all(), $model, 'id' . str_replace('-', '', $entity));
         return $this->sendResponse($model);
     }
-    private function processUpdateRelations(array $data, Model $belongToModel, string $belongToFieldName): void
+
+    private
+    function processUpdateRelations(array $data, Model $belongToModel, string $belongToFieldName): void
     {
         $relations = Arr::get($data, 'relations', []);
 
@@ -187,26 +210,25 @@ class ApiResourceBase extends AbstractApiHandler
                     ...$item,
                     $belongToFieldName => $belongToModel->id,
                 ];
-                if(isset($itemToSave['id'])){
-                    if(Arr::get($itemToSave,'deleted'))
-                    {
+                if (isset($itemToSave['id'])) {
+                    if (Arr::get($itemToSave, 'deleted')) {
                         $this->processDelete($entity, $itemToSave);
-                    }else{
+                    } else {
                         $relationModel = $this->processUpdate($entity, $itemToSave);
-                        $this->processRelations($relation, $relationModel, 'id'.$entity);
+                        $this->processRelations($relation, $relationModel, 'id' . $entity);
                     }
-                }else{
-                    if(Arr::get($itemToSave,'deleted') !== true)
-                    {
+                } else {
+                    if (Arr::get($itemToSave, 'deleted') !== true) {
                         $relationModel = $this->processInsert($entity, $itemToSave);
-                        $this->processRelations($relation, $relationModel, 'id'.$entity);
+                        $this->processRelations($relation, $relationModel, 'id' . $entity);
                     }
                 }
             }
         }
     }
 
-    public function deleteResource(ApiResourceBaseDelete $request): JsonResponse
+    public
+    function deleteResource(ApiResourceBaseDelete $request): JsonResponse
     {
         $entity = $request->validated('entity');
         $id = $request->validated('id');
@@ -223,7 +245,8 @@ class ApiResourceBase extends AbstractApiHandler
         return $this->sendResponse(['deleted' => true]);
     }
 
-    private function resolveModelClass(string $entity): string
+    private
+    function resolveModelClass(string $entity): string
     {
         $class = Str::studly(Str::singular($entity));
         return "App\\Models\\$class";
@@ -236,7 +259,8 @@ class ApiResourceBase extends AbstractApiHandler
      * @param mixed $value
      * @return array|null
      */
-    private function toArrayIfJsonLike($value): ?array
+    private
+    function toArrayIfJsonLike($value): ?array
     {
         if (is_array($value)) {
             return $value;
@@ -267,7 +291,8 @@ class ApiResourceBase extends AbstractApiHandler
      * @param array $override
      * @return array
      */
-    private function deepMerge(array $base, array $override): array
+    private
+    function deepMerge(array $base, array $override): array
     {
         $baseIsAssoc = $this->isAssoc($base);
         $overrideIsAssoc = $this->isAssoc($override);
@@ -295,7 +320,8 @@ class ApiResourceBase extends AbstractApiHandler
     /**
      * Determine if an array is associative.
      */
-    private function isAssoc(array $arr): bool
+    private
+    function isAssoc(array $arr): bool
     {
         if ($arr === []) {
             return true; // treat empty as associative for merge purposes

@@ -12,7 +12,7 @@ export const AccesosAlSistema = () => {
     const [addAccesosAlSistema, setAddAccesosAlSistema] = useState(false);
     const [accesoSeleccionado, setAccesoSeleccionado] = useState(null);
     const {data: accesos, isLoading, refetch, isRefetching, isError, error} = useAccesosPorHora();
-    console.log('aux', error);
+
     const {mutate: deleteAcceso} = useDeleteAccesoPorHora();
 
     const loading = isLoading || isRefetching;
@@ -112,7 +112,7 @@ export const AccesosAlSistema = () => {
             onAdd={() => {
                 setAccesoSeleccionado({
                     accion: 'Restringir',
-                    targetType: null,
+                    targettype: null,
                     target: null,
                     tipodemomento: null,
                     diadelasemana: null,

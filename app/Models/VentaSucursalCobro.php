@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
-use Illuminate\Database\Eloquent\Model;
 use phpDocumentor\Parser\Exception;
 
-class VentaSucursalCobro extends Model
+class VentaSucursalCobro extends BaseModel
 {
 
     protected $table = 'ventasucursalcobros';

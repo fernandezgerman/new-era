@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 
-class ModoDeCobro extends Model
+class ModoDeCobro extends BaseModel
 {
     protected $table = 'modosdecobro';
     protected $primaryKey = 'id';

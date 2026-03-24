@@ -5,15 +5,19 @@ import uuid from "react-uuid";
 import {usePerfiles} from "@/dataHooks/usePerfiles.jsx";
 
 export const SelectPerfil = ({setPerfil, perfil, errorMessage}) => {
-    const {data: perfiles} = usePerfiles();
+    const {data: perfiles, isLoading} = usePerfiles();
     const [perfilId, setPerfilId] = useState(perfil?.id ?? null);
 
     useEffect(() => {
-        setPerfil(
-            perfilId !== null ? perfiles?.reduce(
-                    (acum, perfil) => parseInt(perfil.id) === parseInt(perfilId) ? perfil : acum, null)
-                :null);
-    }, [perfilId]);
+
+        if(isLoading) return;
+
+        const perfil = perfilId !== null ? perfiles?.reduce(
+                (acum, perfil) => parseInt(perfil.id) === parseInt(perfilId) ? perfil : acum, null)
+            : null
+
+        setPerfil(perfil);
+    }, [perfilId, perfiles]);
 
     return <ErrorBoundary>
         <Select

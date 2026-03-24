@@ -7,7 +7,7 @@ const useAgrupacionCajas = () => {
         queryKey: ['agrupaciones-de-caja-41w1q2s'],
         queryFn: async () => {
             const resource = new Resource();
-            return await resource.getEntities('AgrupacionCaja', ['cajas.sucursal', 'cajas.usuario',' usuarios.usuario'], [], ['descripcion']);
+            return await resource.getEntities('AgrupacionCaja', ['cajas.sucursal', 'cajas.usuario',' usuarios.usuario'], [], 'descripcion');
         },
         enabled: true,
         select: (data) => data,

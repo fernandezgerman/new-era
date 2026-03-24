@@ -9,7 +9,7 @@ const useRubros = () => {
             const resource = new Resource();
             let filtros = [];
             filtros['activo'] = true;
-            return await resource.getEntities('rubro', [], { 'esrubrogastos': 0}, ['rubros.nombre']);
+            return await resource.getEntities('rubro', [], { 'esrubrogastos': 0}, 'rubros.nombre');
         },
         enabled: true,
         select: (data) => data,

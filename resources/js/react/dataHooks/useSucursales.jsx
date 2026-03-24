@@ -9,7 +9,7 @@ const useSucursales = () => {
             const resource = new Resource();
             let filtros = [];
             filtros['activo'] = true;
-            return await resource.getEntities('sucursal', ['usuariosCajas'], {'activo': true}, ['sucursales.nombre']);
+            return await resource.getEntities('sucursal', ['usuariosCajas'], {'activo': true}, 'sucursales.nombre');
         },
         enabled: true,
         select: (data) => data,

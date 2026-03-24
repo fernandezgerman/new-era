@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class VentaSucursal extends Model
+class VentaSucursal extends BaseModel
 {
     protected $table = 'ventassucursal';
     protected $primaryKey = 'id';

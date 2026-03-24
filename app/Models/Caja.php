@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Services\Ventas\VentasManager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Caja extends Model
+class Caja extends BaseModel
 {
     use HasFactory;
 

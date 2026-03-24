@@ -16,7 +16,7 @@ import {isMobile} from 'react-device-detect';
 import {UserAndBreadcrumb} from "@/widgets/menu/UserAndBreadcrum.jsx";
 import {faBars, faCog} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Alertas, AlertasMobile} from "@/widgets/menu/Alertas.jsx";
+import { AlertasMobile} from "@/widgets/menu/Alertas.jsx";
 
 
 const Menu = ({onMenuSelected, onModuloSelected, leftMenuIsOpen}) => {

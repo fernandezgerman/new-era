@@ -56,7 +56,7 @@ export const Table = ({
         }
 
         {isTableEmpty && <DivCenterContentHyV
-            className={'w-full p-6 h-10!'}>{emptyText ?? 'No se encontro informacion relacionada.'}</DivCenterContentHyV>}
+            className={'w-full p-6 h-10!'}>{isLoading ? 'Cargando...' : (emptyText ?? 'No se encontro informacion relacionada.')}</DivCenterContentHyV>}
         {footer}
     </div>;
 }

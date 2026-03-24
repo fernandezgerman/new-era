@@ -5,9 +5,8 @@ namespace App\Models;
 use App\Services\Actualizaciones\Contracts\ActualizableItem;
 use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
 use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
-use Illuminate\Database\Eloquent\Model;
 
-class VentaSucursalAnulacion extends Model implements ActualizableItem
+class VentaSucursalAnulacion extends BaseModel implements ActualizableItem
 {
     protected $table = 'ventassucursalanulacion';
     protected $primaryKey = 'id';

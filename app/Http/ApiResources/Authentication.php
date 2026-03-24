@@ -6,6 +6,7 @@ use App\DataAccessor\UsuarioDataAccessor;
 use App\Http\Requests\Api\SelectSucursalRequest;
 use App\Models\Sucursal;
 use App\Repositories\Legacy\PermisosRepository;
+use App\Services\Auditoria\AuditoriaManager;
 use App\Services\Authentication\AuthenticationService;
 use App\Services\Authentication\Exceptions\InvalidCredentialsException;
 use Illuminate\Http\JsonResponse;
@@ -38,12 +39,17 @@ class Authentication extends AbstractApiHandler
 
         try
         {
-            return $this->sendResponse(
+            $response =  $this->sendResponse(
                 app(AuthenticationService::class)->login(
                     $credentials['usuario'],
                     $credentials['clave']
                 ),
             );
+
+            app(AuditoriaManager::class)->auditarLegacyRequest('login');
+
+            return $response;
+
         }catch(InvalidCredentialsException $invalidCredentialsException)
         {
             return $this->sendResponseValidationError('Las credenciales proporcionadas no coinciden con nuestros registros.');

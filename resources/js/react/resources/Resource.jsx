@@ -16,12 +16,23 @@ export default class Resource extends ResourcesBase
         }
     }
 
-    async getEntities(entity, includes = [], filtros =null, orden = [])
+    /*
+
+    entity = 'string'
+    includes = ['include1', 'include2'...]
+    filtros = {active: true, usuario_id: 65}
+    orden= {orden1: {name: 'fecha', direction: 'asc'}} or 'descripcion'
+
+     */
+    async getEntities(entity, includes = [], filtros =null, orden = null, limit = null)
     {
         try{
             const f = filtros ? JSON.stringify(filtros, null, 2) : '';
+            const o = orden ? JSON.stringify( (typeof orden === "string") ? {orden1: {name: orden, direction: 'asc'}} : orden, null, 2) : '';
+
+
             return this.processResponse(
-                await window.axios.get('/api/resources/'+entity+'?includes='+includes+'&filtros='+f+'&orden='+orden )
+                await window.axios.get('/api/resources/'+entity+'?includes='+includes+'&filtros='+f+'&orden='+o+'&limit='+( limit ?? 500) )
             );
         }catch(err)
         {

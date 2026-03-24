@@ -44,14 +44,15 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
             if (accesoSeleccionado.diadelasemana) tipodemomento = 'Dia de la semana';
             else if (accesoSeleccionado.fecha) tipodemomento = 'Fecha puntual';
 
-            let targetType = 'Todos';
-            if (accesoSeleccionado.targettype === 'Usuario' || accesoSeleccionado.targettype === 'App\\Models\\User') targetType = 'Usuario';
-            else if (accesoSeleccionado.targettype === 'Perfil' || accesoSeleccionado.targettype === 'App\\Models\\Perfil') targetType = 'Perfil';
+            let targettype = 'Todos';
+            if (accesoSeleccionado.targettype === 'Usuario' || accesoSeleccionado.targettype === 'App\\Models\\User') targettype = 'Usuario';
+            else if (accesoSeleccionado.targettype === 'Perfil' || accesoSeleccionado.targettype === 'App\\Models\\Perfil') targettype = 'Perfil';
 
 
+            console.log('accesoSeleccionado', accesoSeleccionado);
             setData({
                 accion: accesoSeleccionado.accion,
-                targetType: targetType,
+                targettype: targettype,
                 target: accesoSeleccionado.target,
                 tipodemomento: tipodemomento,
                 diadelasemana: accesoSeleccionado.diadelasemana,
@@ -59,10 +60,11 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
                 horadesde: formatHour(accesoSeleccionado.horadesde ),
                 horahasta: formatHour(accesoSeleccionado.horahasta),
             });
+
         } else {
             setData({
                 accion: 'Restringir',
-                targetType: null,
+                targettype: null,
                 target: null,
                 tipodemomento: null,
                 diadelasemana: null,
@@ -74,11 +76,11 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
     }, [accesoSeleccionado, isOpen]);
 
     const {data: usuariosAfectados} = useUsuarios([], [],
-        {activo: true, idperfil: (data.targetType=== 'Perfil' ? data.target?.id : null)}, (data.targetType=== 'Perfil' && data.target?.id > 0) );
+        {activo: true, idperfil: (data.targettype=== 'Perfil' ? data.target?.id : null)}, (data.targettype=== 'Perfil' && data.target?.id > 0) );
 
     const [errores, setErrores] = useState({
         accion: null,
-        targetType: null,
+        targettype: null,
         target: null,
         tipodemomento: null,
         diadelasemana: null,
@@ -87,6 +89,9 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
         horahasta: null,
     })
 
+    useEffect(() => {
+        console.log('data from add', data);
+    }, [data]);
     const validData = () => {
         let valid = true;
         const errors = {};
@@ -94,17 +99,17 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
             errors.accion = 'Seleccione una accion';
             valid = false;
         }
-        if (!data.targetType) {
-            errors.targetType = 'Seleccione un target';
+        if (!data.targettype) {
+            errors.targettype = 'Seleccione un target';
             valid = false;
         }
 
-        if (data.targetType === 'Usuario' && !data.target) {
+        if (data.targettype === 'Usuario' && !data.target) {
             errors.target = 'Seleccione un usuario';
             valid = false;
         }
 
-        if (data.targetType === 'Perfil' && !data.target) {
+        if (data.targettype === 'Perfil' && !data.target) {
             errors.target = 'Seleccione un perfil';
             valid = false;
         }
@@ -145,7 +150,7 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
         if(validData()){
             const payload = {
                 accion: data.accion,
-                targettype: checkTodos(data.targetType),
+                targettype: checkTodos(data.targettype),
                 targetid: data.target?.id ?? null,
                 tipodemomento: checkTodos(data.tipodemomento),
                 diadelasemana: data.tipodemomento !== 'Dia de la semana' ? null : checkTodos(data.diadelasemana),
@@ -254,26 +259,26 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
                                     value: target,
                                     label: target
                                 })) ?? []}
-                                value={data.targetType}
+                                value={data.targettype}
                                 className={'mt-4'}
                                 setValue={(selectedTarget) => setData({
                                     ...data,
                                     target: null,
-                                    targetType: selectedTarget
+                                    targettype: selectedTarget
                                 })}
                                 placeholder="Seleccione un target a restringir / habilitar"
                                 label={'Tipo'}
-                                errorMessage={errores.targetType}
+                                errorMessage={errores.targettype}
                             />
                         </div>
                         <div className={'pl-2'}>
-                            {data.targetType === 'Usuario' && (
+                            {data.targettype === 'Usuario' && (
                                 <SelectUsuario usuario={data.target}
                                                setUsuario={(usuario) => setData({...data, target: usuario})}
                                                errorMessage={errores.target}/>
                             )}
 
-                            {data.targetType === 'Perfil' && (
+                            {data.targettype === 'Perfil' && (
                                 <SelectPerfil perfil={data.target}
                                               setPerfil={(perfil) => setData({...data, target: perfil})}
                                               errorMessage={errores.target}/>
@@ -282,7 +287,7 @@ export const AddAccesosAlSistema = ({isOpen, setIsOpen, accesoSeleccionado}) => 
                     </div>
                     {
 
-                        console.log('data.target', data) || (data.targetType === 'Perfil' && data.target) && (
+                        (data.targettype === 'Perfil' && data.target) && (
                             <div className={'colspan-2'}>
                                 <Label>Usuarios Alcanzados</Label>
                                 <div className={'max-h-50  overflow-y-scroll text-sm italic text-gray-500'}>

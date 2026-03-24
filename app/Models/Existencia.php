@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
-class Existencia extends Model
+class Existencia extends BaseModel
 {
     protected $table = 'existencias';
 

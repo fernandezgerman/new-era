@@ -4,10 +4,11 @@ import {Select} from "@/components/Select.jsx";
 import uuid from "react-uuid";
 import {useUsuarios} from "@/dataHooks/useUsuarioHooks.jsx";
 export const SelectUsuario = ({setUsuario, usuario, errorMessage}) => {
-    const {data: usuarios} = useUsuarios();
+    const {data: usuarios, isLoading} = useUsuarios();
     const [usuarioId, setUsuarioId] = useState(usuario?.id ?? null);
 
     useEffect(() => {
+        if(isLoading) return;
         setUsuario(
             usuarioId !== null ? usuarios?.reduce(
                     (acum, user) => parseInt(user.id) === parseInt(usuarioId) ? user : acum, null)
@@ -15,7 +16,6 @@ export const SelectUsuario = ({setUsuario, usuario, errorMessage}) => {
     }, [usuarioId]);
 
 
-    console.log('errorMessage user', errorMessage );
     return <ErrorBoundary>
         <Select
             options={usuarios?.map((usuario) => ({key: uuid(), value: usuario.id, label: usuario.nombre + ' ' + usuario.apellido})) ?? []}

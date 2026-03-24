@@ -10,7 +10,7 @@ const usePerfiles = () => {
             let filtros = [];
             filtros['activo'] = true;
             filtros['idempresa'] = 6;
-            return await resource.getEntities('perfil', [], filtros, ['perfiles.nombre']);
+            return await resource.getEntities('perfil', [], filtros, 'perfiles.nombre');
         },
         enabled: true,
         select: (data) => data,

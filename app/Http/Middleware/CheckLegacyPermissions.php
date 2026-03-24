@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Exceptions\Api\Exceptions\ApiUnauthorizedException;
+use App\Services\Auditoria\AuditoriaManager;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -21,6 +22,9 @@ class CheckLegacyPermissions
     {
         $permisos = session("permisos");
         $pagina = $request->get("pagina");
+
+
+
         // Check if user is authenticated
         if ($permisos && $pagina) {
             if(Arr::get($permisos,$pagina) === 'RESTRINGIDO')
@@ -28,6 +32,8 @@ class CheckLegacyPermissions
                 throw new ApiUnauthorizedException('Acceso Restringido ');
             }
         }
+
+        app(AuditoriaManager::class)->auditarLegacyRequest();
 
         return $next($request);
     }

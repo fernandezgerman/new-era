@@ -37,7 +37,7 @@ const useUsuarios = (includes = [], orden = 'usuarios.nombre', filter = {'activo
         queryKey: ['usuarios-' + JSON.stringify(includes) + JSON.stringify(filter) + orden],
         queryFn: async () => {
             const resource = new Resource();
-            return await resource.getEntities('user', includes, filter, [orden]);
+            return await resource.getEntities('user', includes, filter, orden);
         },
         enabled: enabled,
         select: (data) => data,

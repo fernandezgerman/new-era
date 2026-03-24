@@ -6,7 +6,6 @@ namespace App\Models;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoBase\MercadoPagoExtendedFunctionalities;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDTOFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\MedioDeCobroSucursalConfiguracion
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * at a given branch (sucursal), including optional destination cashbox
  * sucursal/usuario for transfers.
  */
-class MedioDeCobroSucursalConfiguracion extends Model
+class MedioDeCobroSucursalConfiguracion extends BaseModel
 {
     use HasFactory;
 

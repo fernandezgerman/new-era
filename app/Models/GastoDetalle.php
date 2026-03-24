@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class GastoDetalle extends Model
+class GastoDetalle extends BaseModel
 {
     // Table name does not follow Laravel's conventions
     protected $table = 'comprasdetalle';

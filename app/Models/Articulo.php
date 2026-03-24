@@ -7,7 +7,7 @@ use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
 use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Articulo extends CustomModel implements ActualizableItem
+class Articulo extends BaseModel implements ActualizableItem
 {
     use HasFactory;
 

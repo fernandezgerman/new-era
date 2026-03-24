@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SolicitudDePago extends CustomModel
+class SolicitudDePago extends BaseModel
 {
     use HasFactory;
 
