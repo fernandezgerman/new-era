@@ -160,6 +160,7 @@ class FixStock2503Command extends Command
                             $rendicionId = DB::table('rendicionesstock')->insertGetId([
                                 'idusuario' => 1,
                                 'idestado' => 1,
+                                'diferencia' => 0,
                                 'idsucursal' => $row->idsucursal,
                                 'idrubro' => $articulo->idrubro,
                                 'fechaapertura' => '2026-03-24 06:43:31',
