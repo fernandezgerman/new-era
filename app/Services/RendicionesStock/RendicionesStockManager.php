@@ -175,36 +175,40 @@ class RendicionesStockManager
         float          $cantidadRendida
     ): RendicionStockDetalle
     {
-        $existenciaAnterior = Existencia::query()
-            ->where('idarticulo', $articulo->id)
-            ->where('idsucursal', $rendicionStock->idsucursal)
-            ->first();
-
-        $existenciaNueva = $this->stockManager->setStock(
-            $articulo,
-            $rendicionStock->sucursal,
-            $cantidadRendida
-        );
-
-
-        $detallesRendicion = $this->getArticulosParaRendicionQueryBuilder($rendicionStock)->where('articulos.id', $articulo->id)->first();
 
         $rendicionStockDetalle = new RendicionStockDetalle();
 
-        $rendicionStockDetalle->idrendicion = $rendicionStock->id;
-        $rendicionStockDetalle->idarticulo = $articulo->id;
-        $rendicionStockDetalle->cantidadsistema = $existenciaAnterior->cantidad;
-        $rendicionStockDetalle->cantidadrendida = $existenciaNueva->cantidad;
-        $rendicionStockDetalle->fechahora = Carbon::now()->format('Y-m-d H:i:s');
-        $rendicionStockDetalle->costo = $detallesRendicion->costoArticulo;
-        $rendicionStockDetalle->precioventa = $detallesRendicion->precioVentaArticulo;
-        $rendicionStockDetalle->valorsistema = $detallesRendicion->precioVentaArticulo * $rendicionStockDetalle->cantidadsistema;
-        $rendicionStockDetalle->valorrendido = $detallesRendicion->precioVentaArticulo * $rendicionStockDetalle->cantidadrendida;
+        DB::transaction(function () use ($rendicionStock, $articulo, $cantidadRendida, &$rendicionStockDetalle) {
+            $existenciaAnterior = Existencia::query()
+                ->where('idarticulo', $articulo->id)
+                ->where('idsucursal', $rendicionStock->idsucursal)
+                ->first();
 
-        $rendicionStockDetalle->save();
+            $existenciaNueva = $this->stockManager->setStock(
+                $articulo,
+                $rendicionStock->sucursal,
+                $cantidadRendida
+            );
 
-        $this->actualizacionesManager->ActualizarArticuloConStockVisible($articulo, $rendicionStock->sucursal);
 
+            $detallesRendicion = $this->getArticulosParaRendicionQueryBuilder($rendicionStock)->where('articulos.id', $articulo->id)->first();
+
+
+            $rendicionStockDetalle->idrendicion = $rendicionStock->id;
+            $rendicionStockDetalle->idarticulo = $articulo->id;
+            $rendicionStockDetalle->cantidadsistema = $existenciaAnterior->cantidad;
+            $rendicionStockDetalle->cantidadrendida = $existenciaNueva->cantidad;
+            $rendicionStockDetalle->fechahora = Carbon::now()->format('Y-m-d H:i:s');
+            $rendicionStockDetalle->costo = $detallesRendicion->costoArticulo;
+            $rendicionStockDetalle->precioventa = $detallesRendicion->precioVentaArticulo;
+            $rendicionStockDetalle->valorsistema = $detallesRendicion->precioVentaArticulo * $rendicionStockDetalle->cantidadsistema;
+            $rendicionStockDetalle->valorrendido = $detallesRendicion->precioVentaArticulo * $rendicionStockDetalle->cantidadrendida;
+
+            $rendicionStockDetalle->save();
+
+            $this->actualizacionesManager->ActualizarArticuloConStockVisible($articulo, $rendicionStock->sucursal);
+
+        });
         return $rendicionStockDetalle->load('articulo');
     }
 }
