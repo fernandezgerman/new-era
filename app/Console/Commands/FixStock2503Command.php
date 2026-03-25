@@ -145,7 +145,7 @@ class FixStock2503Command extends Command
                     $this->line("PRIMER RENDICION RENDICION:  {$primerDetalle->cantidadrendida}");
                     $this->line("DIF:  {$dif}");
 
-                    if ($this->confirm('¿Desea crear el registro de ajuste para este artículo?', true)) {
+                    if (!$isCompuesto || $this->confirm('¿Desea crear el registro de ajuste para este artículo?', true)) {
                         // Buscar costo de tabla articulos
                         $articulo = DB::table('articulos')->where('id', $row->idarticulo)->first();
                         $costo = $articulo ? $articulo->costo : 0;
