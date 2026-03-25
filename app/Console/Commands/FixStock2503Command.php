@@ -42,7 +42,7 @@ class FixStock2503Command extends Command
             })
             ->select('rbr.nombre as rubro_nombre', 'art.codigo', 'art.nombre as articulo_nombre', 'suc.nombre as sucursal_nombre', 'art.id as idarticulo', 'suc.id as idsucursal')
             ->whereBetween('r.fechaapertura', ['2026-03-24 06:43:29', '2026-03-25 09:36:39'])
-            ->groupBy('suc.nombre', 'art.nombre', 'art.id', 'suc.id', 'art.codigo')
+            ->groupBy('rbr.nombre','suc.nombre', 'art.nombre', 'art.id', 'suc.id', 'art.codigo')
             ->orderBy('suc.nombre', 'asc')
             ->orderBy('art.nombre', 'desc');
 
