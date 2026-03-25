@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Facades\Auditor;
+use Throwable;
 
 require_once config('legacy.legacy_base_directory') . 'clsIndicePaginas.php';
 
@@ -52,7 +53,7 @@ class AuditoriaManager
                 'user_type' => 'App\Models\User',
                 // tus custom fields
             ]);
-        }catch (\Exception $exception){
+        }catch (Throwable $exception){
             Log::error($exception);
         }
     }
