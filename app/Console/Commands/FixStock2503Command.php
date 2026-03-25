@@ -129,6 +129,14 @@ class FixStock2503Command extends Command
                 {
                     $this->info("  -> Found previous rendicionstockdetalle ID: {$primerDetalle->id} at {$primerDetalle->fechahora}");
 
+                    $isCompuesto = DB::table('articuloscompuestos')
+                        ->where('idarticulo', $row->idarticulo)
+                        ->exists();
+
+                    if ($isCompuesto) {
+                        $this->error("  !!! WARNING: This item exists in articuloscompuestos table !!!");
+                    }
+
                     $this->line("    * A - Existencia: {$cantidadExistencia}");
                     $this->line("    * B - Suma Ventas: {$sumaVentas}");
                     $this->line("    * C - Suma Compras: {$sumaCompras}");
