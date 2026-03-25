@@ -44,7 +44,7 @@ class AuditoriaManager
                 'auditable_type' => $url ?? Request()->url(),
                 'auditable_id' => (int)(Request()->get("id") ?? Request()->get("p_id") ?? 0),
                 'old_values' => json_encode([]),
-                'new_values' => json_encode($info),
+                'new_values' => json_encode(array_filter($info)),
                 'ip_address' => request()->ip(),
                 'user_agent' => request()->userAgent(),
                 'url' => request()->fullUrl(),
