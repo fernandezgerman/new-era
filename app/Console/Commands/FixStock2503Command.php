@@ -88,7 +88,6 @@ class FixStock2503Command extends Command
                 ->first();
 
             if ($primerDetalle) {
-                $this->info("  -> Found previous rendicionstockdetalle ID: {$primerDetalle->id} at {$primerDetalle->fechahora}");
 
                 // A - Existencias model for the given idsucursal, & idarticulo
                 $existencia = DB::table('existencias')
@@ -123,18 +122,21 @@ class FixStock2503Command extends Command
                     ->where('rd.fechahora', '>', $primerDetalle->fechahora)
                     ->sum(DB::raw('cantidadrendida - cantidadsistema'));
 
-                $this->line("    * A - Existencia: {$cantidadExistencia}");
-                $this->line("    * B - Suma Ventas: {$sumaVentas}");
-                $this->line("    * C - Suma Compras: {$sumaCompras}");
-                $this->line("    * D - Suma Rendiciones (Dif): {$totalRendiciones}");
                 $total = $cantidadExistencia + $sumaVentas - $sumaCompras - $totalRendiciones;
-                $this->line("TOTAL: {$total}");
-                $this->line("PRIMER RENDICION RENDICION:  {$primerDetalle->cantidadrendida}");
                 $dif = ($primerDetalle->cantidadrendida - $total) * -1;
-                $this->line("DIF:  {$dif}");
 
                 if((float)$dif !== 0.0 )
                 {
+                    $this->info("  -> Found previous rendicionstockdetalle ID: {$primerDetalle->id} at {$primerDetalle->fechahora}");
+
+                    $this->line("    * A - Existencia: {$cantidadExistencia}");
+                    $this->line("    * B - Suma Ventas: {$sumaVentas}");
+                    $this->line("    * C - Suma Compras: {$sumaCompras}");
+                    $this->line("    * D - Suma Rendiciones (Dif): {$totalRendiciones}");
+                    $this->line("TOTAL: {$total}");
+                    $this->line("PRIMER RENDICION RENDICION:  {$primerDetalle->cantidadrendida}");
+                    $this->line("DIF:  {$dif}");
+
                     if ($this->confirm('¿Desea crear el registro de ajuste para este artículo?', true)) {
                         // Buscar costo de tabla articulos
                         $articulo = DB::table('articulos')->where('id', $row->idarticulo)->first();
@@ -193,12 +195,9 @@ class FixStock2503Command extends Command
                         ];
                     }
 
-                    if (!$this->confirm('¿Desea continuar con el siguiente artículo?', true)) {
-                        return 0;
-                    }
                 }else{
-                    $this->line("ART OK!!!!!!!");
-                    $this->line("ART OK!!!!!!!");
+                    $this->line("success!!!!", );
+
                 }
 
                 // Mark as processed (even if no adjustment was needed, or if user skipped creation,
