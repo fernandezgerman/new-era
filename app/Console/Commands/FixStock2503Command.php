@@ -82,7 +82,7 @@ class FixStock2503Command extends Command
                 ->join('rendicionesstock as r', 'rd.idrendicion', '=', 'r.id')
                 ->where('r.idsucursal', $row->idsucursal)
                 ->where('rd.idarticulo', $row->idarticulo)
-                ->where('rd.fechahora', '<', '2026-03-24 06:43:29')
+                ->where('rd.fechahora', '<', '2026-03-24 17:00:29')
                 ->where('rd.id', '>', 17583362)
                 ->orderBy('rd.fechahora', 'desc')
                 ->first();
