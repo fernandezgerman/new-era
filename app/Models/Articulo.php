@@ -6,6 +6,7 @@ use App\Services\Actualizaciones\Contracts\ActualizableItem;
 use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
 use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Articulo extends BaseModel implements ActualizableItem
 {
@@ -58,6 +59,11 @@ class Articulo extends BaseModel implements ActualizableItem
     public function rubro()
     {
         return $this->belongsTo(Rubro::class, 'idrubro');
+    }
+
+    public function historicoCostos(): HasMany
+    {
+        return $this->hasMany(ArticuloCostoHistorico::class, 'idarticulo');
     }
 
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO

@@ -11,6 +11,7 @@ export const CustomModal = ({
                                 footer = undefined,
                                 onAceptar = () => {
                                 },
+                                cancelButtonVisible = true,
                                 loading
                             }) => {
 
@@ -30,16 +31,18 @@ export const CustomModal = ({
         contentLabel={titulo}
         className={'  mt-20  rounded-xl ne-body dark:ne-dark-body p-5 px-10 ' + size() + loadingClass}
     >
-        <div className={'relative '}>
+        <div className={'relative'}>
             <H2>{titulo}</H2>
             {copete && (<div className={'mt-5'}>{copete}</div>)}
-            <div className={'mt-8 h-full relative'}>
-                {children}
+            <div className={'max-h-[calc(100vh-250px)] overflow-y-auto z-999 pl-3'} >
+                <div className={'mt-8 h-full relative'}>
+                    {children}
+                </div>
             </div>
             <div className={' justify-end flex'}>
                 {footer !== undefined && footer}
                 {footer === undefined && (<>
-                    <CancelarButton disabled={loading} onClick={() => setIsOpen(false)} className={'mr-2'}>Cancelar</CancelarButton>
+                {cancelButtonVisible && (<CancelarButton disabled={loading} onClick={() => setIsOpen(false)} className={'mr-2'}>Cancelar</CancelarButton>)}
                     <AceptarButton disabled={loading} onClick={onAceptar}>Aceptar</AceptarButton>
                 </>)}
             </div>

@@ -44,6 +44,9 @@ class User extends Authenticatable implements ActualizableItem
         'activo',
     ];
 
+    protected $appends = [
+        'nombre_completo',
+    ];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -62,6 +65,11 @@ class User extends Authenticatable implements ActualizableItem
     public function username()
     {
         return 'usuario';
+    }
+
+    public function getNombreCompletoAttribute()
+    {
+        return "{$this->nombre} {$this->apellido}";
     }
 
     /**

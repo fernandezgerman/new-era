@@ -85,4 +85,9 @@ class Compra extends BaseModel
     {
         return $this->belongsTo(Sucursal::class, 'idsucursalcaja');
     }
+
+    public function anulacion()
+    {
+        return $this->hasOne(CompraAnulada::class, 'idcompra');
+    }
 }

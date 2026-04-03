@@ -3,6 +3,8 @@ import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 import {isMobile} from "react-device-detect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeftLong, faPeopleArrowsLeftRight, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
+import {HistoricoDeArticulosWidget} from "@/widgets/HistoricoCostoArticulos/index.jsx";
+import {LegacyParametterCatcher} from "@/widgets/HistoricoCostoArticulos/LegacyParametterCatcher.jsx";
 export const LegacyFrame = ({iframeHrefs}) => {
     const iframeRef = React.useRef(null);
     const formRef = React.useRef(null);
@@ -63,6 +65,8 @@ export const LegacyFrame = ({iframeHrefs}) => {
 
     return (
         <ErrorBoundary>
+
+            <LegacyParametterCatcher/>
             {/* Hidden form to post parameters into the iframe when available */}
             {hasPost && (
                 <form ref={formRef} method="POST" target="legacy_iframe" style={{display: 'none'}}>

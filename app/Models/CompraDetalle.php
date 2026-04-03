@@ -29,7 +29,24 @@ class CompraDetalle extends BaseModel
         'costoanterior' => 'decimal:3',
     ];
 
+    protected $appends = [
+        'costo_con_impuestos'
+    ];
+
     // Relationships
+    public function costos()
+    {
+        return $this->hasMany(CostoCompra::class, 'iddetalle');
+    }
+
+    public function getCostoConImpuestosAttribute(): ?float
+    {
+        return CostoCompra::query()->where('iddetalle', $this->id)
+            ->where('idtipocosto', 1)
+            ->first()?->importe;
+    }
+
+
     public function compra()
     {
         return $this->belongsTo(Compra::class, 'idcabecera');
