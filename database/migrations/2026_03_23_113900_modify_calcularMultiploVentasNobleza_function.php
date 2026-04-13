@@ -35,7 +35,7 @@ BEGIN
 
 
 	if(p_rubro_id = 4) THEN
-			SET v_multiplo = 0.7;
+			SET v_multiplo = 0.9;
 	end if;
 
 
@@ -82,3 +82,5 @@ RETURN v_multiplo;
 END ");
     }
 };
+
+
