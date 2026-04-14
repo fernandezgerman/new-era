@@ -51,6 +51,7 @@ const Select = ({
             itemSelectText: '',
             placeholderValue: placeholder,
             shouldSort: false,
+            removeItems: true,
         });
 
         return () => {
@@ -64,12 +65,22 @@ const Select = ({
     // Sync options when they change
     useEffect(() => {
         if (!choicesRef.current) return;
-        const choices = options.map((opt) => ({
-            value: String(opt.value),
-            label: opt.label,
-            disabled: !!opt.disabled,
-            selected: value !== undefined && value !== null ? String(value) === String(opt.value) : !!opt.selected,
-        }));
+        const choices = options.map((opt) => {
+            let selected = !!opt.selected;
+            if (value !== undefined && value !== null) {
+                if (multiple && Array.isArray(value)) {
+                    selected = value.map(String).includes(String(opt.value));
+                } else {
+                    selected = String(value) === String(opt.value);
+                }
+            }
+            return {
+                value: String(opt.value),
+                label: opt.label,
+                disabled: !!opt.disabled,
+                selected: selected,
+            };
+        });
         choicesRef.current.clearStore();
         choicesRef.current.setChoices(choices, "value", "label", true);
     }, [options]);
@@ -77,12 +88,21 @@ const Select = ({
     // Sync selected value
     useEffect(() => {
         if (!choicesRef.current) return;
-        const stringVal = value !== undefined && value !== null ? String(value) : "";
-        const current = choicesRef.current.getValue(true);
-        if (String(current) !== stringVal) {
-            choicesRef.current.setChoiceByValue(stringVal);
+        if (multiple) {
+            const currentValues = choicesRef.current.getValue(true);
+            const nextValues = Array.isArray(value) ? value.map(String) : [];
+            if (JSON.stringify(currentValues.sort()) !== JSON.stringify(nextValues.sort())) {
+                choicesRef.current.removeActiveItems();
+                choicesRef.current.setChoiceByValue(nextValues);
+            }
+        } else {
+            const stringVal = value !== undefined && value !== null ? String(value) : "";
+            const current = choicesRef.current.getValue(true);
+            if (String(current) !== stringVal) {
+                choicesRef.current.setChoiceByValue(stringVal);
+            }
         }
-    }, [value]);
+    }, [value, multiple]);
 
     // Handle change events to lift state up
     useEffect(() => {
