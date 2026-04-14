@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const processDate = (momentDate) => {
+export const processDate = (momentDate, onlyDate = false) => {
     if(!momentDate){
         return '';
     }
@@ -11,7 +11,7 @@ export const processDate = (momentDate) => {
     }
 
     if (momentDate.isSame(today, 'year')) {
-        return momentDate.format("DD/MM HH:mm");
+        return momentDate.format(onlyDate ? "DD/MM" : "DD/MM HH:mm");
     }
 
     return momentDate.format("DD/MM/YYYY");

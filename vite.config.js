@@ -28,9 +28,12 @@ export default defineConfig(({ mode }) => {
                 host: hmrHost,
                 port,
                 protocol: 'ws',
+                overlay: false,
             },
             watch: {
                 ignored: ['**/*.php'], // Ignore all PHP files
+                usePolling: true,
+                interval: 200
             },
         },
         plugins: [
@@ -46,5 +49,16 @@ export default defineConfig(({ mode }) => {
             }),
             flowbiteReact(),
         ],
+        optimizeDeps: {
+            include: [
+                '@emotion/react',      // ← agregamos
+                '@emotion/styled',     // ← esto es lo que está fallando
+                '@mui/material',       // si usás muchos componentes MUI
+                '@mui/styled-engine'
+            ],
+        },
+        watch: {
+            usePolling: true,     // útil en algunos entornos de red / VM / Laravel
+        },
     };
 });
