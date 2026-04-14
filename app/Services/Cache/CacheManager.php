@@ -12,8 +12,8 @@ class CacheManager
 
     public function Cache(array $params, CacheExpire $expire, Closure $functionWithTheValues)
     {
-        return Cache::store('redis')->remember(
-            serialize($params), $this->getExireTime($expire), $functionWithTheValues);
+        return $functionWithTheValues(); /*Cache::store('redis')->remember(
+            serialize($params), $this->getExireTime($expire), $functionWithTheValues);*/
     }
 
     protected function getExireTime(CacheExpire $expire): int|Carbon
