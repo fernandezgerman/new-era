@@ -59,6 +59,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron2AM.php')))
             ->dailyAt('02:00')->name('cron2AM')->withoutOverlapping();
 
+        $schedule->command('alertas:cleanup-old')
+            ->dailyAt('02:00')->name('CleanupOldAlertas')->withoutOverlapping();
+
         // Monday 08:00 - cronLunes8AM.php
         $schedule->command('email:comparativo-semanal')
             ->weeklyOn(1, '08:00')->name('comparativoSemanal')->withoutOverlapping();

@@ -12,6 +12,7 @@ use App\Services\Alertas\Collections\AlertasSummaryCollection;
 use App\Services\Alertas\DTOs\AlertaSummaryDTO;
 use App\Services\Alertas\Exceptions\NotImplementedException;
 use App\Services\Alertas\Factories\AlertaDetalleDTOFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -47,21 +48,27 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
 
     public function getAlertasSummary(int $usuarioId, ?int $alertaTipoId): AlertasSummaryCollection
     {
-        $alertasSummary = Alerta::query()
+        $alertasSummary = AlertaTipo::query()
             ->selectRaw("
                 COUNT(1) AS cantidad,
-                alertas.idalertatipo AS idalertatipo,
-                SUM(IF(alertas.color = 'NEGRO', 1, 0)) AS negro,
-                SUM(IF(alertas.color = 'AZUL' OR alertas.color IS NULL, 1, 0)) AS azul,
-                SUM(IF(alertas.color = 'VERDE', 1, 0)) AS verde,
-                SUM(IF(alertas.color = 'ROJO', 1, 0)) AS rojo,
-                SUM(IF(alertas.color = 'AMARILLO', 1, 0)) AS amarillo,
+                alertastipos.id AS idalertatipo,
+                SUM(IF(alertas.color = 'NEGRO' AND fechahoravisto is null, 1, 0)) AS negro,
+                SUM(IF((alertas.color = 'AZUL' OR alertas.color IS NULL) AND fechahoravisto is null AND not alertas.id  is null, 1, 0)) AS azul,
+                SUM(IF(alertas.color = 'VERDE' AND fechahoravisto is null, 1, 0)) AS verde,
+                SUM(IF(alertas.color = 'ROJO' AND fechahoravisto is null, 1, 0)) AS rojo,
+                SUM(IF(alertas.color = 'AMARILLO' AND fechahoravisto is null, 1, 0)) AS amarillo,
                 0 AS violeta
             ")
-            ->join('alertasdestinatarios', 'alertas.id', '=', 'alertasdestinatarios.idalerta')
-            ->where('idusuario', $usuarioId)
-            ->where('fechahoravisto', null)
-            ->groupBy('alertas.idalertatipo');
+            ->leftjoin('alertas', 'alertas.idalertatipo', '=', 'alertastipos.id')
+            ->leftjoin('alertasdestinatarios', 'alertas.id', '=', 'alertasdestinatarios.idalerta')
+            ->where(function (Builder $query) use ($usuarioId){
+                $query->where('idusuario', $usuarioId);
+                $query->orWhereNull('alertas.id');
+            })
+            ->where('alertastipos.id',2)
+
+            //->where('fechahoravisto', null)
+            ->groupBy('alertastipos.id');
 
         if ($alertaTipoId !== null) {
             $alertasSummary->where('idalertatipo', $alertaTipoId);

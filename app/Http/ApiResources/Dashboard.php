@@ -2,6 +2,7 @@
 
 namespace App\Http\ApiResources;
 
+use App\Services\Alertas\AlertasManager;
 use App\Services\Alertas\Transformers\AlertaSummaryDTOTransformer;
 use App\Services\Alertas\Transformers\AlertaDetalleDTOToLegacyResponseTransformer;
 use Illuminate\Http\JsonResponse;
@@ -68,5 +69,22 @@ class Dashboard extends AbstractApiHandler
                     )->toArray()
             ]
         );
+    }
+    public function MarcarAlertasComoLeidas(int $alertaTipoId): JsonResponse
+    {
+        app(AlertasManager::class)->MarcarAlertasComoLeidas(auth()->user(), [$alertaTipoId]);
+        return $this->sendResponse([]);
+    }
+
+    public function MarcarAlertaComoLeida(int $alertaId): JsonResponse
+    {
+        app(AlertasManager::class)->MarcarAlertasComoLeidas(auth()->user(), null, $alertaId);
+        return $this->sendResponse([]);
+    }
+
+    public function MarcarAlertaComoNoLeida(int $alertaId): JsonResponse
+    {
+        app(AlertasManager::class)->MarcarAlertasComoLeidas(auth()->user(), null, $alertaId, false);
+        return $this->sendResponse([]);
     }
 }

@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
-class Existencia extends BaseModel
+class Existencia extends Model
 {
     protected $table = 'existencias';
 
@@ -47,4 +48,6 @@ class Existencia extends BaseModel
     {
         return $this->belongsTo(Sucursal::class, 'idsucursal');
     }
+
+
 }

@@ -16,6 +16,8 @@ const Button = ({
     const baseClass = () => {
         switch (format)
         {
+            case 'xxs':
+                return ' px-1 py-0.5 text-[5px] w-auto ';
             case 'xs':
                 return ' px-3 py-1.5 text-[8px] w-auto ';
             case 'normal':
