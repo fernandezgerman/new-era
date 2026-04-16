@@ -116,19 +116,19 @@ return [
     ],
     'destinatarios' => [
         'email_diario_de_ventas' => [
-           'sistemas',  'valeria', 'daniel', 'ariel'
+            'valeria', 'daniel', 'ariel'
         ],
         'stock_nobleza' => [
-            'sistemas','nobleza_1', 'nobleza_2', 'nobleza_3'
+            'nobleza_1', 'nobleza_2', 'nobleza_3'
         ],
         'ventas_nobleza' => [
-            'sistemas','nobleza_1', 'nobleza_2', 'nobleza_3'
+            'nobleza_1', 'nobleza_2', 'nobleza_3'
         ],
         'comparativo_semanal' => [
-            'sistemas','valeria', 'daniel', 'sistemas'
+            'valeria', 'daniel', 'sistemas'
         ],
         'ganancias_ventas_por_hora' => [
-            'sistemas','valeria', 'daniel', 'sistemas', 'ariel'
+            'valeria', 'daniel', 'sistemas', 'ariel'
         ]
     ],
     'emails' => [
