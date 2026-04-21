@@ -2,7 +2,6 @@
 
 use App\Http\ApiResources\Dashboard;
 use App\Http\Controllers\MediosDeCobro\MediosDeCobroController;
-use App\Http\Controllers\RendicionesStock\RendicionesStockController;
 use App\Http\Middleware\CheckLegacyPermissions;
 use App\Http\Middleware\ValidateMercadoPagoQR;
 use Illuminate\Support\Facades\Route;
@@ -12,20 +11,19 @@ use App\Http\ApiResources\ApiResourceBase;
 
 route::prefix('rendiciones-stock')->group(function () {
 
-    Route::post('/', [RendicionesStockController::class, 'create'])
-        ->name('rendiciones-stock.create');
+    Route::get('sobrantes-vs-arreglos', [\App\Http\Controllers\RendicionesStock\RendicionesStockController::class, 'getGraficosSobrantesVsArreglos'])
+        ->name('rendiciones-stock.get-graficos-sobranes-vs-arreglos');
 
-    Route::get('/list-today', [RendicionesStockController::class, 'listToday'])
-        ->name('rendiciones-stock.list-today');
+    Route::post('sobrantes-vs-arreglos/por-sucursal', [\App\Http\Controllers\RendicionesStock\RendicionesStockController::class, 'getGraficosSobrantesVsArreglosPorSucursal'])
+        ->name('rendiciones-stock.graficos-sobranes-vs-arreglos.por-sucursal');
 
-    Route::get('/{rendicionId}/articulos-pendientes', [RendicionesStockController::class, 'rendicionArticulosPendientes'])
-        ->name('rendicion.articulos-pendientes');
+    Route::post('sobrantes-vs-arreglos/por-articulos', [\App\Http\Controllers\RendicionesStock\RendicionesStockController::class, 'getGraficosSobrantesVsArreglosArticulosPorSucursal'])
+        ->name('rendiciones-stock.graficos-sobranes-vs-arreglos.por-articulos-sucursal');
 
-    Route::get('/{rendicionId}/articulos-rendidos', [RendicionesStockController::class, 'rendicionArticulosRendidos'])
-        ->name('rendicion.articulos-rendidos');
 
-    Route::post('/{rendicionId}/rendir', [RendicionesStockController::class, 'rendirArticulo'])
-        ->name('rendicion.rendir');
+    Route::post('sobrantes-vs-arreglos/por-articulo', [\App\Http\Controllers\RendicionesStock\RendicionesStockController::class, 'getArreglosVsSobrantesArticuloPorSucursal'])
+        ->name('rendiciones-stock.graficos-sobranes-vs-arreglos.por-articulo-sucursal');
+
 
 });
 

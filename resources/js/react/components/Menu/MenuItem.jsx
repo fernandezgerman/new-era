@@ -11,7 +11,7 @@ import {
     faMoneyCheck, faReceipt,
     faServer,
     faSuitcase,
-    faHome, faBuilding, faKey
+    faHome, faBuilding, faKey, faChartSimple
 } from "@fortawesome/free-solid-svg-icons";
 
 const icons = {
@@ -35,6 +35,7 @@ const icons = {
     'home': faHome,
     'building': faBuilding,
     'key': faKey,
+    'grafico': faChartSimple,
 };
 export const MenuGroup = ({
                        menuGroupValues = {

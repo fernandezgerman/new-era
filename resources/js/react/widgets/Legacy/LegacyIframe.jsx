@@ -3,9 +3,9 @@ import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 import {isMobile} from "react-device-detect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeftLong, faPeopleArrowsLeftRight, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
-import {HistoricoDeArticulosWidget} from "@/widgets/HistoricoCostoArticulos/index.jsx";
 import {LegacyParametterCatcher} from "@/widgets/HistoricoCostoArticulos/LegacyParametterCatcher.jsx";
-export const LegacyFrame = ({iframeHrefs}) => {
+
+export const LegacyFrame = ({iframeHrefs, children}) => {
     const iframeRef = React.useRef(null);
     const formRef = React.useRef(null);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -100,31 +100,34 @@ export const LegacyFrame = ({iframeHrefs}) => {
                             </button>
                         </div>
                     </div>
-                    <iframe
-                        onLoad={()=>{
-                            setIsLoading(false);
-                            setCurrentQs('');
-                        }}
-                        ref={iframeRef}
-                        name="legacy_iframe"
-                        src={(function(){
-                            const baseUrl = iframeHrefs.url;
-                            const currentQs = ''; //(typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
-                            const separator = baseUrl?.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
-                            const url = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
+                    <div className={iFrameHeight + ' overflow-y-scroll  '}>
+                        {children}
+                        <iframe
+                            onLoad={()=>{
+                                setIsLoading(false);
+                                setCurrentQs('');
+                            }}
+                            ref={iframeRef}
+                            name="legacy_iframe"
+                            src={(function(){
+                                const baseUrl = iframeHrefs.url;
+                                const currentQs = ''; //(typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '';
+                                const separator = baseUrl?.includes('?') ? (currentQs ? '&' : '') : (currentQs ? '?' : '');
+                                const url = `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
 
-                            if(iframeHrefs.getData && iframeHrefs.getData.length > 0) {
-                                const auxSeparator = url?.includes('?') ? '&' :'?';
+                                if(iframeHrefs.getData && iframeHrefs.getData.length > 0) {
+                                    const auxSeparator = url?.includes('?') ? '&' :'?';
 
-                                return url + auxSeparator + iframeHrefs.getData.reduce((acum, data) => data.name + '=' + data.value + '&' + acum, '');
-                            }
-                            return `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
-                        })()}
-                        width="100%"
-                        className={iFrameHeight + (isLoading ? ' hidden' : '')}
-                        title="Contenido Externo"
-                    >
-                    </iframe>
+                                    return url + auxSeparator + iframeHrefs.getData.reduce((acum, data) => data.name + '=' + data.value + '&' + acum, '');
+                                }
+                                return `${baseUrl}${separator}${currentQs ? currentQs.replace(/^\?/, '') : ''}`;
+                            })()}
+                            width="100%"
+                            className={'w-full h-full ' + (isLoading ? ' hidden' : '')}
+                            title="Contenido Externo"
+                        >
+                        </iframe>
+                    </div>
                 </>
             )}
         </ErrorBoundary>

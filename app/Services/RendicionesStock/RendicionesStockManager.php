@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class RendicionesStockManager
 {
@@ -210,5 +212,122 @@ class RendicionesStockManager
 
         });
         return $rendicionStockDetalle->load('articulo');
+    }
+
+    public function getArreglosVsSobrantes(Carbon $fechaHasta, int $semanas): Collection
+    {
+        $userId = auth()->id();
+        $firstMonday = $fechaHasta->copy()->modify('last monday');
+
+        $data = collect();
+
+        for ($i = 0; $i < $semanas; $i++) {
+            $startOfWeek = $firstMonday->copy()->subWeeks($i);
+            $endOfWeek = $startOfWeek->copy()->addWeek();
+
+            $sobrante = DB::table('cajas')
+                ->join('usuarios', 'cajas.idusuario', '=', 'usuarios.id')
+                ->join('sucursales', 'cajas.idsucursal', '=', 'sucursales.id')
+                ->join('usuariossucursales as us', 'sucursales.id', '=', 'us.idsucursal')
+                ->where('us.idusuario', $userId)
+                ->where('us.activo', 1)
+                ->where('cajas.fechacierre', '>=', $startOfWeek->format('Y-m-d'))
+                ->where('cajas.fechacierre', '<', $endOfWeek->format('Y-m-d'))
+                ->whereRaw('abs(cajas.idestado) = 1')
+                ->select(DB::raw('sum(ifnull(cajas.importeRendido, 0) - ifnull(cajas.totalmovimientos, 0) - ifnull(cajas.totalventas, 0) + ifnull(cajas.totalcompras, 0) + ifnull(cajas.totalpagos, 0) - ifnull(cajas.cajainicial, 0)) as total'));
+
+            $sobrante = $sobrante->value('total') ?? 0;
+
+            $arreglos = $this->getRendicionesStockQuery($startOfWeek, $endOfWeek, $userId);
+
+            //$sql = query_builder_to_raw_sql($arreglos);
+
+            $arreglos = $arreglos->first()->total * -1;
+
+            $data->push([
+                'semana' => 'Semana ' . $startOfWeek->format('d/m'),
+                'desde' => $startOfWeek->format('Y-m-d'),
+                'hasta' => $endOfWeek->format('Y-m-d'),
+                'arreglos' => (float)$arreglos,
+                'sobrantes' => (float)$sobrante,
+                'variacion' => (float)($arreglos - $sobrante),
+                'rubros' => [
+
+                ],
+            ]);
+        }
+
+        return $data->reverse()->values();
+    }
+
+    private function getRendicionesStockQuery(Carbon $fechaDesde, Carbon $fechaHasta, int $userId): QueryBuilder
+    {
+        return DB::table('rendicionesstock')
+            ->join('usuariossucursales as us', 'rendicionesstock.idsucursal', '=', 'us.idsucursal')
+            ->join('rendicionstockdetalle', 'rendicionesstock.id', '=', 'rendicionstockdetalle.idrendicion')
+            ->where('us.idusuario', $userId)
+            ->where('fechaapertura', '>=', $fechaDesde->format('Y-m-d'))
+            ->where('fechaapertura', '<', $fechaHasta->format('Y-m-d'))
+            ->select(
+                DB::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)) as total'),
+                DB::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)) as total')
+            );
+    }
+
+    public function getArreglosVsSobrantesPorSucursal(Carbon $fechaDesde, Carbon $fechaHasta): Collection
+    {
+        $userId = auth()->id();
+
+        $query = $this->getRendicionesStockQuery($fechaDesde, $fechaHasta, $userId);
+        $query->join('sucursales', 'sucursales.id', '=', 'rendicionesstock.idsucursal');
+        $query->groupBy('sucursales.id', 'sucursales.nombre');
+        $query->select(
+            'sucursales.id',
+            'sucursales.nombre',
+            DB::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)) as total')
+        )->orderBy('total', 'asc');
+
+        return $query->get();
+    }
+
+    public function getArreglosVsSobrantesArticulosPorSucursal(Carbon $fechaDesde, Carbon $fechaHasta, Sucursal $sucursal): Collection
+    {
+        $userId = auth()->id();
+
+        $query = $this->getRendicionesStockQuery($fechaDesde, $fechaHasta, $userId);
+        $query->join('articulos', 'articulos.id', '=', 'rendicionstockdetalle.idarticulo');
+        $query->groupBy('articulos.id', 'articulos.nombre', 'articulos.codigo');
+        $query->where('rendicionesstock.idsucursal', '=', $sucursal->id);
+        $query->select(
+            'articulos.id',
+            'articulos.nombre',
+            'articulos.codigo',
+            DB::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)) as total')
+        )->orderBy(db::raw('abs(total)'), 'desc')
+            ->having(db::raw('abs(total)'), '>', 10000);
+
+        return $query->get();
+    }
+
+    public function getArreglosVsSobrantesArticuloPorSucursal(Carbon $fechaDesde, Carbon $fechaHasta, Sucursal $sucursal, Articulo $articulo): Collection
+    {
+        $userId = auth()->id();
+
+        $query = $this->getRendicionesStockQuery($fechaDesde, $fechaHasta, $userId);
+        $query->join('articulos', 'articulos.id', '=', 'rendicionstockdetalle.idarticulo');
+        $query->join('usuarios', 'usuarios.id', '=', 'rendicionesstock.idusuario');
+        $query->where('rendicionesstock.idsucursal', '=', $sucursal->id);
+        $query->where('articulos.id', '=', $articulo->id);
+        $query->select(
+            'usuarios.nombre',
+            'usuarios.apellido',
+            DB::raw('max(rendicionstockdetalle.fechahora) as fechahora'),
+            DB::raw('sum(ifnull(rendicionstockdetalle.cantidadrendida, 0) - ifnull(rendicionstockdetalle.cantidadsistema, 0)) as diferencia'),
+            DB::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)) as importe')
+        )->orderBy('fechahora', 'desc')
+        ->having(db::raw('abs(importe)'), '>', 0)
+        ->groupBy('usuarios.nombre', 'usuarios.apellido', 'rendicionesstock.id');
+
+        return $query->get();
     }
 }

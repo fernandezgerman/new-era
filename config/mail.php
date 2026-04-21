@@ -128,7 +128,7 @@ return [
             'valeria', 'daniel', 'sistemas'
         ],
         'ganancias_ventas_por_hora' => [
-            'valeria', 'daniel', 'sistemas', 'ariel'
+            'valeria', 'daniel', 'ariel'
         ]
     ],
     'emails' => [

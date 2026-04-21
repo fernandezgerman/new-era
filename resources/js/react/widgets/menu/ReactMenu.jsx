@@ -4,6 +4,7 @@ import {AgrupacionDeCajasLista} from "@/pages/agrupacionDeCajas/index.jsx";
 import {AccesosAlSistema} from "@/pages/accesosAlSistema/index.jsx";
 import {ListarAudits} from "@/pages/audits/index.jsx";
 import {ValorizacionHistorico} from "@/pages/ValorizacionHistorico/index.jsx";
+import {ArreglosDeStockChartCard} from "@/widgets/Dashboard/ArreglosStockChart/index.jsx";
 
 // Documentacion: https://reactcommunity.org/react-modal/
 export const ReactMenu = {
@@ -12,6 +13,7 @@ export const ReactMenu = {
     "cnf-accs-hra": AccesosAlSistema,
     "audits" :ListarAudits,
     "vlrs_histo" :ValorizacionHistorico,
+    "mis-indicadores" : ArreglosDeStockChartCard,
 };
 
 export const GenerateComponent = ({pageCode}) => {

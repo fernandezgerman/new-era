@@ -169,6 +169,8 @@ const MenuGeneral = ({openMenu, onMenuSelected, setOpenMenu} ) =>
     const maxOpenWidth = isMobile ? "max-w-[200px]" : "max-w-[250px]";
     const maxCloseHeight = isMobile ? " hidden " : " h-[calc(100vh)] ";
 
+    const {data: authUser} = useAuthUsuario();
+
     return (
     <div
         onMouseEnter={() => setOpenMenu(true)}
@@ -180,6 +182,7 @@ const MenuGeneral = ({openMenu, onMenuSelected, setOpenMenu} ) =>
         {isMobile && <MobileLogo openMenu={openMenu || isMobile} onClick={() => setOpenMenu(!openMenu)}/>}
 
         <SucursalActual openMenu={openMenu || isMobile} onIconClick={() => setOpenMenu(true)}/>
+
         <MenuGroup
             menuGroupValues={{
                 id: 'inicio',
@@ -190,6 +193,18 @@ const MenuGeneral = ({openMenu, onMenuSelected, setOpenMenu} ) =>
             isOpen={false}
             withoutSubMenu={true}
         />
+        {(authUser?.idperfil === 8 || authUser?.idperfil === 26 ) && (
+            <MenuGroup
+                menuGroupValues={{
+                    id: 'mis-indicadores',
+                    descripcion: 'Mis Indicadores',
+                    icon: 'grafico'
+                }}
+                onClick={() => _onMenuSelected('mis-indicadores', 'Mis Indicadores')}
+                isOpen={false}
+                withoutSubMenu={true}
+            />
+        )}
         <a href={'cerrar-session'}>
             <MenuGroup
                 menuGroupValues={{
@@ -263,6 +278,7 @@ export const LeftMenuBar = ({onMenuSelected}) => {
         {isMobile ? <MobileMenu  openMenu={openMenu} onMenuSelected={ onMenuSelected}  setOpenMenu={setOpenMenu} /> :
             <MenuGeneral  openMenu={openMenu} onMenuSelected={ onMenuSelected}  setOpenMenu={setOpenMenu} />
         }
+
     </ErrorBoundary>);
 
 }

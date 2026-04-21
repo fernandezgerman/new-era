@@ -96,8 +96,9 @@
 @layer utilities {
 
     .choices__inner {
-        height: 38px !important;
         min-height: 38px !important;
+        max-height: 120px !important;
+        overflow-y: auto !important;
         padding: 5px 7.5px 3.75px !important;
         border-radius: 8px !important;
         background-color: transparent !important; /* Optional: Scale the image to cover the entire div */
