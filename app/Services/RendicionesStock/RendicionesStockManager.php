@@ -303,8 +303,8 @@ class RendicionesStockManager
             'articulos.nombre',
             'articulos.codigo',
             DB::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)) as total')
-        )->orderBy(db::raw('abs(total)'), 'desc')
-            ->having(db::raw('abs(total)'), '>', 10000);
+        )->orderBy(db::raw('abs(sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)))'), 'desc')
+            ->having(db::raw('abs(sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)))'), '>', 10000);
 
         return $query->get();
     }
@@ -325,7 +325,7 @@ class RendicionesStockManager
             DB::raw('sum(ifnull(rendicionstockdetalle.cantidadrendida, 0) - ifnull(rendicionstockdetalle.cantidadsistema, 0)) as diferencia'),
             DB::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0)) as importe')
         )->orderBy('fechahora', 'desc')
-        ->having(db::raw('abs(importe)'), '>', 0)
+        ->having(db::raw('sum(ifnull(rendicionstockdetalle.valorrendido, 0) - ifnull(rendicionstockdetalle.valorsistema, 0))'), '>', 0)
         ->groupBy('usuarios.nombre', 'usuarios.apellido', 'rendicionesstock.id');
 
         return $query->get();
