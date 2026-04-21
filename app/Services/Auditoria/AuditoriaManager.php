@@ -2,6 +2,7 @@
 
 namespace App\Services\Auditoria;
 
+use App\Services\Auditoria\DTO\AuditoriaDTO;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,5 +57,14 @@ class AuditoriaManager
         }catch (Throwable $exception){
             Log::error($exception);
         }
+    }
+    public function audicionManual(AuditoriaDTO $auditarDTO): void
+    {
+        try{
+            DB::connection('audits')->table('audits')->insert($auditarDTO->toArray());
+        }catch (Throwable $exception){
+            Log::error($exception);
+        }
+
     }
 }
