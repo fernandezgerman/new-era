@@ -65,7 +65,7 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
                 $query->where('idusuario', $usuarioId);
                 $query->orWhereNull('alertas.id');
             })
-            ->where('alertastipos.id',2)
+            ->whereIn('alertastipos.id',[2,4] )
 
             //->where('fechahoravisto', null)
             ->groupBy('alertastipos.id');
