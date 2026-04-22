@@ -65,7 +65,7 @@ order by (max_precio.importe - costocimp) desc
 
         try {
             $this->info('Executing query...');
-            $results = DB::select(DB::raw($query));
+            $results = DB::select($query);
             $this->info('Query executed successfully. Found ' . count($results) . ' records.');
 
             if (count($results) === 0) {
