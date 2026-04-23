@@ -33,20 +33,33 @@ class EmailReporteDiferenciaCostos extends Command
 SELECT
 	art.codigo, art.nombre,
 	ifnull(cc.importe, art.costo) AS costocimp,
-	max_precio.importe
+	max_precio.importe,
+	lr.porcentajeminimo,
+    lp.precio
 FROM
 	articulos as art LEFT JOIN
 	costoscompra cc on art.idcompradetalle  = cc.iddetalle  and cc.idtipocosto = 1
 	inner join (select idarticulo from existencias where cantidad > 0 group by idarticulo)as ex on art.id = ex.idarticulo
+	        inner join listadetalle as lp on art.id = lp.idarticulo and lp.idlista = 2
+	    inner join listasrubros as lr on art.idrubro = lr.idrubro and lr.idlista = 2
 inner join (
 	select
 	    max(cc.importe)as importe,
-	    idarticulo
+	    cd.idarticulo
 	FROM
 	    comprasdetalle as cd
 	    INNER JOIN compras as cmp on cd.idcabecera = cmp.id
 	    INNER JOIN costoscompra cc on cd.id  = cc.iddetalle  and cc.idtipocosto = 1
 	    inner join articulos as art on cd.idarticulo  = art.id
+         INNER JOIN (
+                    select
+                        max(cd.id) as detalleid, cd.idarticulo, cmp.idsucursal
+                    from
+                        comprasdetalle as cd
+                        inner join compras as cmp on cd.idcabecera = cmp.id
+                        inner join existencias as ex on cd.idarticulo = ex.idarticulo and cmp.idsucursal = ex.idsucursal
+                    group by idarticulo, idsucursal
+                )as ultimas_existencias on cd.id = ultimas_existencias.detalleid
 	    LEFT JOIN comprasanuladas as ca ON cmp.id = ca.idanulacion
 	    LEFT JOIN comprasanuladas as ca2 ON cmp.id = ca2.idcompra
 		LEFT JOIN comprasdudosas as duda ON cd.id = duda.idcompradetalle
@@ -57,7 +70,7 @@ inner join (
 	    ca2.idanulacion is null  and
 	    cd.id > art.idcompradetalle and
 	    (art.escompuesto = 0 or art.escompuesto is null)
-	group by idarticulo
+	group by cd.idarticulo
 ) as max_precio  on art.id = max_precio.idarticulo
 where art.activo = 1 and max_precio.importe > (ifnull(cc.importe, art.costo) + 10)
 order by (max_precio.importe - costocimp) desc
