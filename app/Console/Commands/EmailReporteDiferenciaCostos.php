@@ -32,10 +32,10 @@ class EmailReporteDiferenciaCostos extends Command
         $query = "
 SELECT
 	art.codigo, art.nombre,
-	ifnull(cc.importe, art.costo) AS costocimp,
-	max_precio.importe,
-	lr.porcentajeminimo,
-    lp.precio
+	round(ifnull(cc.importe, art.costo)) AS costocimp,
+	round(max_precio.importe),
+	round(lr.porcentajeminimo),
+    round(lp.precio)
 FROM
 	articulos as art LEFT JOIN
 	costoscompra cc on art.idcompradetalle  = cc.iddetalle  and cc.idtipocosto = 1
