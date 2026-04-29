@@ -90,4 +90,8 @@ class Compra extends BaseModel
     {
         return $this->hasOne(CompraAnulada::class, 'idcompra');
     }
+    public function impuestos()
+    {
+        return $this->hasMany(ImpuestoCompra::class, 'idcabecera');
+    }
 }

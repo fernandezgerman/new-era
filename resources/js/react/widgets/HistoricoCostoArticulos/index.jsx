@@ -159,10 +159,13 @@ export const HistoricoDeArticulosWidget = ({idarticulo, setIdArticulo}) => {
     const content = data?.map((item, index) => ({
         body: <>
             <ResolveTags tags={item.tags}/>
-            <div className={'pt-2'}>
-                {item.links && item.links.map((link) => <a key={link.texto} href={link.url} target={'_blank'}
-                                                           className={'text-blue-500 underline'}>{link.texto}</a>)}
-            </div>
+            <span className={index === 0 ? ' text-white ' : ''}>
+                {item?.mediodescripcion && (<div className={'opacity-80 italic'}>"{item?.mediodescripcion}"</div>)}
+                <div className={'pt-2'}>
+                    {item.links && item.links.map((link) => <a key={link.texto} href={link.url} target={'_blank'}
+                                                               className={'text-blue-500 underline'}>{link.texto}</a>)}
+                </div>
+            </span>
         </>
         ,
         title: <>

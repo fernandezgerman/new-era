@@ -20,6 +20,7 @@ class ArticuloCostoHistorico extends BaseModel
         'medio',
         'idusuario',
         'precioauxiliar',
+        'descripcion',
     ];
 
     protected $casts = [
@@ -28,6 +29,7 @@ class ArticuloCostoHistorico extends BaseModel
         'fechahora' => 'datetime',
         'idusuario' => 'integer',
         'precioauxiliar' => 'decimal:3',
+        'descripcion' => 'string',
     ];
 
     public function articulo(): BelongsTo

@@ -66,6 +66,11 @@ class Articulo extends BaseModel implements ActualizableItem
         return $this->hasMany(ArticuloCostoHistorico::class, 'idarticulo');
     }
 
+    public function compraDetalle()
+    {
+        return $this->belongsTo(CompraDetalle::class, 'idcompradetalle');
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(

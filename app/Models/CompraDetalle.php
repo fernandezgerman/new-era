@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use App\DataAccessor\CompraDetalleDataAccessor;
+
 class CompraDetalle extends BaseModel
 {
     // Table name does not follow Laravel's conventions
@@ -13,6 +15,7 @@ class CompraDetalle extends BaseModel
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
         'idcabecera',
         'idarticulo',
         'cantidad',
@@ -30,7 +33,8 @@ class CompraDetalle extends BaseModel
     ];
 
     protected $appends = [
-        'costo_con_impuestos'
+        'costo_con_impuestos',
+        'total_linea'
     ];
 
     // Relationships
@@ -41,12 +45,15 @@ class CompraDetalle extends BaseModel
 
     public function getCostoConImpuestosAttribute(): ?float
     {
-        return CostoCompra::query()->where('iddetalle', $this->id)
-            ->where('idtipocosto', 1)
-            ->first()?->importe;
+        $newCompraDetalleDataAccessor = new CompraDetalleDataAccessor($this);
+
+        return $newCompraDetalleDataAccessor->getUnitarioConImpuestos();
     }
 
-
+    public function getTotalLineaAttribute(): ?float
+    {
+        return $this->cantidad * $this->precio;
+    }
     public function compra()
     {
         return $this->belongsTo(Compra::class, 'idcabecera');

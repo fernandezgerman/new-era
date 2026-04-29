@@ -13,7 +13,30 @@ class Rubro extends BaseModel
     public $timestamps = false;
 
     protected $fillable = [
-        // define fields if needed
+        'codigo',
+        'nombre',
+        'descripcion',
+        'porcentajeminimoutilidad',
+        'esrubrogastos',
+        'lu',
+        'ma',
+        'mi',
+        'ju',
+        'vi',
+        'sa',
+        'do',
+    ];
+
+    protected $casts = [
+        'porcentajeminimoutilidad' => 'float',
+        'esrubrogastos'            => 'boolean',
+        'lu'                       => 'boolean',
+        'ma'                       => 'boolean',
+        'mi'                       => 'boolean',
+        'ju'                       => 'boolean',
+        'vi'                       => 'boolean',
+        'sa'                       => 'boolean',
+        'do'                       => 'boolean',
     ];
 
     public function articulos()

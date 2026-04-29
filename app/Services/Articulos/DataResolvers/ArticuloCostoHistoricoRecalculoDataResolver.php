@@ -19,6 +19,7 @@ class ArticuloCostoHistoricoRecalculoDataResolver implements ArticuloCostoHistor
             'usuario' => $articuloCostoHistorico->usuario,
             'compradetalle' => $articuloCostoHistorico->compraDetalle,
             'descripcion' => 'Anulacion o compra dudosa',
+            'mediodescripcion' => $articuloCostoHistorico?->descripcion,
             'precio' => $articuloCostoHistorico?->compraDetalle?->precio,
             'precioconimpuesto' => $articuloCostoHistorico?->compraDetalle?->costo_con_impuestos,
             'links' => [

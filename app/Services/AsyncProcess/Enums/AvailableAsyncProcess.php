@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Services\AsyncProcess\Enums;
+
+enum AvailableAsyncProcess: string
+{
+    case PROCESAR_COMPRA = 'PROCESAR_COMPRA';
+    case ACTUALIZAR_REFERENCIAS_COSTOS = 'ACTUALIZAR_REFERENCIAS_COSTOS';
+
+    case ACTUALIZAR_REFERENCIAS_COSTOS_POR_DETALLES = 'ACTUALIZAR_REFERENCIAS_COSTOS_POR_DETALLES';
+
+    case TEST = 'PROCESAR_TEST';
+}
