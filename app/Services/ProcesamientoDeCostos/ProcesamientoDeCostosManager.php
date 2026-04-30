@@ -240,7 +240,7 @@ class ProcesamientoDeCostosManager
         $costo = blank($compraReemplazante) ? $compraDetalle->articulo->costo : $compraReemplazante->precio;
 
         $res = DB::update('UPDATE ventassucursal as vs LEFT JOIN ventassucursalextra as vse ON vs.id = vse.idventa
-                    SET vse.idcompradetalle = '.$idCompraDetalleUpdate.',costosucursal = '.$costo.'
+                    SET vse.idcompradetalle = '.$idCompraDetalleUpdate.', costosucursal = '.(int)$costo.'
                     WHERE vse.idcompradetalle = '.$compraDetalle->id);
         return $costo;
     }
