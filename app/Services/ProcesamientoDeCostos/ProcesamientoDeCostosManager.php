@@ -236,7 +236,7 @@ class ProcesamientoDeCostosManager
         }
 
       //  $compra = $compraReemplazante?->compra;
-        $idCompraDetalleUpdate = blank($compraReemplazante) ? null : $compraReemplazante->id;
+        $idCompraDetalleUpdate = blank($compraReemplazante) ? ' null ' : $compraReemplazante->id;
         $costo = blank($compraReemplazante) ? $compraDetalle->articulo->costo : $compraReemplazante->precio;
 
         $res = DB::update('UPDATE ventassucursal as vs LEFT JOIN ventassucursalextra as vse ON vs.id = vse.idventa
