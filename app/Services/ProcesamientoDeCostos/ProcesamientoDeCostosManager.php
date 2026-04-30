@@ -27,6 +27,7 @@ class ProcesamientoDeCostosManager
     public function procesarCostosDeCompra(int $compraId): void
     {
 
+        if($compraId === -1) return;
         $compra = get_entity_or_fail('Compra', $compraId);
 
         if($compra->idtipocomprobante != TipoComprobanteCompra::FACTURA->value)
