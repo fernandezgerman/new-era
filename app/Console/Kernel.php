@@ -64,10 +64,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('monitor:jobs')
             ->everyFifteenMinutes()->name('MonitorJobs')->withoutOverlapping();
-/*
+
         $schedule->command('queue:retry all')
             ->everyFifteenMinutes()->name('QueueRetryAll')->withoutOverlapping();
-*/
+
         // Monday 08:00 - cronLunes8AM.php
         $schedule->command('email:comparativo-semanal')
             ->weeklyOn(1, '08:00')->name('comparativoSemanal')->withoutOverlapping();
