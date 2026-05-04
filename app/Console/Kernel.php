@@ -31,6 +31,9 @@ class Kernel extends ConsoleKernel
             ->everyMinute()->name('cronTest')->withoutOverlapping();*/
 
 
+        $schedule->command('transferencias:rechazar-antiguas')
+            ->dailyAt('02:03')->name('transferencias.rechazar-antiguas')->withoutOverlapping();
+
         $schedule->command('medios:trigger-status-change')
             ->everyMinute()->withoutOverlapping()->name('VentasCobrosTriggerStatusChange')->withoutOverlapping();
 

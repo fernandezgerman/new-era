@@ -7,4 +7,6 @@ enum MovimientoCajaEstados: int
     case PENDIENTE = 1;
     case APROBADO = 2;
     case RECHAZADO = 3;
+
+    case RECIBIDO = 7;
 }
