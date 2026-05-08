@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'mobile.redirection' => \App\Http\Middleware\MobileRedirect::class,
         'custom.auth' => \App\Http\Middleware\CustomAuth::class,
         'restrict.access.per.hour' => \App\Http\Middleware\RestringirAccesoPorHora::class,
+        'auth.integraciones' => \App\Http\Middleware\AuthenticateIntegracionesArticulos::class,
     ];
 }
