@@ -50,7 +50,7 @@ class IntegracionesArticulosController extends Controller
         $descripcionUpper = strtoupper($descripcion);
 
         $articulos = Articulo::join('rubros', 'articulos.idrubro', '=', 'rubros.id')
-            ->where(DB::raw('ucase(articulos.descripcion) LIKE %' . $descripcionUpper . '%'))
+            ->where(DB::raw("ucase(articulos.descripcion) LIKE '% . $descripcionUpper . %'"))
             ->where('articulos.activo', 1)
             ->where('rubros.esrubrogastos', '<>', 1)
             ->select('articulos.*')
