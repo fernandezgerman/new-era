@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Integraciones;
 use App\Http\Controllers\Controller;
 use App\Models\Articulo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class IntegracionesArticulosController extends Controller
 {
@@ -16,8 +17,11 @@ class IntegracionesArticulosController extends Controller
      */
     public function showByCodigo($codigo)
     {
-        $articulo = Articulo::where('codigo', $codigo)
-            ->where('activo', 1)
+        $articulo = Articulo::join('rubros', 'articulos.idrubro', '=', 'rubros.id')
+            ->where('articulos.codigo', $codigo)
+            ->where('articulos.activo', 1)
+            ->where('rubros.esrubrogastos', '<>', 1)
+            ->select('articulos.*')
             ->first();
 
         if (!$articulo) {
@@ -43,8 +47,13 @@ class IntegracionesArticulosController extends Controller
             ], 422);
         }
 
-        $articulos = Articulo::where('descripcion', 'LIKE', '%' . $descripcion . '%')
-            ->where('activo', 1)
+        $descripcionUpper = strtoupper($descripcion);
+
+        $articulos = Articulo::join('rubros', 'articulos.idrubro', '=', 'rubros.id')
+            ->where(DB::raw('ucase(articulos.descripcion) LIKE %' . $descripcionUpper . '%'))
+            ->where('articulos.activo', 1)
+            ->where('rubros.esrubrogastos', '<>', 1)
+            ->select('articulos.*')
             ->paginate(20);
 
         return response()->json($articulos);
