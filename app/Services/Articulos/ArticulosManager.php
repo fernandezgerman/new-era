@@ -4,11 +4,14 @@ namespace App\Services\Articulos;
 
 use App\Models\Articulo;
 use App\Models\ArticuloCostoHistorico;
+use App\Models\ArticuloPrecioHistorico;
+use App\Models\PrecioHistorico;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoArticuloInsertDataResolver;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoArticuloUpdateDataResolver;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoCompraDataResolver;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoConfiguracionDePreciosDataResolver;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoRecalculoDataResolver;
+use App\Services\Articulos\DataResolvers\ArticuloPrecioHistorico\ArticuloPrecioHistoricoCabeceraDataResolver;
 use App\Services\Articulos\Enums\ArticulosCostoHistoricoMotivos;
 use Aws\Panorama\Exception\PanoramaException;
 use Exception;
@@ -37,6 +40,31 @@ class ArticulosManager
             };
 
             $response[] = app($dataResolver)->resolve($item);
+        }
+        return $response;
+    }
+    public function getArticuloHistoricoPrecios(Articulo $articulo): array
+    {
+        $historico = PrecioHistorico::query()
+            ->whereExists(function ($subquery) use ($articulo) {
+                $subquery->select(DB::raw(1))
+                    ->from('articulopreciohistorico')
+                    ->whereColumn('articulopreciohistorico.idcabecera', 'preciohistorico.id')
+                    ->where('articulopreciohistorico.idarticulo', $articulo->id);
+            })
+            ->orderBy('id', 'desc')
+            ->limit(40)
+            ->get();
+
+        $response = [];
+        /** @var PrecioHistorico $item */
+        foreach($historico as $item)
+        {
+            $detalles = $item->detalles()
+                ->where('idarticulo', $articulo->id)
+                ->orderByRaw("(tipo = 'Precio Temporal' or tipo = 'Promocion'), idlista ASC")  // todo en un solo orderByRaw
+                ->get();
+            $response[] = app(ArticuloPrecioHistoricoCabeceraDataResolver::class)->resolve($item, $detalles);
         }
         return $response;
     }

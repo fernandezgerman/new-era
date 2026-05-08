@@ -22,10 +22,10 @@ export const processNumber = (number, decimals = 2, simplificado = false, simbol
         const formateador = new Intl.NumberFormat('es-ES', {
             style: 'decimal', // 'currency' para monedas
             minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals
+            maximumFractionDigits: decimals,
         });
 
-        retorno = Math.abs(formateador.format(number));
+        retorno = formateador.format(Math.abs(number));
     }
 
     return signo + simbolo + retorno;

@@ -66,6 +66,46 @@ class Articulo extends BaseModel implements ActualizableItem
         return $this->hasMany(ArticuloCostoHistorico::class, 'idarticulo');
     }
 
+    /**
+     * Get the historic prices for the articulo.
+     */
+    public function historicoPrecios(): HasMany
+    {
+        return $this->hasMany(ArticuloPrecioHistorico::class, 'idarticulo');
+    }
+
+    /**
+     * Get the exceptions for the articulo.
+     */
+    public function excepcionesPrecios(): HasMany
+    {
+        return $this->hasMany(PrecioExcepcion::class, 'idarticulo');
+    }
+
+    /**
+     * Get the dependent list exceptions for the articulo.
+     */
+    public function excepcionesListasDependientes(): HasMany
+    {
+        return $this->hasMany(ListaDependienteExcepcion::class, 'idarticulo');
+    }
+
+    /**
+     * Get the temporary prices for the articulo.
+     */
+    public function preciosTemporales(): HasMany
+    {
+        return $this->hasMany(PrecioTemporal::class, 'idarticulo');
+    }
+
+    /**
+     * Get the promotions for the articulo.
+     */
+    public function promociones(): HasMany
+    {
+        return $this->hasMany(PromocionArticulo::class, 'idarticulo');
+    }
+
     public function compraDetalle()
     {
         return $this->belongsTo(CompraDetalle::class, 'idcompradetalle');

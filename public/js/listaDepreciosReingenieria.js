@@ -834,3 +834,24 @@ function mostrarHistoricoDeCostos(idarticulo){
     window.parent.postMessage(mensaje, baseUrl); // Cambia por tu dominio en producción
 
 }
+
+function mostrarHistoricoDePrecios(idarticulo){
+    /*
+    const div = document.getElementById('visualizar-historico-costos');
+    div.setAttribute('data-articulo-id', idarticulo); */
+
+    const mensaje = {
+        tipo: 'IFRAME_EVENT',
+        accion: 'HISTORICO_DE_PRECIOS',
+        payload: {
+            idarticulo: idarticulo
+        }
+    };
+
+    // Obtiene: https://sitio.com
+    const baseUrl = window.location.origin;
+
+    // Enviar mensaje al padre (React)
+    window.parent.postMessage(mensaje, baseUrl); // Cambia por tu dominio en producción
+
+}

@@ -16,12 +16,13 @@ El valor del token es el configurado en la variable de entorno `INTEGRACIONES_AR
 ## Endpoints
 
 ### 1. Obtener artículo por código
-Retorna la información detallada de un artículo que coincide exactamente con el código proporcionado.
+Retorna la información detallada de un artículo que coincide exactamente con el código proporcionado. Se excluyen artículos pertenecientes a rubros de gastos.
 
 *   **URL:** `/api/integraciones/articulo/{codigo}`
 *   **Método:** `GET`
+*   **Filtros Aplicados:** Solo artículos activos y cuyo rubro asociado no sea de gastos (`esrubrogastos <> 1`).
 *   **Respuesta Exitosa (200 OK):** Retorna el objeto del artículo.
-*   **Respuesta No Encontrada (404 Not Found):** Si el código no existe o el artículo no está activo.
+*   **Respuesta No Encontrada (404 Not Found):** Si el código no existe, el artículo no está activo, o pertenece a un rubro de gastos.
 
 #### Ejemplo de petición (cURL)
 ```bash
@@ -61,18 +62,19 @@ curl -X GET "http://tu-dominio.com/api/integraciones/articulo/12345" \
 ---
 
 ### 2. Buscar artículos por descripción
-Busca artículos cuya descripción contenga el texto proporcionado. Los resultados están paginados.
+Busca artículos cuya descripción contenga el texto proporcionado. La búsqueda se realiza convirtiendo el texto a mayúsculas. Los resultados están paginados y excluyen artículos pertenecientes a rubros de gastos.
 
 *   **URL:** `/api/integraciones/articulo/buscar/{descripcion}`
 *   **Método:** `GET`
 *   **Validación:** La búsqueda debe tener al menos 3 caracteres.
 *   **Paginación:** 20 resultados por página. Para ver otras páginas usar el query param `?page=X`.
+*   **Filtros Aplicados:** Solo artículos activos y cuyo rubro asociado no sea de gastos (`esrubrogastos <> 1`).
 *   **Respuesta Exitosa (200 OK):** Retorna un objeto de paginación de Laravel.
 *   **Error de Validación (422 Unprocessable Entity):** Si la búsqueda tiene menos de 3 caracteres.
 
 #### Ejemplo de petición (cURL)
 ```bash
-curl -X GET "http://tu-dominio.com/api/integraciones/articulo/buscar/cocacola?page=1" \
+curl -X GET "http://tu-dominio.com/api/integraciones/articulo/buscar/COCACOLA?page=1" \
      -H "X-INTEGRACIONES-TOKEN: tu_token_aqui" \
      -H "Accept: application/json"
 ```

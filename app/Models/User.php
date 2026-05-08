@@ -159,6 +159,22 @@ class User extends Authenticatable implements ActualizableItem
         ];
     }
 
+    /**
+     * Get the historic prices created by the user.
+     */
+    public function historicoPrecios()
+    {
+        return $this->hasMany(PrecioHistorico::class, 'idusuario');
+    }
+
+    /**
+     * Get the temporary prices audited by the user.
+     */
+    public function preciosTemporalesAuditados()
+    {
+        return $this->hasMany(PrecioTemporal::class, 'idusuarioaudito');
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(

@@ -5,3 +5,10 @@ export const arrayIsEmpty = (arreglo) => arreglo === undefined || arreglo === nu
 export const objectIsEmpty = (objeto) => objeto === undefined ||
     objeto === null ||
     reduce(objeto, (acum, value) => value === null ? acum : false, true)
+;
+
+export const camelCaseToSpace = (text) => {
+    if (!text) return text;
+    const spaced = text.replace(/([A-Z])/g, ' $1').replace(/\s+/g, ' ').trim();
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+};

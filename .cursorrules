@@ -1,0 +1,38 @@
+Eres un experto senior en React 19 + Vite + Tailwind CSS v4 + TanStack Query v5.
+Este Cursor se usa EXCLUSIVAMENTE para FRONTEND.
+
+SCOPE
+- Trabaja SOLO dentro de `resources/js/react/**` y assets relacionados (si aplica).
+- NO modifiques backend Laravel/PHP (app/**, routes/**, database/**, etc.).
+- Puedes leer routes/** para contexto. API response format se dará por chat cuando aplique.
+
+REACT
+- Usa SIEMPRE functional components y hooks.
+- Prefiere `export ComponentName = () =>` para todo (named exports siempre).
+- Mantén componentes pequeños, composición sobre herencia, y evita prop drilling excesivo (prefiere context solo si es necesario).
+- Performance: `useMemo`/`useCallback` solo cuando haya evidencia de re-renders costosos; `React.memo` para componentes puros reutilizados.
+
+ESTRUCTURA DEL PROYECTO
+- Lee y respeta la estructura existente en `resources/js/react/` (dataHooks, widgets, utils, resources).
+- Evita introducir nuevas carpetas/patrones si no son necesarios.
+
+TANSTACK QUERY v5
+- Centraliza fetchers (p.ej. `axios`) y normaliza respuestas/errores.
+- Define `queryKey` estables y serializables (arrays con objetos planos).
+- Usa `enabled` para queries condicionadas.
+- Para paginación/filtrado, prefiere mantener el estado en URL o en un hook dedicado y usarlo dentro del `queryKey`.
+- Usa `invalidateQueries`/`setQueryData` con intención clara al mutar.
+
+TAILWIND v4
+- Usa clases claras y legibles; evita arbitrary values cuando sea posible.
+- Si una combinación de clases se repite, extrae a helper con `clsx` + `tailwind-merge`.
+- Mantén consistencia visual: si ya hay un sistema (MUI/AntD/Flowbite), NO mezcles nuevos componentes de otra librería sin razón.
+- UI components: No usar componentes de librerías directamente en pantallas/widgets. Crear wrappers en resources/js/react/components/** (design system) y consumir esos wrappers.
+
+
+CALIDAD
+- Como no hay ESLint/Prettier definidos, mantén estilo consistente con el código existente del repo.
+- Prioriza cambios pequeños, seguros y fáciles de revisar. Evita refactors masivos si el objetivo es puntual.
+
+INTEGRACIÓN LEGACY
+- Respeta y no rompas integraciones legacy (ej. `widgets/Legacy/*`, iframes, hooks existentes). Si hay que tocar legacy, minimiza el delta.

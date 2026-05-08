@@ -64,7 +64,7 @@ class RechazarTransferenciasAntiguasCommand extends Command
                 // 2 - Add a new record to TransferenciaStockFirma
                 TransferenciaStockFirma::create([
                     'idtransferenciastock' => $transferencia->id,
-                    'idusuario' => 1,
+                    'idusuario' => 1, //SISTEMA INFORMATICO
                     'fechahora' => Carbon::now(),
                     'idestado' => $rechazado,
                     'observaciones' => 'Rechazado por sistemas',

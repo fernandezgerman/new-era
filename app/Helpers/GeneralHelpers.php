@@ -4,8 +4,15 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Exceptions\Api\Exceptions\ApiValidationException;
 
 if (! function_exists('get_entity_or_fail')) {
-    function get_entity_or_fail(string $modelName, int $id): Model
+    function get_entity_or_fail(string $modelName, ?int $id, bool $defaultNull = false): ?Model
     {
+        if($id === null ) {
+            if($defaultNull)
+            {
+                return null;
+            }
+            throw new Exception("Id = null not allowed for get_entity_or_fail");
+        }
         // Resolve model class: accept either FQCN or short model name under App\Models
         $class = $modelName;
         if (!class_exists($class)) {
@@ -24,6 +31,9 @@ if (! function_exists('get_entity_or_fail')) {
         /** @var Model|null $entity */
         $entity = $class::query()->find($id);
         if (!$entity) {
+            if($defaultNull){
+                return null;
+            }
             throw ApiValidationException::withMessages([
                 'id' => ["{$class} with id={$id} not found"],
             ]);

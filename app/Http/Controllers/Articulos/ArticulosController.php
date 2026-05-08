@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Articulos;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Articulos\GetArticulosHistoricoDeCostosRequest;
+use App\Http\Requests\Articulos\GetArticulosHistoricoDePreciosRequest;
 use App\Http\Requests\Caja\GetUltimaCajaRequest;
 use App\Models\Articulo;
 use App\Services\Articulos\ArticulosManager;
@@ -19,6 +20,18 @@ class ArticulosController extends BaseController
         return app(ArticulosManager::class)->getArticuloHistoricoCostos(
             /** @var Articulo $articulo */
             get_entity_or_fail('Articulo', $getArticulosHistoricoDeCostosRequest->idarticulo)
+        );
+
+    }
+
+    public function articulosHistoricoDePrecios(GetArticulosHistoricoDePreciosRequest $getArticulosHistoricoDePreciosRequest)
+    {
+        // For now, just echo back the validated payload as JSON
+        $getArticulosHistoricoDePreciosRequest->validated();
+
+        return app(ArticulosManager::class)->getArticuloHistoricoPrecios(
+        /** @var Articulo $articulo */
+            get_entity_or_fail('Articulo', $getArticulosHistoricoDePreciosRequest->idarticulo)
         );
 
     }

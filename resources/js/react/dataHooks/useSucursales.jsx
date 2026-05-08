@@ -1,6 +1,7 @@
 import React from "react";
 import Resource from "../resources/Resource.jsx";
 import {useQuery} from "@tanstack/react-query";
+import Authentication from "@/resources/Authentication.jsx";
 
 const useSucursales = () => {
     return useQuery({
@@ -18,4 +19,18 @@ const useSucursales = () => {
 
 }
 
-export { useSucursales };
+const useSucursal = (sucursalId) => {
+    return useQuery({
+        queryKey: ['sucursal-'+sucursalId],
+        queryFn: async () => {
+            const resource = new Resource();
+            return await resource.getEntity('sucursal', sucursalId);
+        },
+        enabled: !!sucursalId,
+        select: (data) => data,
+        staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    });
+
+}
+
+export { useSucursales, useSucursal };
