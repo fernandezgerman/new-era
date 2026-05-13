@@ -23,8 +23,9 @@ export const Table = ({
             {row.map((cell) => (
                 <td key={cell?.key ?? cell.id ?? cell?.content}
                     colSpan={cell.colSpan ?? 1}
+                    rowSpan={cell.rowSpan ?? undefined}
                     className={
-                        " font-normal leading-normal text-sm " +
+                        " font-normal leading-normal text-sm text-slate-900 dark:text-slate-200 " +
                         (destacarColumnasPares && (index % 2 !== 0) ? (darkMode ? ' bg-gray-800 ' : ' bg-gray-200 ') : '') +
                         (cell?.onClick ? '  cursor-pointer' : '') +
                         (cell.className ?? '')}>
@@ -45,7 +46,7 @@ export const Table = ({
                 <tr>
                     {header.map((head) => (
                         <th key={head.name}
-                            className={"font-bold uppercase text-slate-400 text-xxs opacity-70 " + (head.className ?? '')}>{head.name}</th>
+                            className={"font-bold uppercase text-slate-500 text-xxs dark:text-slate-500 " + (head.className ?? '')}>{head.name}</th>
                     ))}
                 </tr>
                 </thead>
@@ -56,7 +57,7 @@ export const Table = ({
         }
 
         {isTableEmpty && <DivCenterContentHyV
-            className={'w-full p-6 h-10!'}>{isLoading ? 'Cargando...' : (emptyText ?? 'No se encontro informacion relacionada.')}</DivCenterContentHyV>}
+            className={'w-full p-6 h-10! text-slate-600 dark:text-slate-400'}>{isLoading ? 'Cargando...' : (emptyText ?? 'No se encontro informacion relacionada.')}</DivCenterContentHyV>}
         {footer}
     </div>;
 }

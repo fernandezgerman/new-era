@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Collections\SucursalCollection;
 use App\Services\Actualizaciones\Contracts\ActualizableItem;
 use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
 use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
@@ -11,6 +12,11 @@ use Illuminate\Support\Facades\DB;
 class Sucursal extends BaseModel implements ActualizableItem
 {
     use HasFactory;
+
+    public function newCollection(array $models = [])
+    {
+        return new SucursalCollection($models);
+    }
 
     /**
      * The table associated with the model.

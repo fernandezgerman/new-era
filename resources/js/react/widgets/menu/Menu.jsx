@@ -125,6 +125,7 @@ const SucursalActual = ({openMenu, onIconClick}) => {
                                 value={sucursal.id}
                                 className={'z-10'}
                                 setValue={saveSelectedSucursal}
+                                disabled={loadingSucursal}
                                 isLoading={loadingSucursal}
                                 placeholder="Seleccione una sucursal"
                             />

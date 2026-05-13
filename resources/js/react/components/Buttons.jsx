@@ -77,8 +77,8 @@ const CancelarButton = ({
     >
         {children}</Button>
 }
-const IconButton = ({icon, className, onClick, iconClassName}) => {
-    return <span className={'mr-1 p-1 bg-pink-500 text-white rounded-lg cursor-pointer ' + className} onClick={onClick}><FontAwesomeIcon className={iconClassName} icon={icon} /></span>
+const IconButton = ({icon, className, onClick, iconClassName, title}) => {
+    return <span title={title} className={'mr-1 p-1 bg-pink-500 text-white rounded-lg cursor-pointer ' + className} onClick={onClick}><FontAwesomeIcon className={iconClassName} icon={icon} /></span>
 }
 
 const EditIconButton = ({className, onClick}) => {

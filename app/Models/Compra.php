@@ -94,4 +94,9 @@ class Compra extends BaseModel
     {
         return $this->hasMany(ImpuestoCompra::class, 'idcabecera');
     }
+
+    public function periodosLiquidacion()
+    {
+        return $this->belongsToMany(LiquidacionPeriodo::class, 'liquidacionesperiodogastos', 'idgasto', 'idperiodo');
+    }
 }
