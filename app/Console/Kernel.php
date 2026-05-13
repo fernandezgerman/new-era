@@ -92,6 +92,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))
             ->cron('10 9,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
 
+        $schedule->command('liquidacion:update-cambio')
+            ->cron('0 0 */15 * *')->name('UpdateLiquidacionPeriodoCambio')->withoutOverlapping();
+
         // Daily: delete .log files in storage/logs not modified for one week
         $schedule->call(function () {
             $logsPath = storage_path('logs');
