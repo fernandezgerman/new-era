@@ -179,6 +179,7 @@ class MediosDeCobroController extends BaseController
     {
         $ventaSucursalCobros = VentaSucursalCobro::where('idsucursal', $idSucursal)
             ->where('idusuario', $idUsuario)
+            ->where('created_at', '>=', now()->subHours(24))
             ->orderBy('created_at', 'desc')
             ->get();
         return view('mediosDePago.MercadoPago.orders.orders-to-refund', compact('ventaSucursalCobros'));
