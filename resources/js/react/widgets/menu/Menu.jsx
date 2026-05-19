@@ -194,7 +194,7 @@ const MenuGeneral = ({openMenu, onMenuSelected, setOpenMenu} ) =>
             isOpen={false}
             withoutSubMenu={true}
         />
-        {(authUser?.idperfil === 8 || authUser?.idperfil === 26 ) && (
+        {(authUser?.idperfil === 8 || authUser?.idperfil === 26 || authUser?.idperfil === 33) && (
             <MenuGroup
                 menuGroupValues={{
                     id: 'mis-indicadores',

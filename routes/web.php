@@ -4,6 +4,8 @@ use App\Events\Events\MediosDeCobro\MediosDeCobroUpdatedEvent;
 use App\Http\Controllers\AuthController;
 use App\Models\Compra;
 use App\Services\AsyncProcess\AsyncProcessManager;
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoPaymentDetailFactory;
+use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\ProcesamientoDeCostos\ProcesamientoDeCostosManager;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -38,9 +40,9 @@ Route::get('/test-job', function() {
         compraId: 846478
     );
     AsyncProcessManager::handle($asyncProcesamientoDeCompra);*/
-
+/*
     $asyncTest = new  \App\Services\AsyncProcess\DTOs\AsyncProcessTestDTO();
-    AsyncProcessManager::handle($asyncTest);
+    AsyncProcessManager::handle($asyncTest);*/
 
 //    app(ProcesamientoDeCostosManager::class)->actualizarReferenciaDeCostoscompraDetallesIds([5938292]);
 

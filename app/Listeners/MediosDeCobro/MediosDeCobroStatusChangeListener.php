@@ -83,7 +83,7 @@ class MediosDeCobroStatusChangeListener
                 {
                     $observaciones = $observaciones.PHP_EOL.PHP_EOL;
                 }
-                $observaciones = $observaciones.$chargeDetail->type->value === OrderPaymentChargeDetailTypeEnum::FEE->value ? 'CARGO POR ' : 'IMPUESTO POR ';
+                $observaciones = $observaciones.($chargeDetail->type->value === OrderPaymentChargeDetailTypeEnum::FEE->value ? 'CARGO POR ' : 'IMPUESTO POR ');
                 $observaciones = $observaciones.$chargeDetail->name;
                 if($chargeDetail->baseAmount > 0)
                 {
