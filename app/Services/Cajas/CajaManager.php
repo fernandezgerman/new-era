@@ -153,7 +153,11 @@ class CajaManager
         }
 
         if ($updated) {
-            $caja->save();
+            DB::table('cajas')
+                ->where('idsucursal', $caja->idsucursal)
+                ->where('idusuario', $caja->idusuario)
+                ->where('numero', $caja->numero)
+                ->update(array_intersect_key($caja->getAttributes(), array_flip(array_keys($comparisons))));
         }
 
         return $messages;

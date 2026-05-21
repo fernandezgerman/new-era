@@ -11,9 +11,9 @@ class Caja extends BaseModel
 
     protected $table = 'cajas';
 
-    protected $primaryKey = 'id';
-
     public $timestamps = false;
+
+    public $incrementing = false;
 
     protected $fillable = [
         'numero',
