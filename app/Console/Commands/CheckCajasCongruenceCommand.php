@@ -59,7 +59,7 @@ class CheckCajasCongruenceCommand extends Command
         $allErrorMessages = [];
 
         foreach ($cajas as $caja) {
-            $messages = $cajaManager->CheckCajaCongruence($caja);
+            $messages = $cajaManager->CheckCajaCongruence($caja, true);
 
             if (!empty($messages)) {
                 $errorsCount++;

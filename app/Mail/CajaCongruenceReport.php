@@ -35,7 +35,7 @@ class CajaCongruenceReport extends Mailable
      */
     public function build()
     {
-        return $this->subject('Caja Congruence Report - Errors Detected')
+        return $this->subject('Caja Congruence Report - Updates Performed')
                     ->view('emails.caja_congruence_report');
     }
 }

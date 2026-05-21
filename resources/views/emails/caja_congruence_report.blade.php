@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Caja Congruence Report</h1>
-    <p>The following errors were detected during the congruence check for the period from <strong>{{ $dateFrom }}</strong> to <strong>{{ $dateTo }}</strong>:</p>
+    <p>The following issues were detected and fixed during the congruence check for the period from <strong>{{ $dateFrom }}</strong> to <strong>{{ $dateTo }}</strong>:</p>
 
     <ul>
         @foreach ($messages as $message)

@@ -82,10 +82,11 @@ class CajaManager
     /**
      * Check the congruence of the calculated totals for a given Caja.
      */
-    public function CheckCajaCongruence(Caja $caja): array
+    public function CheckCajaCongruence(Caja $caja, bool $update = false): array
     {
         $messages = [];
         $offset = 10;
+        $updated = false;
 
         // totalpagos: sum all "totalpago" from model "Pago" where pagos.idsucursalcaja = cajas.idsucursal, pagos.idusuariocaja = cajas and pagos.numerocaja = caja.numero
         $totalPagosCalc = Pago::where('idsucursalcaja', $caja->idsucursal)
@@ -131,18 +132,28 @@ class CajaManager
 
         foreach ($comparisons as $field => $data) {
             if (abs($data['calc'] - $data['caja']) > $offset) {
+                if ($update) {
+                    $caja->{$field} = $data['calc'];
+                    $updated = true;
+                }
+
                 $sucursal = get_entity_or_fail('Sucursal',$caja->idsucursal);
                 $usuario = get_entity_or_fail('User',$caja->idusuario);
                 $messages[] = sprintf(
-                    "Error detected in %s for Caja (Nro: %s, Usuario: %s, Sucursal: %s ). Total from caja: %s, Total calculated: %s.",
+                    "Error detected in %s for Caja (Nro: %s, Usuario: %s, Sucursal: %s ). Total from caja: %s, Total calculated: %s.%s",
                     $data['label'],
                     $caja->numero,
                     $caja->idusuario . ' - ' .$usuario->nombre . ' ' .$usuario->apellido,
                     $caja->idsucursal . ' - ' .$sucursal->nombre,
                     $data['caja'],
-                    $data['calc']
+                    $data['calc'],
+                    $update ? " [UPDATED]" : ""
                 );
             }
+        }
+
+        if ($updated) {
+            $caja->save();
         }
 
         return $messages;
