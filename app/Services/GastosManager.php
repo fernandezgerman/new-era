@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Collections\LiquidacionPeriodoCollection;
 use App\Collections\SucursalCollection;
+use App\DTOs\GastoDTO;
 use App\DTOs\RubroGastoPorPeriodoDTO;
 use App\Models\Sucursal;
 use App\Models\LiquidacionPeriodo;
@@ -31,8 +32,7 @@ class GastosManager
         $query = $this->getBaseQuery($periodos, $fechaDesde, $fechaHasta, $sucursales);
 
         $subquerySql = 'SELECT COUNT(DISTINCT cmp2.idsucursal)
-                      FROM compras as cmp2
-                      JOIN liquidacionesperiodogastos as lpg2 ON cmp2.id = lpg2.idgasto
+                      FROM compras as cmp2                      JOIN liquidacionesperiodogastos as lpg2 ON cmp2.id = lpg2.idgasto
                       WHERE lpg2.idperiodo = lp.id';
 
         if ($fechaDesde) {
@@ -139,10 +139,12 @@ class GastosManager
     ): Collection {
         $query = $this->getBaseQuery($periodos, $fechaDesde, $fechaHasta, $sucursales);
 
-        $results = $query->select('lp.descripcion', 'lp.id as periodo_id', 'art.nombre', 'art.id', 'cmp.totalfactura as importe', 'suc.nombre as sucursal_nombre')
+        $results = $query->select(DB::raw('count(1) as total'),'lp.descripcion', 'lp.id as periodo_id', 'art.nombre', 'art.id', DB::raw('sum(cmp.totalfactura) as importe'), 'suc.nombre as sucursal_nombre')
             ->join('sucursales as suc', 'cmp.idsucursal', '=', 'suc.id')
             ->where('art.id', $idarticulo)
+            ->orderBy('suc.nombre')
             ->orderBy('lp.id', 'desc')
+            ->groupBy('lp.descripcion', 'lp.id', 'art.nombre', 'art.id',  'suc.nombre')
             ->get();
 
         return $results->map(fn($row) => new RubroGastoPorPeriodoDTO(
@@ -151,7 +153,8 @@ class GastosManager
             nombre: $row->nombre,
             importe: (float) $row->importe,
             sucursal: $row->sucursal_nombre,
-            periodoId: $row->periodo_id
+            periodoId: $row->periodo_id,
+            total: (int) $row->total
         ));
     }
 
@@ -201,6 +204,45 @@ class GastosManager
     }
 
     /**
+     * Obtiene el detalle de gastos para un periodo, artículo y sucursal específicos.
+     *
+     * @param int $idperiodo
+     * @param int $idarticulo
+     * @param int $idsucursal
+     * @return Collection<int, GastoDTO>
+     */
+    public function getGastosDetalle(int $idperiodo, int $idarticulo, int $idsucursal): Collection
+    {
+        $results = DB::table('compras as cmp')
+            ->join('comprasdetalle as cd', 'cmp.id', '=', 'cd.idcabecera')
+            ->join('articulos as art', 'cd.idarticulo', '=', 'art.id')
+            ->join('sucursales as suc', 'cmp.idsucursal', '=', 'suc.id')
+            ->join('liquidacionesperiodogastos as lpg', 'cmp.id', '=', 'lpg.idgasto')
+            ->where('lpg.idperiodo', $idperiodo)
+            ->where('art.id', $idarticulo)
+            ->where('cmp.idsucursal', $idsucursal)
+            ->select(
+                'cmp.id',
+                'cmp.fechaemision as fecha',
+                db::raw('(cd.precio * cd.cantidad) as importe'),
+                'suc.nombre as sucursal_nombre',
+                'art.nombre as articulo_nombre',
+                'cmp.observaciones'
+            )
+            ->get();
+
+        return $results->map(fn($row) => new GastoDTO(
+            id: $row->id,
+            fecha: $row->fecha,
+            comprobante: '',
+            importe: (float) $row->importe,
+            sucursal: $row->sucursal_nombre,
+            articulo: $row->articulo_nombre,
+            observaciones: $row->observaciones
+        ));
+    }
+
+    /**
      * Obtiene la base de la consulta para reportes de gastos.
      *
      * @param LiquidacionPeriodoCollection|null $periodos
@@ -244,5 +286,33 @@ class GastosManager
         }
 
         return $query;
+    }
+
+    /**
+     * Actualiza artículo del detalle y periodo de liquidación de un gasto (compra).
+     */
+    public function updateGastoCompra(
+        int $idCompra,
+        int $idCompraDetalle,
+        int $idarticulo,
+        int $idperiodo,
+        ?int $idperiodoAnterior = null
+    ): void {
+        DB::table('comprasdetalle')
+            ->where('id', $idCompraDetalle)
+            ->where('idcabecera', $idCompra)
+            ->update(['idarticulo' => $idarticulo]);
+
+        if ($idperiodoAnterior !== null) {
+            DB::table('liquidacionesperiodogastos')
+                ->where('idgasto', $idCompra)
+                ->where('idperiodo', $idperiodoAnterior)
+                ->delete();
+        }
+
+        DB::table('liquidacionesperiodogastos')->insertOrIgnore([
+            'idgasto'   => $idCompra,
+            'idperiodo' => $idperiodo,
+        ]);
     }
 }

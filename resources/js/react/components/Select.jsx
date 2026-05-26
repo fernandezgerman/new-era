@@ -179,7 +179,7 @@ const Select = ({
         });
         choicesRef.current.clearStore();
         choicesRef.current.setChoices(choices, "value", "label", true);
-    }, [options]);
+    }, [options, value, multiple]);
 
     // Sync selected value
     useEffect(() => {

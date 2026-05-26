@@ -13,7 +13,8 @@ class RubroGastoPorPeriodoDTO implements Arrayable
         public float $importe,
         public ?string $sucursal = null,
         public ?int $periodoId = null,
-        public ?int $sucursales_per_periodo = null
+        public ?int $sucursales_per_periodo = null,
+        public ?int $total = null
     ) {}
 
     public function toArray(): array
@@ -26,6 +27,7 @@ class RubroGastoPorPeriodoDTO implements Arrayable
             'sucursal'               => $this->sucursal,
             'periodoId'              => $this->periodoId,
             'sucursales_per_periodo' => $this->sucursales_per_periodo,
+            'total'                  => $this->total,
         ];
     }
 }

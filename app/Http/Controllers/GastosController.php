@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GastoDetalleRequest;
 use App\Http\Requests\ReporteGastosRequest;
+use App\Http\Requests\UpdateGastoRequest;
 use App\Models\LiquidacionPeriodo;
 use App\Models\Sucursal;
 use App\Services\GastosManager;
@@ -37,7 +39,8 @@ class GastosController extends Controller
      *     "nombre": "Nombre del Rubro",
      *     "importe": 1250.50,
      *     "periodoId": 1,
-     *     "sucursales_per_periodo": 5
+     *     "sucursales_per_periodo": 5,
+     *     "total": null
      *   },
      *   ...
      * ]
@@ -96,7 +99,8 @@ class GastosController extends Controller
      *     "nombre": "Nombre del Articulo",
      *     "importe": 1250.50,
      *     "periodoId": 1,
-     *     "sucursales_per_periodo": 5
+     *     "sucursales_per_periodo": 5,
+     *     "total": null
      *   },
      *   ...
      * ]
@@ -129,7 +133,7 @@ class GastosController extends Controller
     }
 
     /**
-     * Reporte de gastos para un artículo específico, sin agrupar.
+     * Reporte de gastos para un artículo específico, agrupado por articulo.
      *
      * Documentación para Agentes de IA:
      *
@@ -152,7 +156,8 @@ class GastosController extends Controller
      *     "nombre": "Nombre del Articulo",
      *     "importe": 1250.50,
      *     "sucursal": "Nombre de la Sucursal",
-     *     "periodoId": 1
+     *     "periodoId": 1,
+     *     "total": 2
      *   },
      *   ...
      * ]
@@ -230,5 +235,69 @@ class GastosController extends Controller
         );
 
         return response()->json($reporte);
+    }
+
+    /**
+     * Obtiene el detalle de gastos filtrado por periodo, artículo y sucursal.
+     *
+     * Endpoint: GET /api/gastos/detalle
+     *
+     * Query Parameters:
+     * - idperiodo: int (Requerido)
+     * - idarticulo: int (Requerido)
+     * - idsucursal: int (Requerido)
+     *
+     * Json Response:
+     * [
+     *   {
+     *     "id": 789,
+     *     "fecha": "2024-05-20",
+     *     "comprobante": "0001-00001234",
+     *     "importe": 500.00,
+     *     "sucursal": "Sucursal Centro",
+     *     "articulo": "Nombre del Articulo",
+     *     "observaciones": "Alguna observación"
+     *   },
+     *   ...
+     * ]
+     *
+     * @param GastoDetalleRequest $request
+     * @return JsonResponse
+     */
+    public function detalle(GastoDetalleRequest $request): JsonResponse
+    {
+        $gastos = $this->gastosManager->getGastosDetalle(
+            idperiodo: (int) $request->input('idperiodo'),
+            idarticulo: (int) $request->input('idarticulo'),
+            idsucursal: (int) $request->input('idsucursal')
+        );
+
+        return response()->json($gastos->toArray());
+    }
+
+    /**
+     * Actualiza periodo de liquidación y artículo de un gasto (compra).
+     *
+     * Endpoint: PATCH /api/gastos/{id}
+     *
+     * Body:
+     * - idperiodo: int (requerido)
+     * - idperiodo_anterior: int (opcional, periodo del contexto al editar)
+     * - idarticulo: int (requerido)
+     * - id_compra_detalle: int (requerido)
+     */
+    public function update(int $id, UpdateGastoRequest $request): JsonResponse
+    {
+        $this->gastosManager->updateGastoCompra(
+            idCompra: $id,
+            idCompraDetalle: (int) $request->input('id_compra_detalle'),
+            idarticulo: (int) $request->input('idarticulo'),
+            idperiodo: (int) $request->input('idperiodo'),
+            idperiodoAnterior: $request->filled('idperiodo_anterior')
+                ? (int) $request->input('idperiodo_anterior')
+                : null,
+        );
+
+        return response()->json(['ok' => true]);
     }
 }

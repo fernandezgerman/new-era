@@ -31,9 +31,42 @@ export const idFromReporteRow = (row) => {
     return Number.isFinite(n) ? n : null;
 };
 
+/** Clave de sucursal en filas del detalle por artículo (agrupado por sucursal × periodo). */
+export const sucursalKeyFromReporteRow = (row) =>
+    (row?.sucursal ?? row?.sucursal_nombre ?? '').toString();
+
+export const totalFromReporteRow = (row) => {
+    const n = Number(row?.total);
+    return Number.isFinite(n) ? n : null;
+};
+
+export const periodoIdFromReporteRow = (row) => {
+    const n = Number(row?.periodoId ?? row?.periodo_id);
+    return Number.isFinite(n) ? n : null;
+};
+
+export const idsucursalFromReporteRow = (row, sucursalesCatalog) => {
+    const direct = Number(row?.idsucursal ?? row?.id_sucursal);
+    if (Number.isFinite(direct)) {
+        return direct;
+    }
+    const nombre = sucursalKeyFromReporteRow(row).trim();
+    if (!nombre) {
+        return null;
+    }
+    const found = (sucursalesCatalog ?? []).find(
+        (s) => (s?.nombre ?? '').toString().trim() === nombre,
+    );
+    const id = Number(found?.id);
+    return Number.isFinite(id) ? id : null;
+};
+
+export const gastosDetalleFetchKey = ({idarticulo, idperiodo, idsucursal}) =>
+    [idarticulo, idperiodo, idsucursal].filter((v) => v != null).join('-');
+
 /**
  * Celda Periodo: concatena `(sucursales_per_periodo)` en reportes agrupados.
- * No aplica en el detalle no agrupado por artículo (`incluirSucursal`).
+ * No aplica en el detalle por artículo agrupado por sucursal (`incluirSucursal`).
  */
 export const periodoEtiquetaConSucursales = (descripcion, row, incluirSucursal) => {
     const base = (descripcion ?? '').toString();
@@ -74,27 +107,41 @@ export const buildGastosReporteQueryParams = (submittedFilters) => {
  * importe y % vs siguiente.
  */
 export const buildGastosTablaRows = (rows, muestraVariacion, options = {}) => {
-    const {primeraColumnaContent, incluirSucursal, onPeriodoClick, getIdRubroContexto} = options;
+    const {
+        primeraColumnaContent,
+        incluirSucursal,
+        sucursalColumnContent,
+        onPeriodoClick,
+        getIdRubroContexto,
+    } = options;
     const list = rows ?? [];
-    let prevGrupo = null;
-    let grupoBloqueIdx = -1;
+    let prevGrupoStripe = null;
+    let grupoStripeBloqueIdx = -1;
 
     return list.map((row, idx) => {
         const grupoNombre = (row?.nombre ?? '').toString();
-        if (grupoNombre !== prevGrupo) {
-            grupoBloqueIdx++;
-            prevGrupo = grupoNombre;
+        const grupoStripeKey = incluirSucursal
+            ? sucursalKeyFromReporteRow(row)
+            : grupoNombre;
+        if (grupoStripeKey !== prevGrupoStripe) {
+            grupoStripeBloqueIdx++;
+            prevGrupoStripe = grupoStripeKey;
         }
-        const bloqueImpar = grupoBloqueIdx % 2 === 1;
+        const bloqueImpar = grupoStripeBloqueIdx % 2 === 1;
         const celdaStripe = bloqueImpar
             ? ' bg-slate-50 text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-200 '
             : ' bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-300 ';
 
         const nextRow = idx < list.length - 1 ? list[idx + 1] : null;
+        const grupoVariacionKey = incluirSucursal
+            ? sucursalKeyFromReporteRow(row)
+            : grupoNombre;
         const mismoGrupoQueSiguiente = nextRow !== null
-            && (nextRow?.nombre ?? '').toString() === grupoNombre;
+            && (incluirSucursal
+                ? sucursalKeyFromReporteRow(nextRow)
+                : (nextRow?.nombre ?? '').toString()) === grupoVariacionKey;
         let variacionTexto = '';
-        if (muestraVariacion && !incluirSucursal) {
+        if (muestraVariacion) {
             if (mismoGrupoQueSiguiente) {
                 variacionTexto = formatVariacionPctRespectoSiguiente(row?.importe, nextRow?.importe);
             } else {
@@ -164,7 +211,9 @@ export const buildGastosTablaRows = (rows, muestraVariacion, options = {}) => {
             const sucursalTxt = (row?.sucursal ?? row?.sucursal_nombre ?? '').toString();
             content.push({
                 key: 'sucursal-' + idx,
-                content: sucursalTxt,
+                content: typeof sucursalColumnContent === 'function'
+                    ? sucursalColumnContent({row, idx, sucursalTxt, celdaStripe})
+                    : sucursalTxt,
                 className: celdaStripe,
             });
         }
@@ -175,7 +224,7 @@ export const buildGastosTablaRows = (rows, muestraVariacion, options = {}) => {
                 className: celdaStripe,
             },
         );
-        if (muestraVariacion && !incluirSucursal) {
+        if (muestraVariacion) {
             content.push({
                 key: 'variacion-' + idx,
                 content: <span className={'tabular-nums'}>{variacionTexto}</span>,
@@ -200,7 +249,7 @@ export const tablaHeaderDef = (muestraVariacion, options = {}) => {
         h.push({name: 'Sucursal'});
     }
     h.push({name: 'Importe', className: 'text-right'});
-    if (muestraVariacion && !incluirSucursal) {
+    if (muestraVariacion) {
         h.push({
             name: '% vs siguiente',
             className: 'text-right',

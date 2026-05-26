@@ -14,8 +14,28 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\isArray;
 
+/**
+ * Generic Controller for managing Eloquent resources (models).
+ * Handles CRUD operations through dynamic entity resolution.
+ */
 class ApiResourceBase extends AbstractApiHandler
 {
+    /**
+     * Retrieve a list of resources or a single resource by ID.
+     *
+     * @param ApiResourceBaseGetEntity $request
+     *      - entity (string, required, route): The name of the model (plural or singular, kebab-case or StudlyCase).
+     *      - id (int, optional, route): The ID of the resource to retrieve.
+     *      - includes (string|array, optional, query): Comma-separated relations or custom attributes to load.
+     *      - filtros (json string|array, optional, query): Key-value filters. Supports objects for operators (e.g., {"price":{"operador":"menoroigual","valor":100}}).
+     *      - orden (json string|array, optional, query): Sorting configuration (e.g., [{"name":"id","direction":"desc"}] or ["name"]).
+     *      - limit (int, optional, query): Max number of records (default: 500).
+     *      - offset (int, optional, query): Number of records to skip.
+     *
+     * @return JsonResponse
+     *      - 200 OK: Single resource object or array of resource objects.
+     *      - 404 Not Found: If a specific ID was requested but not found.
+     */
     public function index(ApiResourceBaseGetEntity $request): JsonResponse
     {
         $entity = $request->validated('entity');
@@ -91,6 +111,18 @@ class ApiResourceBase extends AbstractApiHandler
 
     }
 
+    /**
+     * Create a new resource and its nested relations.
+     *
+     * @param ApiResourceBaseInsert $request
+     *      - entity (string, required, route): The name of the model to create.
+     *      - [attributes] (mixed): Any attribute corresponding to the model's fillable fields.
+     *      - relations (array, optional): Nested relations to create (each with 'entity' and 'payload').
+     *
+     * @return JsonResponse
+     *      - 200 OK: The newly created resource object.
+     *      - 400 Bad Request: On validation errors.
+     */
     public
     function insertResource(ApiResourceBaseInsert $request): JsonResponse
     {
@@ -156,6 +188,21 @@ class ApiResourceBase extends AbstractApiHandler
         $modelClass::find($payload['id'])->delete();
     }
 
+    /**
+     * Update an existing resource and its nested relations.
+     *
+     * Performs a patch-like update where existing values in JSON/array attributes are preserved unless overridden.
+     *
+     * @param ApiResourceBasePatch $request
+     *      - entity (string, required, route): The name of the model.
+     *      - id (int, required, route): The ID of the resource to update.
+     *      - [attributes] (mixed): Any attribute to update. Supports deep merging for JSON/array fields.
+     *      - relations (array, optional): Nested relations to update or create (supports 'deleted' flag).
+     *
+     * @return JsonResponse
+     *      - 200 OK: The updated resource object.
+     *      - 404 Not Found: If the resource does not exist.
+     */
     public
     function updateResource(ApiResourceBasePatch $request): JsonResponse
     {
@@ -227,6 +274,17 @@ class ApiResourceBase extends AbstractApiHandler
         }
     }
 
+    /**
+     * Delete a resource by ID.
+     *
+     * @param ApiResourceBaseDelete $request
+     *      - entity (string, required, route): The name of the model.
+     *      - id (int, required, route): The ID of the resource to delete.
+     *
+     * @return JsonResponse
+     *      - 200 OK: ['deleted' => true]
+     *      - 404 Not Found: If the resource does not exist.
+     */
     public
     function deleteResource(ApiResourceBaseDelete $request): JsonResponse
     {

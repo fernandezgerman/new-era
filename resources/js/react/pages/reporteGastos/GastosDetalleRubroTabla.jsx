@@ -119,6 +119,7 @@ export const GastosDetalleRubroTabla = ({
                                         errorMessage={meta.errorMessage}
                                         emptyText={'Sin movimientos para este artículo.'}
                                         idrubro={idrubro}
+                                        idarticulo={idarticulo}
                                     />
                                 ),
                             },

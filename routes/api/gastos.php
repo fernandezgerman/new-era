@@ -11,4 +11,6 @@ Route::prefix('gastos')
     Route::get('/reporte/articulo/{idrubro}/agrupado', [GastosController::class, 'reporteArticulosPorRubroAgrupado']);
     Route::get('/periodo/{idperiodo}/contexto', [GastosController::class, 'getPeriodoContexto']);
     Route::get('/articulo/{idarticulo}/reporte', [GastosController::class, 'reporteArticulo']);
+    Route::get('/detalle', [GastosController::class, 'detalle']);
+    Route::patch('/{id}', [GastosController::class, 'update']);
 });
