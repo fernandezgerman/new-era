@@ -7,6 +7,7 @@ import {ValorizacionHistorico} from "@/pages/ValorizacionHistorico/index.jsx";
 import {ArreglosDeStockChartCard} from "@/widgets/Dashboard/ArreglosStockChart/index.jsx";
 import {ProcesamientoDeCostosDocumentacion} from "@/pages/procesamientoDeCostos/index.jsx";
 import {ReporteGastos} from "@/pages/reporteGastos/index.jsx";
+import {ProveedoresListasImportar} from "@/pages/proveedoresImportarListas/index.jsx";
 
 // Documentacion: https://reactcommunity.org/react-modal/
 export const ReactMenu = {
@@ -18,6 +19,7 @@ export const ReactMenu = {
     "vlrs_histo" :ValorizacionHistorico,
     "mis-indicadores" : ArreglosDeStockChartCard,
     "rep-gastos": ReporteGastos,
+    "impr-cmp": ProveedoresListasImportar,
 };
 
 export const GenerateComponent = ({pageCode}) => {

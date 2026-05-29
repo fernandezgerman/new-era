@@ -175,6 +175,11 @@ class User extends Authenticatable implements ActualizableItem
         return $this->hasMany(PrecioTemporal::class, 'idusuarioaudito');
     }
 
+    public function importacionesCabecera()
+    {
+        return $this->hasMany(ImportacionProveedorListaCabecera::class, 'idusuario');
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(

@@ -3,8 +3,27 @@
 use App\Console\Commands\GeocodeSucursalesCommand;
 use App\Console\Commands\TriggerMediosDeCobroStatusChange;
 use App\Events\Events\MediosDeCobro\MediosDeCobroStatusChangeEvent;
+use App\Models\Proveedor;
 use App\Services\Actualizaciones\ActualizacionesManager;
+use App\Services\ProveedoresListas\DTOs\ImportDataDTO;
+use App\Services\ProveedoresListas\Enum\SupportedFiles;
+use App\Services\ProveedoresListas\ProveedoresListasManager;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/import-prices-test', function () {
+    $proveedoresListasManager = app(ProveedoresListasManager::class);
+
+    $proveedor = Proveedor::query()->where('id', 132)->first();
+    $importDataDTO = new ImportDataDTO(
+                                 proveedor: $proveedor,
+                                 path: 'app/listas/arcor.xls',
+                                 driver: \App\Services\ProveedoresListas\Enum\SupportedDrivers::File);
+
+    $rows = $proveedoresListasManager->importarRegistros($importDataDTO);
+
+    exit;
+});
 
 
 Route::get('/test', function () {
