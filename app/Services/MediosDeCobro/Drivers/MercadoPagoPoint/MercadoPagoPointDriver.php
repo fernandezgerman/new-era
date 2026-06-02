@@ -45,7 +45,7 @@ class MercadoPagoPointDriver extends MercadoPagoBaseDriver
         try {
             $terminals = $this->getTerminals($sucursalId);
             if ($terminals->count() === 0) {
-                throw new MediosDeCobroConfiguracionException('No se encontraron postnets asociados a la caja. Por favor, configure el posnet con la aplicacion. ');
+                throw new MediosDeCobroConfiguracionException('No se encontraron posnets asociados a la caja. Por favor, configure el posnet con la aplicacion. ');
             }
             /** @var TerminalDTO $terminal */
             $terminal = $terminals->first();
@@ -126,7 +126,7 @@ class MercadoPagoPointDriver extends MercadoPagoBaseDriver
             // Response can be { terminals: [...] } or { data: { terminals: [...] } }
             $terminals = Arr::get($data, 'terminals', Arr::get($data, 'data.terminals', []));
             if (!is_array($terminals) || count($terminals) === 0) {
-                throw new MediosDeCobroConfiguracionException('No se encontraron postnets asociados a caja.');
+                throw new MediosDeCobroConfiguracionException('No se encontraron posnets asociados a caja.');
             }
 
             $first = $terminals[0] ?? [];

@@ -45,18 +45,22 @@ class MediosDeCobroStatusChangeListener
 
             $existe = MovimientoCajaVentaSucursalCobro::query()
                 ->where('idventasucursalcobro', $cobro->id)
-                ->first();
+                ->get();
 
-            if(blank($existe) || $isReembolso)
-            {
+            $movimientoExistente = $existe->isNotEmpty();
+            $reembolsoYaProcesado = false;
+
+            if ($isReembolso && $movimientoExistente) {
+                $reembolsoYaProcesado = $existe->count() > 1;
+            }
+
+            if (!$movimientoExistente || ($isReembolso && !$reembolsoYaProcesado)) {
                 $this->generarMovimientoDeCaja($cobro, $configuracion);
                 $this->generarGastos($cobro, $configuracion);
 
-                if($isReembolso)
-                {
+                if ($isReembolso) {
                     //anularVentaPorIdUnico
-                    foreach($cobro->articulos as $articulo)
-                    {
+                    foreach ($cobro->articulos as $articulo) {
                         app(VentasManager::class)->anularVentaPorIdUnico($cobro->usuario, $articulo->idunicoventa);
                     }
                 }
@@ -112,11 +116,16 @@ class MediosDeCobroStatusChangeListener
     {
         $isRefund = $cobro->estado === MedioDeCobroEstados::REEMBOLSADO || $cobro->estado === MedioDeCobroEstados::REEMBOLSADO->value;
 
+        $importe = $cobro->importe;
+        if ($isRefund) {
+            $importe = abs($importe) * -1;
+        }
+
         $movimientoCaja = $this->movimientosCajaManager->createMovimientosCaja(
             $isRefund ? $configuracion->idsucursalcajadestino: $cobro->idsucursal,
             $isRefund ? $configuracion->idusuariocajadestino : $cobro->idusuario,
             config('medios_de_cobro.drivers.MercadoPagoQR.id_motivo_movimiento_caja'),
-            $cobro->importe,
+            $importe,
             $isRefund ? $cobro->idsucursal : $configuracion->idsucursalcajadestino,
             $isRefund ? $cobro->idusuario : $configuracion->idusuariocajadestino,
             'Movimiento automatico por '.($isRefund ? 'REEMBOLSO' : 'VENTA').'.',

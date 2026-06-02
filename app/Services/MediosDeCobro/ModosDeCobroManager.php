@@ -151,30 +151,29 @@ class ModosDeCobroManager
     {
         $webhookEvent = new WebhookEventDTO($request->all());
         $newStatus = null;
-        try{
+        try {
             $newStatus = $driverClass::processEvent($webhookEvent);
-        }catch(MercadoPagoQRNotFoundException|MediosDeCobroNotImplementedException|MediosDeCobroNotImplementedException $mercadoPagoQRNotFoundException)
-        {
+        } catch (MercadoPagoQRNotFoundException|MediosDeCobroNotImplementedException $mercadoPagoQRNotFoundException) {
             Log::warning($mercadoPagoQRNotFoundException->getMessage());
         }
 
-        if($newStatus !== null)
-        {
-
-            $ventaSucursalCobro = VentaSucursalCobro::where('id', $newStatus->localId)->first();
-            if(!$newStatus->localId)
-            {
+        if ($newStatus !== null) {
+            if (!$newStatus->localId) {
                 throw new MediosDeCobroException('No se pudo localizar una ventaSucursalCobro en la notificacion.');
             }
 
-            if($ventaSucursalCobro->estado !== $newStatus->status->value)
-            {
-                $ventaSucursalCobro->estado = $newStatus->status->value;
-                $ventaSucursalCobro->save();
+            DB::transaction(function () use ($newStatus) {
+                $ventaSucursalCobro = VentaSucursalCobro::where('id', $newStatus->localId)
+                    ->lockForUpdate()
+                    ->first();
 
+                if ($ventaSucursalCobro && $ventaSucursalCobro->estado !== $newStatus->status->value) {
+                    $ventaSucursalCobro->estado = $newStatus->status->value;
+                    $ventaSucursalCobro->save();
 
-                event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
-            }
+                    event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
+                }
+            });
         }
     }
 
