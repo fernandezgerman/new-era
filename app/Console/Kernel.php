@@ -31,6 +31,9 @@ class Kernel extends ConsoleKernel
             ->everyMinute()->name('cronTest')->withoutOverlapping();*/
 
 
+        $schedule->command('mercado-pago:check-notifications-events')
+            ->hourly()->name('MercadoPagoCheckNotificationsEvents')->withoutOverlapping();
+
         $schedule->command('transferencias:rechazar-antiguas')
             ->dailyAt('02:03')->name('transferencias.rechazar-antiguas')->withoutOverlapping();
 

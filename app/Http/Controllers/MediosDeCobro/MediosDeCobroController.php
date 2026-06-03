@@ -12,6 +12,8 @@ use App\Http\Requests\MediosDePago\TestConnectionRequest;
 use App\Models\MedioDeCobroSucursalConfiguracion;
 use App\Models\ModoDeCobro;
 use App\Models\VentaSucursalCobro;
+use App\Services\AsyncProcess\AsyncProcessManager;
+use App\Services\AsyncProcess\DTOs\MercadoPago\AsyncProcessProcesarEventoDTO;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoCajaDTOFactory;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\MercadoPagoQRDriver;
 use App\Services\MediosDeCobro\DTOs\ConnectionDataDTO;
@@ -63,9 +65,14 @@ class MediosDeCobroController extends BaseController
 
     public function processEvent(Request $request)
     {
+
+        $asyncProcessProcesarEventoDTO = new AsyncProcessProcesarEventoDTO($request->all(), MercadoPagoQRDriver::class);
+        AsyncProcessManager::handle($asyncProcessProcesarEventoDTO);
+
+        /*
         $modosDeCobroManager = app(ModosDeCobroManager::class);
 
-        $modosDeCobroManager->processEvent($request, MercadoPagoQRDriver::class);
+        $modosDeCobroManager->processEvent($request, MercadoPagoQRDriver::class);*/
 
         return 'ok';
     }

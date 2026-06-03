@@ -147,12 +147,12 @@ class ModosDeCobroManager
         return null;
     }
 
-    public function processEvent(Request $request, $driverClass): void
+    public function processEvent(array $payload, $className): void
     {
-        $webhookEvent = new WebhookEventDTO($request->all());
+        $webhookEvent = new WebhookEventDTO($payload);
         $newStatus = null;
         try {
-            $newStatus = $driverClass::processEvent($webhookEvent);
+            $newStatus = $className::processEvent($webhookEvent);
         } catch (MercadoPagoQRNotFoundException|MediosDeCobroNotImplementedException $mercadoPagoQRNotFoundException) {
             Log::warning($mercadoPagoQRNotFoundException->getMessage());
         }
@@ -162,18 +162,18 @@ class ModosDeCobroManager
                 throw new MediosDeCobroException('No se pudo localizar una ventaSucursalCobro en la notificacion.');
             }
 
-            DB::transaction(function () use ($newStatus) {
-                $ventaSucursalCobro = VentaSucursalCobro::where('id', $newStatus->localId)
-                    ->lockForUpdate()
-                    ->first();
 
-                if ($ventaSucursalCobro && $ventaSucursalCobro->estado !== $newStatus->status->value) {
-                    $ventaSucursalCobro->estado = $newStatus->status->value;
-                    $ventaSucursalCobro->save();
+            $ventaSucursalCobro = VentaSucursalCobro::where('id', $newStatus->localId)
+                ->lockForUpdate()
+                ->first();
 
-                    event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
-                }
-            });
+            if ($ventaSucursalCobro && $ventaSucursalCobro->estado !== $newStatus->status->value) {
+                $ventaSucursalCobro->estado = $newStatus->status->value;
+                $ventaSucursalCobro->save();
+
+                event(app(MediosDeCobroStatusChangeEvent::class, ['ventaSucursalCobro' => $ventaSucursalCobro]));
+            }
+
         }
     }
 
