@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class ComprasManager
 {
-    /*
+    /**
      * Retorna query de compras que no son dudosas ni estan anuladas
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function getCompraDetallesLimpiasQuery(): \Illuminate\Database\Eloquent\Builder
     {

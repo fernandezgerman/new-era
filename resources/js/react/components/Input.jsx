@@ -15,11 +15,13 @@ const Input = ({
                    validMessage,
                    inputClassName = '',
                    selectOnFocus = false,
+                    maxCharacters = null,
                    onChange = () => {
                    },
                    onKeyDown = () => {
                    },
-                   onKeyPress = () => {}
+                   onKeyPress = () => {},
+                   disabled = false,
                }) => {
 
     const processNumber = (number) => {
@@ -47,13 +49,16 @@ const Input = ({
         return type;
     }
 
-    let extraClass = icon === null ? '' : ' pl-[40px]!  ';
-    extraClass = extraClass + (type === 'pesos' ? ' text-right  ' : '');
     const [displayValue, setDisplayValue] = useState(processValue(value));
     const [maskType, setMaskType] = useState(getType());
 
+    let extraClass = icon === null ? '' : ' pl-[40px]!  ';
+    extraClass = extraClass + (type === 'pesos' || type === 'cantidad' || maskType === 'number' ? ' text-right  ' : '');
+
     const _onChange = (e) => {
-        setDisplayValue(e.target.value);
+        const truncatedValue = maxCharacters && e.target.value ? e.target.value.slice(0, maxCharacters) : e.target.value;
+        setDisplayValue(truncatedValue);
+
         if(type === 'number' || type === 'pesos' || type === 'cantidad')
         {
             setValue(parseFloat(e.target.value));
@@ -67,7 +72,6 @@ const Input = ({
     const onBlur = () => {
         if(type === 'pesos') {
             const processed = processValue(value);
-            console.log('processed', processed);
             if( isNaN(value) )
             {
                 setDisplayValue('·NUMERO INCORRECTO·');
@@ -102,8 +106,9 @@ const Input = ({
             setMaskType(maskType === 'password' ? 'text' : 'password')
         }
     }
+
     return (
-        <div className={className}>
+        <div className={className + (disabled ? ' opacity-60 pointer-events-none ' : '')}>
             {label && <Label className="cursor-pointer pl-2  ">{label}</Label>}
             {icon && <FontAwesomeIcon className={' absolute ml-[12px] mt-[12px]'} icon={icon}/>}
 
@@ -113,13 +118,15 @@ const Input = ({
                 <input
                     ref={ref}
                     type={maskType}
+                    disabled={disabled}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     placeholder={placeHolder}
                     onChange={_onChange}
                     onKeyPress={onKeyPress}
                     onKeyDown={onKeyDown}
-                    className={" focus:shadow-soft-primary-outline dark:ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-r-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none " + inputClassName + extraClass}
+                    maxLength={maxCharacters}
+                    className={"  focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-r-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none dark:ne-dark-input! dark:placeholder:text-white/80! dark:text-white/80!  " + inputClassName + extraClass }
                     value={displayValue}
 
                 />

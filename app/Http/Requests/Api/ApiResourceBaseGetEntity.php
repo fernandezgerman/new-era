@@ -40,6 +40,8 @@ class ApiResourceBaseGetEntity extends AbstractApiRequest
             'filtros' => ['nullable', 'array'],
             'orden' => ['nullable'],
             'limit' => ['nullable', 'integer'],
+            'page' => ['nullable', 'integer'],
+            'per_page' => ['nullable', 'integer'],
             'includes' => ['nullable', 'sometimes', 'array'],
             'includes.*' => ['string', function ($attribute, $value, $fail) {
 

@@ -1,9 +1,16 @@
 import moment from "moment";
 
-export const processDate = (momentDate, onlyDate = false) => {
+export const processDate = (momentDate, onlyDate = false, shortForm = true) => {
     if(!momentDate){
         return '';
     }
+
+    if(!shortForm)
+    {
+        return momentDate.format(onlyDate ? "DD/MM/YYYY" : "DD/MM/YYYY HH:mm");
+    }
+
+
 
     const today = moment();
     if (momentDate.isSame(today, 'day')) {

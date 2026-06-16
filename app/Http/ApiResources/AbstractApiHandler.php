@@ -31,4 +31,11 @@ abstract class AbstractApiHandler
     {
         return response()->json(['message' => $message, 'extra' => $extraData], 400);
     }
+
+    public function sendError(
+        string $message, ?array $extraData = null
+    ): JsonResponse
+    {
+        return response()->json(['message' => $message, 'extra' => $extraData], 500);
+    }
 }

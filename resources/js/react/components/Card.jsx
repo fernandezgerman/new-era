@@ -3,6 +3,14 @@ import {H2} from "@/components/H.jsx";
 import {faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
+export const AlternativeCard = (props) => {
+
+    const cardShellClass =
+        'p-4 mt-4 rounded-lg border border-slate-200/80 bg-white text-slate-900 shadow '
+        + 'dark:border-slate-800 dark:ne-dark-body! dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]';
+
+    return (<div {...props} className={cardShellClass + ' '+ props.className}>{props.children}</div>);
+}
 export const Card = ({loading, children, title, titleClassName = '', childrenClassName = '', onRefresh = null, className}) => {
 
     const overlayDiv = (<div

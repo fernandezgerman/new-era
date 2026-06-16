@@ -23,6 +23,7 @@ export const processNumber = (number, decimals = 2, simplificado = false, simbol
             style: 'decimal', // 'currency' para monedas
             minimumFractionDigits: decimals,
             maximumFractionDigits: decimals,
+            useGrouping: true,
         });
 
         retorno = formateador.format(Math.abs(number));

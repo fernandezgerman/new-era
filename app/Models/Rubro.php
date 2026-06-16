@@ -43,4 +43,9 @@ class Rubro extends BaseModel
     {
         return $this->hasMany(Articulo::class, 'idrubro');
     }
+
+    public function newCollection(array $models = [])
+    {
+        return new \App\Collections\RubroCollection($models);
+    }
 }

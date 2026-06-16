@@ -92,6 +92,14 @@ class User extends Authenticatable implements ActualizableItem
             ->where('usuariossucursales.activo', 1);
     }
 
+    /**
+     * Get the sales made by the user.
+     */
+    public function ventasSucursal()
+    {
+        return $this->hasMany(VentaSucursal::class, 'idusuario');
+    }
+
     public function sucursalesCaja()
     {
         return $this->belongsToMany(Sucursal::class, 'usuariossucursalescajas', 'idusuario', 'idsucursal')

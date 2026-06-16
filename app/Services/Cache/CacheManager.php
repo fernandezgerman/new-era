@@ -10,10 +10,16 @@ use Closure;
 class CacheManager
 {
 
-    public function Cache(array $params, CacheExpire $expire, Closure $functionWithTheValues)
+    /**
+     * @param array $params
+     * @param CacheExpire $expire
+     * @param Closure $functionWithTheValues
+     * @return string
+     */
+    public function Cache(array $key, CacheExpire $expire, Closure $functionWithTheValues)
     {
-        return $functionWithTheValues(); /*Cache::store('redis')->remember(
-            serialize($params), $this->getExireTime($expire), $functionWithTheValues);*/
+        return Cache::store('redis')->remember(
+            serialize($key), $this->getExireTime($expire), $functionWithTheValues);
     }
 
     protected function getExireTime(CacheExpire $expire): int|Carbon

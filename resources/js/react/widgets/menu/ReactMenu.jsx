@@ -8,6 +8,7 @@ import {ArreglosDeStockChartCard} from "@/widgets/Dashboard/ArreglosStockChart/i
 import {ProcesamientoDeCostosDocumentacion} from "@/pages/procesamientoDeCostos/index.jsx";
 import {ReporteGastos} from "@/pages/reporteGastos/index.jsx";
 import {ProveedoresListasImportar} from "@/pages/proveedoresImportarListas/index.jsx";
+import {OrdenesDeCompraReporte} from "@/pages/ordenesDeCompra/index.jsx";
 
 // Documentacion: https://reactcommunity.org/react-modal/
 export const ReactMenu = {
@@ -20,6 +21,7 @@ export const ReactMenu = {
     "mis-indicadores" : ArreglosDeStockChartCard,
     "rep-gastos": ReporteGastos,
     "impr-cmp": ProveedoresListasImportar,
+    "ord-cmp-2": OrdenesDeCompraReporte
 };
 
 export const GenerateComponent = ({pageCode}) => {

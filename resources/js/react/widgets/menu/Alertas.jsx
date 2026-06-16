@@ -315,7 +315,7 @@ export const Alertas = ({onMenuSelected}) => {
 
     return (alertas ?? []).length > 0 && (
         <RefreshNode onRefresh={refetch} loading={loading}
-                     className={'w-auto max-w-[680px] px-3 my-auto flex items-center justify-end gap-4  nelg:ml-auto pt-[20px] nelg:pt-0 nelg:!mt-0'}>
+                     className={'w-auto max-w-[680px] px-3 my-auto flex items-center justify-end gap-4  nelg:ml-auto pt-5 nelg:pt-0 nelg:mt-0!'}>
             {(alertas ?? []).map((menu) => <AlertaMenu key={menu.id} loading={loading} onMenuSelected={onMenuSelected}
                                                        refetchHeader={refetch}
                                                        alertaMenu={menu}/>)}

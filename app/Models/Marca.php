@@ -20,4 +20,9 @@ class Marca extends BaseModel
     {
         return $this->hasMany(Articulo::class, 'idmarca');
     }
+
+    public function newCollection(array $models = [])
+    {
+        return new \App\Collections\MarcaCollection($models);
+    }
 }

@@ -31,6 +31,8 @@ class ApiResourceBase extends AbstractApiHandler
      *      - orden (json string|array, optional, query): Sorting configuration (e.g., [{"name":"id","direction":"desc"}] or ["name"]).
      *      - limit (int, optional, query): Max number of records (default: 500).
      *      - offset (int, optional, query): Number of records to skip.
+     *      - page (int, optional, query): Page number for pagination.
+     *      - per_page (int, optional, query): Number of records per page for pagination.
      *
      * @return JsonResponse
      *      - 200 OK: Single resource object or array of resource objects.
@@ -45,6 +47,8 @@ class ApiResourceBase extends AbstractApiHandler
         $orden = $request->validated('orden') ?? [];
         $limit = $request->validated('limit') ?? 500;
         $offset = $request->validated('offset');
+        $page = $request->validated('page');
+        $perPage = $request->validated('per_page');
 
         $modelClass = $this->resolveModelClass($entity);
 
@@ -83,8 +87,6 @@ class ApiResourceBase extends AbstractApiHandler
                 $query->orderBy($o);
             }
         }
-        $query->limit($limit);
-        $data = null;
         if ($id) {
             $data = $query->find($id);
             if (!$data) {
@@ -92,15 +94,21 @@ class ApiResourceBase extends AbstractApiHandler
             }
 
             foreach ($customAttributes as $attribute) {
-                $data['$attribute'] = $data->getAttribute($attribute);
+                $data[$attribute] = $data->getAttribute($attribute);
             }
         } else {
-            $data = $query->get();
-            $data->toArray();
-            foreach ($data as $key => $item) {
+            if ($perPage) {
+                $data = $query->paginate($perPage, ['*'], 'page', $page);
+            } else {
+                $query->limit($limit);
+                $data = $query->get();
+            }
+
+            $items = ($perPage) ? $data->items() : $data;
+
+            foreach ($items as $key => $item) {
                 foreach ($customAttributes as $attribute) {
                     $item[$attribute] = $item->$attribute;
-                    $data[$key] = $item;
                 }
             }
         }

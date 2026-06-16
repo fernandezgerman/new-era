@@ -111,6 +111,35 @@ class Articulo extends BaseModel implements ActualizableItem
         return $this->belongsTo(CompraDetalle::class, 'idcompradetalle');
     }
 
+    /**
+     * Get the components for this article (if it is a composed article).
+     */
+    public function componentes(): HasMany
+    {
+        return $this->hasMany(ArticuloCompuesto::class, 'idCompuesto');
+    }
+
+    /**
+     * Get the compositions where this article is a component.
+     */
+    public function composiciones(): HasMany
+    {
+        return $this->hasMany(ArticuloCompuesto::class, 'idarticulo');
+    }
+
+    /**
+     * Get the sales for this article.
+     */
+    public function ventas(): HasMany
+    {
+        return $this->hasMany(VentaSucursal::class, 'idarticulo');
+    }
+
+    public function existencias(): HasMany
+    {
+        return $this->hasMany(Existencia::class, 'idarticulo');
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(

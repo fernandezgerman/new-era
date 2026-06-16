@@ -163,6 +163,14 @@ class Sucursal extends BaseModel implements ActualizableItem
     }
 
     /**
+     * Get the sales made in this sucursal.
+     */
+    public function ventas()
+    {
+        return $this->hasMany(VentaSucursal::class, 'idsucursal');
+    }
+
+    /**
      * Get the temporary prices for the sucursal.
      */
     public function preciosTemporales()

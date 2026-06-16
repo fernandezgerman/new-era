@@ -120,4 +120,12 @@ class Lista extends BaseModel
     {
         return $this->hasMany(Lista::class, 'idlistabase');
     }
+
+    /**
+     * Get the sales associated with this list.
+     */
+    public function ventas()
+    {
+        return $this->hasMany(VentaSucursal::class, 'idlista');
+    }
 }

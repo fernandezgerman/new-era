@@ -23,6 +23,7 @@ import {
     GastosRubroPeriodoContextoProvider,
     useGastosRubroPeriodoContexto,
 } from "./GastosRubroPeriodoContexto.jsx";
+import {AlternativeCard} from "@/components/Card.jsx";
 
 const toYmd = (date) => {
     if (!date) return null;
@@ -34,18 +35,18 @@ const cardShellClass =
     'dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]';
 
 const ReporteGastosTablaPrincipal = ({
-    dataRaw,
-    muestraVariacion,
-    expandedRubroIds,
-    numColumnas,
-    articulosMetaPorRubroId,
-    toggleRubroExpanded,
-    articuloDetalleEnRubro,
-    isFetching,
-    submittedFilters,
-    totalesPorPeriodoLista,
-    totalImporte,
-}) => {
+                                         dataRaw,
+                                         muestraVariacion,
+                                         expandedRubroIds,
+                                         numColumnas,
+                                         articulosMetaPorRubroId,
+                                         toggleRubroExpanded,
+                                         articuloDetalleEnRubro,
+                                         isFetching,
+                                         submittedFilters,
+                                         totalesPorPeriodoLista,
+                                         totalImporte,
+                                     }) => {
     const openContexto = useGastosRubroPeriodoContexto()?.openContexto;
 
     const tableRows = useMemo(() => {
@@ -151,7 +152,7 @@ const ReporteGastosTablaPrincipal = ({
     const tablaHeader = useMemo(() => tablaHeaderDef(muestraVariacion), [muestraVariacion]);
 
     return (
-        <div className={cardShellClass}>
+        <AlternativeCard>
             <Table
                 isLoading={isFetching}
                 emptyText={submittedFilters ? null : 'Aplique filtros y presione Buscar.'}
@@ -207,13 +208,14 @@ const ReporteGastosTablaPrincipal = ({
                         <div className={'flex justify-end border-t border-slate-200 dark:border-slate-700 pt-4'}>
                             <div className={'text-right'}>
                                 <div className={'text-sm text-slate-600 dark:text-slate-500'}>Total general</div>
-                                <div className={'text-lg font-bold text-slate-900 dark:text-slate-100'}>{processNumber(totalImporte, 1, true, '$')}</div>
+                                <div
+                                    className={'text-lg font-bold text-slate-900 dark:text-slate-100'}>{processNumber(totalImporte, 1, true, '$')}</div>
                             </div>
                         </div>
                     </div>
                 }
             />
-        </div>
+        </AlternativeCard>
     );
 };
 
@@ -357,9 +359,9 @@ export const ReporteGastos = () => {
             variacionVsSiguiente:
                 n > 1 && i < n - 1
                     ? formatVariacionPctRespectoSiguiente(
-                          sumas.get(ordenDescripciones[i]),
-                          sumas.get(ordenDescripciones[i + 1]),
-                      )
+                        sumas.get(ordenDescripciones[i]),
+                        sumas.get(ordenDescripciones[i + 1]),
+                    )
                     : '',
         }));
     }, [dataRaw]);
@@ -421,78 +423,78 @@ export const ReporteGastos = () => {
 
     return <>
         <PageHeader>Reporte de gastos</PageHeader>
-        <br/>
 
         <GastosRubroPeriodoContextoProvider submittedFilters={submittedFilters}>
             <ErrorBoundary>
-                <div className={cardShellClass}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="lg:col-span-2">
-                        <SelectLiquidacionPeriodos
-                            multiple={true}
-                            setPeriodos={setPeriodos}
-                            periodos={periodos}
-                        />
+                <AlternativeCard>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="lg:col-span-2">
+                            <SelectLiquidacionPeriodos
+                                multiple={true}
+                                setPeriodos={setPeriodos}
+                                periodos={periodos}
+                            />
+                        </div>
+                        <div className="lg:col-span-2">
+                            <SelectSucursal
+                                multiple={true}
+                                setSucursal={setSucursales}
+                                sucursal={sucursales}
+                                label={'Sucursales'}
+                                placeHolder={'Seleccione sucursales'}
+                            />
+                        </div>
+                        <div>
+                            <DatePicker
+                                value={fechaDesde}
+                                setValue={setFechaDesde}
+                                label={'Fecha desde'}
+                                placeHolder={'Seleccione fecha desde'}
+                                className={'mt-2'}
+                            />
+                        </div>
+                        <div>
+                            <DatePicker
+                                value={fechaHasta}
+                                setValue={setFechaHasta}
+                                label={'Fecha hasta'}
+                                placeHolder={'Seleccione fecha hasta'}
+                                className={'mt-2'}
+                            />
+                        </div>
                     </div>
-                    <div className="lg:col-span-2">
-                        <SelectSucursal
-                            multiple={true}
-                            setSucursal={setSucursales}
-                            sucursal={sucursales}
-                            label={'Sucursales'}
-                            placeHolder={'Seleccione sucursales'}
-                        />
+
+                    {uiError && <div className={'mt-4'}><LabelError>{uiError}</LabelError></div>}
+                    {reporteQuery.isError && <div className={'mt-4'}>
+                        <LabelError>{reporteQuery.error?.message ?? 'Error al cargar el reporte.'}</LabelError></div>}
+
+                    <div className="flex justify-end mt-4">
+                        <Button
+                            onClick={onBuscar}
+                            disabled={reporteQuery.isFetching}
+                            className={'w-full md:w-auto'}
+                        >
+                            Buscar
+                        </Button>
                     </div>
-                    <div>
-                        <DatePicker
-                            value={fechaDesde}
-                            setValue={setFechaDesde}
-                            label={'Fecha desde'}
-                            placeHolder={'Seleccione fecha desde'}
-                            className={'mt-2'}
-                        />
-                    </div>
-                    <div>
-                        <DatePicker
-                            value={fechaHasta}
-                            setValue={setFechaHasta}
-                            label={'Fecha hasta'}
-                            placeHolder={'Seleccione fecha hasta'}
-                            className={'mt-2'}
-                        />
-                    </div>
-                </div>
+                </AlternativeCard>
 
-                {uiError && <div className={'mt-4'}><LabelError>{uiError}</LabelError></div>}
-                {reporteQuery.isError && <div className={'mt-4'}><LabelError>{reporteQuery.error?.message ?? 'Error al cargar el reporte.'}</LabelError></div>}
+                <br/>
 
-                <div className="flex justify-end mt-4">
-                    <Button
-                        onClick={onBuscar}
-                        disabled={reporteQuery.isFetching}
-                        className={'w-full md:w-auto'}
-                    >
-                        Buscar
-                    </Button>
-                </div>
-            </div>
-
-            <br/>
-
-            <ReporteGastosTablaPrincipal
-                dataRaw={dataRaw}
-                muestraVariacion={muestraVariacion}
-                expandedRubroIds={expandedRubroIds}
-                numColumnas={numColumnas}
-                articulosMetaPorRubroId={articulosMetaPorRubroId}
-                toggleRubroExpanded={toggleRubroExpanded}
-                articuloDetalleEnRubro={articuloDetalleEnRubro}
-                isFetching={reporteQuery.isFetching}
-                submittedFilters={submittedFilters}
-                totalesPorPeriodoLista={totalesPorPeriodoLista}
-                totalImporte={totalImporte}
-            />
-        </ErrorBoundary>
+                <ReporteGastosTablaPrincipal
+                    dataRaw={dataRaw}
+                    muestraVariacion={muestraVariacion}
+                    expandedRubroIds={expandedRubroIds}
+                    numColumnas={numColumnas}
+                    articulosMetaPorRubroId={articulosMetaPorRubroId}
+                    toggleRubroExpanded={toggleRubroExpanded}
+                    articuloDetalleEnRubro={articuloDetalleEnRubro}
+                    isFetching={reporteQuery.isFetching}
+                    submittedFilters={submittedFilters}
+                    totalesPorPeriodoLista={totalesPorPeriodoLista}
+                    totalImporte={totalImporte}
+                />
+            </ErrorBoundary>
         </GastosRubroPeriodoContextoProvider>
     </>;
 }

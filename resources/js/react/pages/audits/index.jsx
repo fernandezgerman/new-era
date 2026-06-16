@@ -107,16 +107,18 @@ export const ListarAudits = () => {
         const desc = processAuditableText(audit.auditable_type, audit.event);
         const finalDesc = desc === '' || desc === undefined || desc === null? processAuditableText(audit.event, '') : desc ;
 
+        const classNameColumn = ' text-slate-600 dark:text-white ';
         return {
             key: audit.id,
+            className: classNameColumn,
             content: [
-                {content: audit.id, key: audit.id + '-id'},
-                {content: processDate(moment(audit.created_at)), key: audit.id + '-date'},
-                {content: processAuditableText(finalDesc), key: audit.id + '-type'},
+                {content: audit.id, key: audit.id + '-id' ,className: classNameColumn,},
+                {content: processDate(moment(audit.created_at)), key: audit.id + '-date',className: classNameColumn},
+                {content: processAuditableText(finalDesc), key: audit.id + '-type',className: classNameColumn},
                 /*{content: <pre className="text-xs">{JSON.stringify(audit.old_values, null, 2)}</pre>, key: audit.id + '-old'},
                 {content: <pre className="text-xs">{JSON.stringify(audit.new_values, null, 2)}</pre>, key: audit.id + '-new'},*/
                 //{content: processAuditableText(audit.event), key: audit.id + '-event'},
-                {content: audit.ip_address, key: audit.id + '-ip'},
+                {content: audit.ip_address, key: audit.id + '-ip',className: classNameColumn},
                 {content: <ViewIconButton
                         className={' text-xxs mb-2 py-0.5!'}
                         onClick={() => {

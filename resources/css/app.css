@@ -95,17 +95,22 @@
 
 @layer utilities {
 
+    .choices__item{
+        margin-bottom: 0 !important;
+    }
+
     .choices__inner {
         min-height: 38px !important;
         max-height: 120px !important;
         overflow-y: auto !important;
-        padding: 5px 7.5px 3.75px !important;
         border-radius: 8px !important;
         background-color: transparent !important; /* Optional: Scale the image to cover the entire div */
+        padding-bottom: 1px !important;
+        padding-top: 3px !important;
     }
 
     .choices__list--dropdown {
-        background-color: var(--bg-color) !important;
+        /*background-color: var(--bg-color) !important;*/
         color: var(--font-color) !important;
     }
 
@@ -115,11 +120,23 @@
     }
 
     .choices__input {
-        background-color: var(--bg-color) !important;
+        /* background-color: var(--bg-color) !important;*/
+        background-color: transparent !important; /* Optional: Scale the image to cover the entire div */
         color: var(--font-color) !important;
     }
 
+
     @media (prefers-color-scheme: dark) {
+        .choices__inner {
+             /*background-color: var(--dark-bg-color) !important; */
+            color: var(--dark-font-color) !important;
+        }
+
+        .choices__inner .choices__item,
+        .choices__inner .choices__placeholder {
+            color: var(--dark-font-color) !important;
+        }
+
         .choices__input {
             background-color: var(--dark-bg-color) !important;
             color: var(--dark-font-color) !important;

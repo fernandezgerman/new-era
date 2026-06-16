@@ -65,7 +65,7 @@ export const Dashboard = () => {
                     <LegacyFrame iframeHrefs={iframeHrefs}>
 
                     </LegacyFrame>}
-                {component !== null && <div className={'m-4 ne-body dark:ne-dark-body max-h-[calc(100vh-150px)] h-full overflow-y-scroll'}>
+                {component !== null && <div className={'m-4 ne-body! dark:ne-dark-body! max-h-[calc(100vh-150px)] h-full overflow-y-scroll scrollbar-hidden'}>
                     <GenerateComponent pageCode={component} />
                 </div>}
 

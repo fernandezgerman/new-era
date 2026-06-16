@@ -19,4 +19,6 @@ route::prefix('compras')->withoutMiddleware('restrict.access.per.hour')->group(f
 
 });
 
+Route::get('ordenes-de-compra', [\App\Http\ApiResources\OrdenesDeCompraController::class, 'index']);
+
 

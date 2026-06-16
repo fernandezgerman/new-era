@@ -16,8 +16,10 @@ import {Label, LabelError, LabelSuccess} from "@/components/Label.jsx"; // Impor
 // - searchResultLimit: max choices shown while searching (Choices.js default is 4). Use -1 for no cap.
 // - keepSearchTextOnMultiSelect: when multiple=true, keep the search box text after picking an option.
 // - onSearchQueryChange: called with the current search string on each keystroke (empty string when cleared).
-// - showClearAllMultiple: when multiple=true, show a control to clear all selections (default true).
-// - clearAllMultipleLabel: label for that control.
+// - showClearSelection: show a control to clear the current selection (single or multiple).
+// - clearSelectionLabel: label when multiple=false.
+// - showClearAllMultiple: when multiple=true, show clear control (default true).
+// - clearAllMultipleLabel: label when multiple=true.
 const Select = ({
                     options = [],
                     value,
@@ -38,6 +40,8 @@ const Select = ({
                     searchResultLimit = 250,
                     keepSearchTextOnMultiSelect = false,
                     onSearchQueryChange,
+                    showClearSelection = true,
+                    clearSelectionLabel = 'Deseleccionar',
                     showClearAllMultiple = true,
                     clearAllMultipleLabel = 'Deseleccionar todo',
                 }) => {
@@ -56,6 +60,12 @@ const Select = ({
         && Array.isArray(value)
         && value.length > 0;
 
+    const hasSingleSelection =
+        !multiple
+        && value !== undefined
+        && value !== null
+        && value !== '';
+
     const handleClearAllMulti = useCallback(() => {
         if (!multiple || !setValue) {
             return;
@@ -70,6 +80,33 @@ const Select = ({
             }
         });
     }, [multiple, onSearchQueryChange, setValue]);
+
+    const handleClearSelection = useCallback(() => {
+        if (!setValue || disabled || isLoading) {
+            return;
+        }
+        if (multiple) {
+            handleClearAllMulti();
+            return;
+        }
+        setValue(null);
+        onSearchQueryChange?.('');
+        queueMicrotask(() => {
+            try {
+                choicesRef.current?.removeActiveItems();
+                choicesRef.current?.clearInput?.();
+            } catch {
+                /* noop */
+            }
+        });
+    }, [disabled, handleClearAllMulti, isLoading, multiple, onSearchQueryChange, setValue]);
+
+    const showClearButton =
+        showClearSelection
+        && setValue
+        && !disabled
+        && !isLoading
+        && (multiple ? (showClearAllMultiple && hasMultiSelection) : hasSingleSelection);
 
     // Initialize Choices.js synchronously to avoid DOM teardown race conditions
     useLayoutEffect(() => {
@@ -93,7 +130,7 @@ const Select = ({
             shouldSort: false,
             removeItems: true,
             classNames: {
-                containerOuter: ['choices', 'relative', 'min-w-[200px]', multiple ? 'bg-gray-100!' : 'bg-transparent'],
+                containerOuter: ['choices', 'relative', 'min-w-[200px]', multiple ? 'bdg-gray-100!' : 'bg-transparent'],
              /*   containerInner: ['choices__inner',  'border', 'border-gray-300', 'rounded-lg', 'p-2'],
                 input: ['choices__input', 'bg-transparent!', 'outline-none'],
                 list: ['choices__list'],
@@ -216,9 +253,27 @@ const Select = ({
         return () => el.removeEventListener("change", handler);
     }, [setValue, multiple]);
 
+    const clearButtonLabel = multiple ? clearAllMultipleLabel : clearSelectionLabel;
+
     return (
         <>
-            {label && <Label className="cursor-pointer pl-2 ">{label}</Label>}
+            {label && <Label className="cursor-pointer pl-2 ">
+                {label}
+                {showClearButton && (
+                    <button
+                        type={'button'}
+                        className={
+                            'cursor-pointer border-0 px-1 p-0.5 ml-2 text-left text-xs underline bg-pink-500! rounded-md '
+                            + 'text-white hover:text-slate-900 '
+                            + 'dark:text-slate-400  dark:hover:text-slate-200'
+
+                        }
+                        onClick={handleClearSelection}
+                    >
+                        {clearButtonLabel}
+                    </button>
+                )}
+            </Label>}
 
             <select
                 id={id}
@@ -227,25 +282,10 @@ const Select = ({
                 onChange={onChange}
                 disabled={disabled}
                 multiple={multiple}
-                className={`focus:shadow-soft-primary-outline dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none ${localClassName}`}
+                className={`focus:shadow-soft-primary-outline bg-white dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none ${localClassName}`}
             />
             {errorMessage && <LabelError className={'ml-2'}>{errorMessage}</LabelError>}
             {validMessage && <LabelSuccess className={'ml-2'}>{validMessage}</LabelSuccess>}
-            {multiple && setValue && showClearAllMultiple && !disabled && !isLoading && hasMultiSelection && (
-                <div className={'mt-2 pl-2'}>
-                    <button
-                        type={'button'}
-                        className={
-                            'cursor-pointer border-0 bg-transparent p-0 text-left text-sm underline '
-                            + 'text-slate-600 decoration-slate-400 hover:text-slate-900 '
-                            + 'dark:text-slate-400 dark:decoration-slate-500 dark:hover:text-slate-200'
-                        }
-                        onClick={handleClearAllMulti}
-                    >
-                        {clearAllMultipleLabel}
-                    </button>
-                </div>
-            )}
         </>
     );
 };

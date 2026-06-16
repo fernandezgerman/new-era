@@ -17,7 +17,7 @@ class ProveedorListaDetalle extends BaseModel
         'precio' => 'decimal:2',
     ];
 
-    public function lista()
+    public function proveedorLista()
     {
         return $this->belongsTo(ProveedorLista::class, 'idproveedorlista');
     }

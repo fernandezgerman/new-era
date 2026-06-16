@@ -12,7 +12,7 @@ export const Alert = ({children, color = 'default', className}) => {
     return <div className={"relative w-full mt-2 p-4 text-white rounded-lg "+colorClass+' '+className}>{children}</div>;
 }
 export const AlertDanger = ({children, className}) => {
-    return <Alert color={'danger'} >{children}</Alert>;
+    return <Alert color={'danger'} className={className} >{children}</Alert>;
 }
 
 export const AlertSuccess = ({children, className}) => {
