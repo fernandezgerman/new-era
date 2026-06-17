@@ -4,16 +4,23 @@ namespace App\Services\Gastos;
 
 use App\Models\Gasto;
 use App\Models\GastoDetalle;
+use App\Models\LiquidacionPeriodoGasto;
 use App\Models\Sucursal;
 use App\Services\Actualizaciones\ActualizacionesManager;
 use App\Services\Gastos\Enums\TiposGastos;
+use App\Services\PeriodosContables\Exceptions\NoHayUnPeriodoContableAbiertoException;
+use App\Services\PeriodosContables\PeriodosContablesManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class GastosManager
 {
     private array $tiposGastos = [];
-    public function __construct(private ActualizacionesManager $actualizacionesManager)
+    public function __construct(
+        private ActualizacionesManager $actualizacionesManager,
+        private PeriodosContablesManager $periodosContablesManager
+    )
     {
         $this->tiposGastos[TiposGastos::MERCADO_PAGO->value] = [
             "proveedorId" => config('medios_de_cobro.drivers.MercadoPagoQR.gastos.proveedorId'),
@@ -51,6 +58,18 @@ class GastosManager
         $gasto->idletra = null;
         $gasto->idunico = 'MPGST'.Carbon::now()->format('Y-m-d H:i:s');;
         $gasto->save();
+
+        try{
+            $periodo = $this->periodosContablesManager->obtenerPeriodoActual();
+
+            LiquidacionPeriodoGasto::create([
+                'idgasto' => $gasto->id,
+                'idperiodo' => $periodo->id,
+            ]);
+        }catch(\Throwable $throwable){
+            Log::warning('No hay un periodo contable abierto, no se registro el gasto en ningun periodo. (Se guardo correctamente)');
+        }
+
 
         $gastoDetalle = new GastoDetalle();
 
