@@ -8,9 +8,6 @@ class LiquidacionPeriodoGasto extends BaseModel
 
     public $timestamps = false;
 
-    // Al ser una tabla pivot con llave primaria compuesta,
-    // Laravel no soporta de forma nativa $primaryKey como array en Eloquent básico,
-    // pero para un modelo Pivot o si se usa como modelo simple:
     protected $primaryKey = ['idgasto', 'idperiodo'];
     public $incrementing = false;
 

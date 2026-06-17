@@ -49,6 +49,13 @@ Route::get('/test-job', function() {
 //    app(ProcesamientoDeCostosManager::class)->actualizarReferenciaDeCostoscompraDetallesIds([5938292]);
 
 })->name('test-job');
+/*
+
+Route::get('test_key', function () {
+    Cache::put('test_key', 'Hola Redis desde prod', 600); // 10 minutos
+    return 'Value: '.Cache::get('test_key');
+});
+*/
 
 Route::middleware(['auth:sanctum', 'restrict.access.per.hour'])->group(function () {
     foreach (Storage::disk('routes')->allFiles('web') as $file) {
