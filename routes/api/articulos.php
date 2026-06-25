@@ -12,6 +12,9 @@ route::prefix('articulos')->group(function () {
     Route::get('{idarticulo}/historico-precios', [\App\Http\Controllers\Articulos\ArticulosController::class, 'articulosHistoricoDePrecios'])
         ->name('articulo.historico-precios');
 
+    Route::get('no-comprados', [\App\Http\Controllers\Articulos\ArticulosController::class, 'articulosNoComprados'])
+        ->name('articulo.no-comprados');
+
 });
 
 

@@ -126,7 +126,7 @@ const Input = ({
                     onKeyPress={onKeyPress}
                     onKeyDown={onKeyDown}
                     maxLength={maxCharacters}
-                    className={"  focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-r-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none dark:ne-dark-input! dark:placeholder:text-white/80! dark:text-white/80!  " + inputClassName + extraClass }
+                    className={" h-9.5 focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-r-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none dark:ne-dark-input! dark:placeholder:text-white/80! dark:text-white/80!  " + inputClassName + extraClass }
                     value={displayValue}
 
                 />

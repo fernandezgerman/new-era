@@ -25,7 +25,7 @@ export const Table = ({
                     colSpan={cell.colSpan ?? 1}
                     rowSpan={cell.rowSpan ?? undefined}
                     className={
-                        " font-normal leading-normal text-sm text-slate-200 " +
+                        " font-normal leading-normal text-sm " +
                         (destacarColumnasPares && (index % 2 !== 0) ? (darkMode ? ' bg-gray-800 ' : ' bg-gray-200 ') : '') +
                         (cell?.onClick ? '  cursor-pointer' : '') +
                         (cell.className ?? '')}>

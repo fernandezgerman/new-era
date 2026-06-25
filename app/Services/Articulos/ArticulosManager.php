@@ -6,6 +6,8 @@ use App\Models\Articulo;
 use App\Models\ArticuloCostoHistorico;
 use App\Models\ArticuloPrecioHistorico;
 use App\Models\PrecioHistorico;
+use App\Models\Rubro;
+use App\Models\Sucursal;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoArticuloInsertDataResolver;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoArticuloUpdateDataResolver;
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoCompraDataResolver;
@@ -13,9 +15,14 @@ use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoConfiguracionDePr
 use App\Services\Articulos\DataResolvers\ArticuloCostoHistoricoRecalculoDataResolver;
 use App\Services\Articulos\DataResolvers\ArticuloPrecioHistorico\ArticuloPrecioHistoricoCabeceraDataResolver;
 use App\Services\Articulos\Enums\ArticulosCostoHistoricoMotivos;
+use App\Services\QueryResolvers\Queries\LimpiezaDeArticulos\DTOs\LimpiezaDeArticulosQueryResolverFilters;
+use App\Services\QueryResolvers\Queries\LimpiezaDeArticulos\Enums\LimpiezaDeArticulosQueryResolverTipoDeReporte;
+use App\Services\QueryResolvers\Queries\LimpiezaDeArticulos\LimpiezaDeArticulosQueryResolver;
 use Aws\Panorama\Exception\PanoramaException;
+
 use Exception;
 use Illuminate\Support\Facades\DB;
+
 
 class ArticulosManager
 {
@@ -67,5 +74,26 @@ class ArticulosManager
             $response[] = app(ArticuloPrecioHistoricoCabeceraDataResolver::class)->resolve($item, $detalles);
         }
         return $response;
+    }
+
+    public function getExistenciasNoCompradasPor(
+        int $diasUltimaCompra,
+        ?Sucursal $sucursal,
+        ?Articulo $articulo,
+        ?Rubro $rubro
+    )
+    {
+        $filtros = new LimpiezaDeArticulosQueryResolverFilters(
+            LimpiezaDeArticulosQueryResolverTipoDeReporte::ARTICULOS_COMPRADOS_HACE_X ,
+            $sucursal,
+            $articulo,
+            $rubro,
+            $diasUltimaCompra,
+            null
+        );
+
+        $limpiezaDeArticulosQueryResolver = new LimpiezaDeArticulosQueryResolver($filtros);
+
+        return $limpiezaDeArticulosQueryResolver->getPaginatedData();
     }
 }

@@ -18,3 +18,8 @@ php artisan queue:retry all --now
 
 # Reintentar solo los que tengan un cierto UUID o tag (Laravel 10+)
 php artisan queue:retry --uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+# reiniciar supervisor
+sudo supervisorctl restart all
+
+

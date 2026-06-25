@@ -91,4 +91,9 @@ class RendicionStock extends BaseModel
 
         return $this->fechaapertura?->format('H:i') ?? null;
     }
+
+    public function rendicionStockDetalle()
+    {
+        return $this->hasMany(RendicionStockDetalle::class, 'idrendicion');
+    }
 }
