@@ -1,32 +1,32 @@
 import React from 'react';
-import mp1A from "../../../../img/documentacion/mercado-pago-configuracion/MP-A.png";
-import mp1B from "../../../../img/documentacion/mercado-pago-configuracion/MP-B.png";
-import mp1C from "../../../../img/documentacion/mercado-pago-configuracion/MP-C.png";
-import mp1D from "../../../../img/documentacion/mercado-pago-configuracion/MP-D.png";
-import mp1E from "../../../../img/documentacion/mercado-pago-configuracion/MP-E.png";
+import mp1A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-A.png";
+import mp1B from "../../../../../img/documentacion/mercado-pago-configuracion/MP-B.png";
+import mp1C from "../../../../../img/documentacion/mercado-pago-configuracion/MP-C.png";
+import mp1D from "../../../../../img/documentacion/mercado-pago-configuracion/MP-D.png";
+import mp1E from "../../../../../img/documentacion/mercado-pago-configuracion/MP-E.png";
 
-import mp3A from "../../../../img/documentacion/mercado-pago-configuracion/MP-3-A.png";
-import mp3B from "../../../../img/documentacion/mercado-pago-configuracion/MP-3-B.png";
-import mp3C from "../../../../img/documentacion/mercado-pago-configuracion/MP-3-C.png";
+import mp3A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-3-A.png";
+import mp3B from "../../../../../img/documentacion/mercado-pago-configuracion/MP-3-B.png";
+import mp3C from "../../../../../img/documentacion/mercado-pago-configuracion/MP-3-C.png";
 
-import mp4B from "../../../../img/documentacion/mercado-pago-configuracion/MP-4-B.png";
-import mp5A from "../../../../img/documentacion/mercado-pago-configuracion/MP-5-A.png";
+import mp4B from "../../../../../img/documentacion/mercado-pago-configuracion/MP-4-B.png";
+import mp5A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-5-A.png";
 
 
-import mp6A from "../../../../img/documentacion/mercado-pago-configuracion/MP-6-A.png";
-import mp6B from "../../../../img/documentacion/mercado-pago-configuracion/MP-6-B.png";
-import mp6C from "../../../../img/documentacion/mercado-pago-configuracion/MP-6-C.png";
-import mp6D from "../../../../img/documentacion/mercado-pago-configuracion/MP-6-D.png";
+import mp6A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-6-A.png";
+import mp6B from "../../../../../img/documentacion/mercado-pago-configuracion/MP-6-B.png";
+import mp6C from "../../../../../img/documentacion/mercado-pago-configuracion/MP-6-C.png";
+import mp6D from "../../../../../img/documentacion/mercado-pago-configuracion/MP-6-D.png";
 
-import mp7A from "../../../../img/documentacion/mercado-pago-configuracion/MP-7-A.png";
+import mp7A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-7-A.png";
 
-import mp8A from "../../../../img/documentacion/mercado-pago-configuracion/MP-8-A.png";
+import mp8A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-8-A.png";
 
-import mp9A from "../../../../img/documentacion/mercado-pago-configuracion/MP-9-A.png";
-import mp9B from "../../../../img/documentacion/mercado-pago-configuracion/MP-9-B.png";
-import mp10A from "../../../../img/documentacion/mercado-pago-configuracion/MP-10-A.png";
-import mp11A from "../../../../img/documentacion/mercado-pago-configuracion/MP-11-A.png";
-import mp11B from "../../../../img/documentacion/mercado-pago-configuracion/MP-11-B.png";
+import mp9A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-9-A.png";
+import mp9B from "../../../../../img/documentacion/mercado-pago-configuracion/MP-9-B.png";
+import mp10A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-10-A.png";
+import mp11A from "../../../../../img/documentacion/mercado-pago-configuracion/MP-11-A.png";
+import mp11B from "../../../../../img/documentacion/mercado-pago-configuracion/MP-11-B.png";
 import {A} from "@/components/A.jsx";
 
 
