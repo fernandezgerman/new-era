@@ -4,11 +4,11 @@ import {Header} from "@/widgets/menu/Header.jsx";
 import {LegacyFrame} from "@/widgets/Legacy/LegacyIframe.jsx";
 import {isMobile} from "react-device-detect";
 import {CollapsibleRightMenu} from "@/widgets/menu/CollapsibleRightMenu.jsx";
-import {GenerateComponent, ReactMenu} from "@/widgets/menu/ReactMenu.jsx";
+import ReactMenu from "@/widgets/menu/ReactMenu.jsx";
 import {get} from "lodash";
 import {NewEraDashboard} from "@/pages/newEraDashboard/index.jsx";
 
-export const Dashboard = () => {
+const Dashboard = () => {
     const getInitialPagina = () => {
         try {
             const params = new URLSearchParams(window.location.search);
@@ -66,10 +66,15 @@ export const Dashboard = () => {
 
                     </LegacyFrame>}
                 {component !== null && <div className={'m-4 ne-body! dark:ne-dark-body! max-h-[calc(100vh-150px)] h-full overflow-y-scroll scrollbar-hidden'}>
-                    <GenerateComponent pageCode={component} />
+                    {(() => {
+                        const SpecificComponent = ReactMenu[component];
+                        return SpecificComponent ? <SpecificComponent /> : <></>
+                    })()}
                 </div>}
 
             </div>
             {/*<CollapsibleRightMenu /> */}
         </div>);
 }
+
+export default Dashboard;

@@ -28,7 +28,6 @@ export default defineConfig(({ mode }) => {
                 host: hmrHost,
                 port,
                 protocol: 'ws',
-                overlay: false,
             },
             watch: {
                 ignored: ['**/*.php'], // Ignore all PHP files
@@ -43,9 +42,6 @@ export default defineConfig(({ mode }) => {
             tailwindcss(),
             react({
                 jsxRuntime: 'automatic',
-                babel: {
-                    plugins: [['@babel/plugin-transform-react-jsx']],
-                },
             }),
             flowbiteReact(),
         ],

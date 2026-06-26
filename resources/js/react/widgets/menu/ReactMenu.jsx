@@ -9,15 +9,15 @@ import {ProcesamientoDeCostosDocumentacion} from "@/pages/documentacion/procesam
 import {ReporteGastos} from "@/pages/reporteGastos/index.jsx";
 import {ProveedoresListasImportar} from "@/pages/proveedoresImportarListas/index.jsx";
 import {OrdenesDeCompraReporte} from "@/pages/ordenesDeCompra/index.jsx";
-import {RustDeskInstalacionDocumentacion} from "@/pages/documentacion/RustDeskDocumentacion/index.jsx";
+import RustDeskInstalacionDocumentacion from "@/pages/documentacion/RustDeskDocumentacion/index.jsx";
 import {ExistenciasSinCompras} from "@/pages/ExistenciasSinCompras/index.jsx";
 
 // Documentacion: https://reactcommunity.org/react-modal/
-export const ReactMenu = {
+const ReactMenu = {
     /** DOCUMENTACION */
     "info-mp": MercadoPagoDocumentacion,
     "info-proc-costos": ProcesamientoDeCostosDocumentacion,
-    /*"info-rust-desk": RustDeskInstalacionDocumentacion,*/
+    "info-rust-desk": RustDeskInstalacionDocumentacion,
 
     /** CONTABILIDAD */
     "agrp-cajas": AgrupacionDeCajasLista,
@@ -36,9 +36,4 @@ export const ReactMenu = {
     "ord-cmp-2": OrdenesDeCompraReporte
 };
 
-export const GenerateComponent = ({pageCode}) => {
-    const SpecificComponent = ReactMenu[pageCode];
-
-
-    return SpecificComponent ? <SpecificComponent /> : <></>
-}
+export default ReactMenu;

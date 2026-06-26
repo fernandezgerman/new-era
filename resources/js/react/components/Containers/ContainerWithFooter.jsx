@@ -8,7 +8,7 @@ import React from "react";
 export const ContainerWithFooter = ({footer, children, scrolleableClassName}) => {
 
     return (<AlternativeCard className={'overflow-hidden p-0! mt-3! '}>
-        <div className={'flex max-h-[calc(100vh-14rem)] min-h-[20rem] flex-col ' + scrolleableClassName}>
+        <div className={'flex max-h-[calc(100vh-14rem)] min-h-80 flex-col ' + scrolleableClassName}>
             <div className={'relative flex-1 overflow-y-auto p-4 max-h-[calc(100vh-18rem)] ' }>
                 {children}
             </div>

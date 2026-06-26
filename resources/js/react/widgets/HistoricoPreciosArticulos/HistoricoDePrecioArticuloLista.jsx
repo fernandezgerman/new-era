@@ -21,7 +21,7 @@ export function HistoricoDePrecioArticuloLista({ detalleListaPrincipal, extraTex
               <span className={'line-through text-red-500'}>
                 <ProcesarLaColumnaBasadaEnTipo nombre={indice} valor={oldValue} />
               </span>{' '}
-              =>{' '}
+              = {' '}
               <span className={'text-green-300'}>
                 <ProcesarLaColumnaBasadaEnTipo nombre={indice} valor={value} />
               </span>

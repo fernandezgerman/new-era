@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom/client';
 import React from 'react';
 import {Login} from "../widgets/auth/login/login.jsx";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {Dashboard} from "../pages/dashboard/index.jsx";
 import {LeavingPage} from "../widgets/utils/LeavingPage.jsx";
 
 const queryClient = new QueryClient();
