@@ -12,5 +12,6 @@ Route::prefix('gastos')
     Route::get('/periodo/{idperiodo}/contexto', [GastosController::class, 'getPeriodoContexto']);
     Route::get('/articulo/{idarticulo}/reporte', [GastosController::class, 'reporteArticulo']);
     Route::get('/detalle', [GastosController::class, 'detalle']);
-    Route::patch('/{id}', [GastosController::class, 'update']);
+    Route::get('/{id}/historial', [GastosController::class, 'historial']);
+    Route::patch('/{id}', [GastosController::class, 'update'])->middleware('can:editar-gasto');
 });

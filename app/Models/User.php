@@ -16,6 +16,8 @@ class User extends Authenticatable implements ActualizableItem
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
+
+    protected $connection = 'mysql';
     /**
      * The table associated with the model.
      *

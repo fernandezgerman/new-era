@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useLayoutEffect, useRef, useState} from "react";
 import {Label, LabelError, LabelSuccess} from "@/components/Label.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
@@ -51,11 +51,14 @@ const Input = ({
 
     const [displayValue, setDisplayValue] = useState(processValue(value));
     const [maskType, setMaskType] = useState(getType());
+    const pendingSelectRef = useRef(false);
+    const focusTargetRef = useRef(null);
 
     let extraClass = icon === null ? '' : ' pl-[40px]!  ';
     extraClass = extraClass + (type === 'pesos' || type === 'cantidad' || maskType === 'number' ? ' text-right  ' : '');
 
     const _onChange = (e) => {
+
         const truncatedValue = maxCharacters && e.target.value ? e.target.value.slice(0, maxCharacters) : e.target.value;
         setDisplayValue(truncatedValue);
 
@@ -82,11 +85,26 @@ const Input = ({
     }
 
     const onFocus = (e) => {
+        focusTargetRef.current = e.target;
         if(type === 'pesos') {
             setDisplayValue(value);
+            if (selectOnFocus) {
+                pendingSelectRef.current = true;
+            }
+            return;
         }
-        if(selectOnFocus) e.target.select();
+        if (selectOnFocus) {
+            e.target.select();
+        }
     }
+
+    useLayoutEffect(() => {
+        if (!pendingSelectRef.current || !focusTargetRef.current) {
+            return;
+        }
+        pendingSelectRef.current = false;
+        focusTargetRef.current.select();
+    }, [displayValue]);
 
     const getSymbol = () =>
     {

@@ -18,6 +18,11 @@ class UpdateGastoRequest extends FormRequest
             'idperiodo_anterior' => ['nullable', 'integer', 'exists:liquidacionesperiodo,id'],
             'idarticulo'         => ['required', 'integer', 'exists:articulos,id'],
             'id_compra_detalle'  => ['required', 'integer', 'exists:comprasdetalle,id'],
+            'idsucursal'         => ['required', 'integer', 'exists:sucursales,id'],
+            'importe'            => ['required', 'numeric', 'min:0'],
+            'fecha_emision'      => ['required', 'date'],
+            'id_proveedor'       => ['required', 'integer', 'exists:proveedores,id'],
+            'observaciones'      => ['nullable', 'string'],
         ];
     }
 }

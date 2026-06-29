@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\EditarGastoDTO;
 use App\Http\Requests\GastoDetalleRequest;
 use App\Http\Requests\ReporteGastosRequest;
 use App\Http\Requests\UpdateGastoRequest;
 use App\Models\LiquidacionPeriodo;
 use App\Models\Sucursal;
-use App\Services\GastosManager;
+use App\Services\Gastos\GastosManager;
 use Illuminate\Http\JsonResponse;
 
 class GastosController extends Controller
@@ -282,22 +283,87 @@ class GastosController extends Controller
      *
      * Body:
      * - idperiodo: int (requerido)
-     * - idperiodo_anterior: int (opcional, periodo del contexto al editar)
+     * - idperiodo_anterior: int (opcional)
      * - idarticulo: int (requerido)
      * - id_compra_detalle: int (requerido)
+     * - idsucursal: int (requerido)
+     * - importe: float (requerido)
+     * - fecha_emision: string (requerido, formato YYYY-MM-DD)
+     * - id_proveedor: int (requerido)
+     * - observaciones: string (opcional)
+     *
+     * @param int $id ID del gasto (compra)
+     * @param UpdateGastoRequest $request
+     * @return JsonResponse
      */
     public function update(int $id, UpdateGastoRequest $request): JsonResponse
     {
-        $this->gastosManager->updateGastoCompra(
+        $this->gastosManager->updateGasto(new EditarGastoDTO(
             idCompra: $id,
-            idCompraDetalle: (int) $request->input('id_compra_detalle'),
-            idarticulo: (int) $request->input('idarticulo'),
-            idperiodo: (int) $request->input('idperiodo'),
+            idCompraDetalle: (int)$request->input('id_compra_detalle'),
+            idarticulo: (int)$request->input('idarticulo'),
+            idperiodo: (int)$request->input('idperiodo'),
+            idsucursal: (int)$request->input('idsucursal'),
+            importe: (float)$request->input('importe'),
+            fechaEmision: \Illuminate\Support\Carbon::parse($request->input('fecha_emision')),
+            idProveedor: (int)$request->input('id_proveedor'),
+            observaciones: $request->input('observaciones'),
             idperiodoAnterior: $request->filled('idperiodo_anterior')
-                ? (int) $request->input('idperiodo_anterior')
+                ? (int)$request->input('idperiodo_anterior')
                 : null,
-        );
+        ));
 
         return response()->json(['ok' => true]);
+    }
+
+    /**
+     * Obtiene el historial de auditoría de un gasto.
+     *
+     * Documentación para Agentes de IA:
+     *
+     * Endpoint: GET /api/gastos/{id}/historial
+     *
+     * Path Parameters:
+     * - id: int (ID del gasto)
+     *
+     * Json Response:
+     * [
+     *   {
+     *     "id": 1,
+     *     "user_type": "App\\Models\\User",
+     *     "user_id": 1,
+     *     "event": "updated",
+     *     "auditable_type": "App\\Models\\Gasto",
+     *     "auditable_id": 10,
+     *     "old_values": { "idsucursal": 1, "idproveedor": 5 },
+     *     "new_values": { "idsucursal": 2, "idproveedor": 6 },
+     *     "metadata": {
+     *        "sucursal_old": { "id": 1, "nombre": "..." },
+     *        "sucursal_new": { "id": 2, "nombre": "..." },
+     *        "proveedor_old": { "id": 5, "nombre": "..." },
+     *        "proveedor_new": { "id": 6, "nombre": "..." }
+     *     },
+     *     "url": "http://...",
+     *     "ip_address": "127.0.0.1",
+     *     "user_agent": "...",
+     *     "tags": null,
+     *     "created_at": "2024-06-26T14:05:00.000000Z",
+     *     "updated_at": "2024-06-26T14:05:00.000000Z",
+     *     "user": { "id": 1, "name": "Admin", ... }
+     *   },
+     *   ...
+     * ]
+     *
+     * Reglas:
+     * - Retorna auditorías del Gasto (Compra) y de sus GastoDetalle (ComprasDetalle).
+     * - Ordenado por fecha de creación descendente.
+     * - Incluye valores antiguos y nuevos del cambio.
+     * - Si hay cambios en idsucursal, idproveedor o idarticulo, se cargan los modelos relacionados en el campo 'metadata'.
+     */
+    public function historial(int $id): JsonResponse
+    {
+        $historial = $this->gastosManager->getHistorial($id);
+
+        return response()->json($historial);
     }
 }
