@@ -61,6 +61,7 @@ class TriggerMediosDeCobroStatusChange extends Command
         $baseQuery->select('ventasucursalcobros.*');
         $baseQuery->where('ventasucursalcobros.estado', MedioDeCobroEstados::APROBADO->value );
         $baseQuery->where('ventasucursalcobros.created_at', '>=',Carbon::today()->subDays(1)->toDateTimeString() );
+        $baseQuery->where('ventasucursalcobros.created_at', '<=',Carbon::today()->subMinutes(10)->toDateTimeString() );
 
         // Apply limit if provided (will be applied per-chunk effectively)
         $processed = 0;
