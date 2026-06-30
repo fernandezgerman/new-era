@@ -67,9 +67,9 @@ class CheckCajasCongruenceCommand extends Command
                 if ($errorsCount === 1) {
                     $this->newLine();
                 }
-                foreach ($messages as $message) {
-                    $this->error($message);
-                    $allErrorMessages[] = $message;
+                foreach ($messages as $issue) {
+                    $this->error($issue['message']);
+                    $allErrorMessages[] = $issue;
                 }
             }
             $bar->advance();

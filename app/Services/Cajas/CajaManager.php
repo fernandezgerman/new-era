@@ -139,16 +139,28 @@ class CajaManager
 
                 $sucursal = get_entity_or_fail('Sucursal',$caja->idsucursal);
                 $usuario = get_entity_or_fail('User',$caja->idusuario);
-                $messages[] = sprintf(
-                    "Error detected in %s for Caja (Nro: %s, Usuario: %s, Sucursal: %s ). Total from caja: %s, Total calculated: %s.%s",
-                    $data['label'],
-                    $caja->numero,
-                    $caja->idusuario . ' - ' .$usuario->nombre . ' ' .$usuario->apellido,
-                    $caja->idsucursal . ' - ' .$sucursal->nombre,
-                    $data['caja'],
-                    $data['calc'],
-                    $update ? " [UPDATED]" : ""
-                );
+
+                $messages[] = [
+                    'sucursal' => $caja->idsucursal . ' - ' . $sucursal->nombre,
+                    'usuario' => $caja->idusuario . ' - ' . $usuario->nombre . ' ' . $usuario->apellido,
+                    'caja_numero' => $caja->numero,
+                    'fecha_apertura' => $caja->fechaapertura,
+                    'field_label' => $data['label'],
+                    'old_value' => $data['caja'],
+                    'new_value' => $data['calc'],
+                    'difference' => $data['calc'] - $data['caja'],
+                    'updated' => $update,
+                    'message' => sprintf(
+                        "Error detected in %s for Caja (Nro: %s, Usuario: %s, Sucursal: %s ). Total from caja: %s, Total calculated: %s.%s",
+                        $data['label'],
+                        $caja->numero,
+                        $caja->idusuario . ' - ' .$usuario->nombre . ' ' .$usuario->apellido,
+                        $caja->idsucursal . ' - ' .$sucursal->nombre,
+                        $data['caja'],
+                        $data['calc'],
+                        $update ? " [UPDATED]" : ""
+                    )
+                ];
             }
         }
 
