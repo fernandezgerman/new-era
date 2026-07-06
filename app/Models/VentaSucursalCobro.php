@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Models\MercadoPagoQROrderSql;
 use App\Services\MediosDeCobro\Enums\MedioDeCobroEstados;
 use phpDocumentor\Parser\Exception;
 
@@ -50,6 +51,11 @@ class VentaSucursalCobro extends BaseModel
         return $this->hasMany(VentaSucursalCobroArticulo::class, 'idventasucursalcobro');
     }
 
+    public function movimientosCaja()
+    {
+        return $this->belongsToMany(MovimientoCaja::class, 'movimientocajaventasucursalcobro', 'idventasucursalcobro', 'idmovimientocaja');
+    }
+
     public function save(array $options = [])
     {
         if (
@@ -63,6 +69,12 @@ class VentaSucursalCobro extends BaseModel
             throw new Exception('El cobro no puede pasar a PENDIENTE o APROBADO sin un modo de cobro especificado');
         }
         return parent::save($options);
+    }
+
+
+    public function MercadoPagoOrders()
+    {
+        return $this->hasMany(MercadoPagoQROrderSql::class, 'idventasucursalcobro');
     }
 
 }

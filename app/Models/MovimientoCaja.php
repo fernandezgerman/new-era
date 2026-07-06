@@ -5,12 +5,13 @@ namespace App\Models;
 use App\Services\Actualizaciones\Contracts\ActualizableItem;
 use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
 use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
+use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Carbon;
 
 class MovimientoCaja extends BaseModel implements ActualizableItem
 {
-    use HasFactory;
+    use HasFactory, Compoships;
 
     protected $table = 'movimientoscaja';
 
@@ -62,6 +63,11 @@ class MovimientoCaja extends BaseModel implements ActualizableItem
         return $this->hasMany(MovimientoCajaEstado::class, 'fechahoramovimiento', 'fechahoramovimiento');
     }
 
+    public function ventasSucursalCobro()
+    {
+        return $this->belongsToMany(VentaSucursalCobro::class, 'movimientocajaventasucursalcobro', 'idmovimientocaja', 'idventasucursalcobro');
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(
@@ -71,4 +77,5 @@ class MovimientoCaja extends BaseModel implements ActualizableItem
             null
         );
     }
+
 }

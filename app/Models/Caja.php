@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Services\Ventas\VentasManager;
+use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Caja extends BaseModel
 {
-    use HasFactory;
+    use HasFactory, Compoships;
 
     protected $table = 'cajas';
 
@@ -35,86 +36,32 @@ class Caja extends BaseModel
 
     public function movimientosCaja()
     {
-        $idusuario = $this->idusuario;
-        $idsucursal = $this->idsucursal;
-        $numero = $this->numero;
-        $relation = $this->hasMany(MovimientoCaja::class, 'numerocaja', 'numero');
-
-        if ($idusuario && $idsucursal && $numero) {
-            $relation->where(function ($q) use ($idusuario, $idsucursal, $numero) {
-                $q->where(function ($q2) use ($idusuario, $idsucursal, $numero) {
-                    $q2->where('movimientoscaja.idusuario', $idusuario)
-                        ->where('movimientoscaja.idsucursal', $idsucursal)
-                        ->where('movimientoscaja.numerocaja', $numero);
-                });
-            });
-        }
-
-        return $relation;
+        return $this->hasMany(MovimientoCaja::class,
+            ['idusuario', 'idsucursal', 'numerocaja'], ['idusuario', 'idsucursal', 'numero']);
     }
 
     public function movimientosCajaDestinatario()
     {
-        $idusuario = $this->idusuario;
-        $idsucursal = $this->idsucursal;
-        $numero = $this->numero;
-        $relation = $this->hasMany(MovimientoCaja::class, 'numerocajadestino', 'numero');
-
-        if ($idusuario && $idsucursal && $numero) {
-            $relation->where(function ($q) use ($idusuario, $idsucursal, $numero) {
-                $q->where(function ($q2) use ($idusuario, $idsucursal, $numero) {
-                    $q2->where('movimientoscaja.idusuariodestino', $idusuario)
-                        ->where('movimientoscaja.idsucursaldestino', $idsucursal)
-                        ->where('movimientoscaja.numerocajadestino', $numero);
-                });
-            });
-        }
-
-        return $relation;
+        return $this->hasMany(MovimientoCaja::class,
+            ['idusuariodestino', 'idsucursaldestino', 'numerocajadestino'], ['idusuario', 'idsucursal', 'numero']);
     }
 
     public function compras()
     {
-        $idusuario = $this->idusuario;
-        $idsucursal = $this->idsucursal;
-        $numero = $this->numero;
-
-        $relation = $this->hasMany(Compra::class, 'numerocaja', 'numero');
-        if ($idusuario && $idsucursal && $numero) {
-            $relation->where('compras.idusuario', $this->idusuario)
-                ->where('compras.idsucursal', $this->idsucursal);
-        }
-        return $relation;
+        return $this->hasMany(Compra::class,
+            ['idusuariocaja', 'idsucursalcaja', 'numerocaja'], ['idusuario', 'idsucursal', 'numero'])
+            ->where('mododepago', 1);
     }
 
     public function pagos()
     {
-        $idusuario = $this->idusuario;
-        $idsucursal = $this->idsucursal;
-        $numero = $this->numero;
-
-        $relation = $this->hasMany(Pago::class, 'numerocaja', 'numero');
-
-        if ($idusuario && $idsucursal && $numero) {
-            $relation->where('pagos.idusuario', $this->idusuario)
-                ->where('pagos.idsucursal', $this->idsucursal);
-        }
-
-        return $relation;
+        return $this->hasMany(Pago::class,
+            ['idusuariocaja', 'idsucursalcaja', 'numerocaja'], ['idusuario', 'idsucursal', 'numero']);
     }
 
     public function ventas()
     {
-        $idusuario = $this->idusuario;
-        $idsucursal = $this->idsucursal;
-        $numero = $this->numero;
-
-        $relation = $this->hasMany(VentaSucursal::class, 'numerocaja', 'numero');
-
-        if ($idusuario && $idsucursal && $numero) {
-            $relation->where('ventassucursal.idusuario', $this->idusuario)
-                ->where('ventassucursal.idsucursal', $this->idsucursal);
-        }
-        return $relation;
+        return $this->hasMany(VentaSucursal::class,
+            ['idusuario', 'idsucursal', 'numerocaja'], ['idusuario', 'idsucursal', 'numero']);
     }
 }

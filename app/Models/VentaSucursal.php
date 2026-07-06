@@ -3,8 +3,11 @@
 namespace App\Models;
 
 
+use Awobaz\Compoships\Compoships;
+
 class VentaSucursal extends BaseModel
 {
+    use Compoships;
     protected $table = 'ventassucursal';
 
     protected $primaryKey = 'id';

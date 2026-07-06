@@ -7,6 +7,9 @@ import {LegacyParametterCatcher} from "@/widgets/HistoricoCostoArticulos/LegacyP
 import {
     LegacyParametterArticulosPreciosCatcher
 } from "@/widgets/HistoricoPreciosArticulos/LegacyParametterArticulosPreciosCatcher.jsx";
+import {
+    LegacyParametterMPResumenCajaCatcher
+} from "@/widgets/MercadoPagoResumenCaja/LegacyParametterMPResumenCajaCatcher.jsx";
 
 export const LegacyFrame = ({iframeHrefs, children}) => {
     const iframeRef = React.useRef(null);
@@ -71,6 +74,7 @@ export const LegacyFrame = ({iframeHrefs, children}) => {
 
             <LegacyParametterCatcher/>
             <LegacyParametterArticulosPreciosCatcher />
+            <LegacyParametterMPResumenCajaCatcher />
             {/* Hidden form to post parameters into the iframe when available */}
             {hasPost && (
                 <form ref={formRef} method="POST" target="legacy_iframe" style={{display: 'none'}}>

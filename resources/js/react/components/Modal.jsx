@@ -13,7 +13,8 @@ export const CustomModal = ({
                                 },
                                 cancelButtonVisible = true,
                                 loading,
-                                childrenClass = ''
+                                childrenClass = '',
+    className
                             }) => {
 
     const size = () => {
@@ -23,6 +24,7 @@ export const CustomModal = ({
         if (widthEnPX === 'l') return ' ml-[calc(50%-400px)]  w-[800px] ';
         if (widthEnPX === 'lg') return ' ml-[calc(50%-500px)]  w-[1000px] ';
         if (widthEnPX === 'xl') return ' ml-[calc(50%-600px)]  w-[1200px] ';
+        if (widthEnPX === 'full') return ' w-full h-full ';
     }
 
     const loadingClass = loading ? ' opacity-60 ' : ''
@@ -30,7 +32,7 @@ export const CustomModal = ({
         isOpen={isOpen}
         onAfterOpen={afterOpenModal}
         contentLabel={titulo}
-        className={'  mt-20  rounded-xl ne-body dark:ne-dark-body p-5 px-10 ' + size() + loadingClass}
+        className={'  mt-20  rounded-xl ne-body dark:ne-dark-body p-5 px-10 ' + size() + loadingClass + className}
     >
         <div className={'relative'}>
             <H2>{titulo}</H2>

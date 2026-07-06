@@ -30,3 +30,26 @@ function buscarCaja()
     form.submit();
 
 }
+
+function mostrarDetalleDeCaja(idUsuario, idSucursal, numeroCaja){
+    /*
+    const div = document.getElementById('visualizar-historico-costos');
+    div.setAttribute('data-articulo-id', idarticulo); */
+
+    const mensaje = {
+        tipo: 'IFRAME_EVENT',
+        accion: 'MOSTRAR_DETALLE_DE_CAJA',
+        payload: {
+            idUsuario,
+            idSucursal,
+            numeroCaja
+        }
+    };
+
+    // Obtiene: https://sitio.com
+    const baseUrl = window.location.origin;
+
+    // Enviar mensaje al padre (React)
+    window.parent.postMessage(mensaje, baseUrl); // Cambia por tu dominio en producción
+
+}

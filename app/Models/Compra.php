@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\DataAccessor\CompraDetalleDataAccessor;
+use App\Services\Compras\Enums\TipoDeSalida;
+use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Compra extends BaseModel
 {
-    use HasFactory;
+    use HasFactory, Compoships;
 
     protected $table = 'compras';
     protected $primaryKey = 'id';
@@ -50,6 +53,34 @@ class Compra extends BaseModel
         'idletra' => 'integer',
     ];
 
+    protected $appends = [
+        'tipo_de_salida',
+    ];
+
+    public function getTipoDeSalidaAttribute(): string
+    {
+        $cd = CompraDetalle::where('idcabecera', $this->id)
+            ->where('idarticulo', config('medios_de_cobro.drivers.MercadoPagoPoint.gastos.articuloId'))
+            ->first();
+
+        if(!blank($cd))
+        {
+            return TipoDeSalida::IMPUESTOS_EN_COBROS->value;
+        }
+
+        $cd = CompraDetalle::where('idcabecera', $this->id)
+            ->join('articulos','idarticulo','=','articulos.id')
+            ->join('rubros','idrubro','=','rubros.id')
+            ->where('rubros.esrubrogastos', 1)
+            ->first();
+
+        if(!blank($cd))
+        {
+            return TipoDeSalida::GASTO_GENERAL->value;
+        }
+
+        return TipoDeSalida::COMPRAS->value;
+    }
     // Relaciones
     public function usuario()
     {
@@ -95,6 +126,10 @@ class Compra extends BaseModel
         return $this->hasMany(ImpuestoCompra::class, 'idcabecera');
     }
 
+    public function compraDetalles()
+    {
+        return $this->hasMany(CompraDetalle::class, 'idcabecera');
+    }
     public function periodosLiquidacion()
     {
         return $this->belongsToMany(LiquidacionPeriodo::class, 'liquidacionesperiodogastos', 'idgasto', 'idperiodo');

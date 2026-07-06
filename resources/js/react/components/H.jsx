@@ -45,8 +45,8 @@ export const BackIconButton = ({onBack, className, loading}) => {
         icon={faBackward}/>;
 }
 
-export const PageHeader = ({children, onAdd, onRefresh,onBack, loading}) => {
-    return <div className={'justify-center w-full align-middle p-2 pl-6 rounded-lg border border-solid border-gray-300 bg-white dark:ne-dark-body!'}>
+export const PageHeader = ({children, onAdd, onRefresh,onBack, loading, className}) => {
+    return <div className={'justify-center w-full align-middle p-2 pl-6 rounded-lg border border-solid border-gray-300 bg-white dark:ne-dark-body! ' + className}>
         <H1>{children}</H1>
         {onAdd && <AddIconButton loading={loading} onAdd={onAdd} className={'  p-1! px-1.5! '}/>}
         {onRefresh && <RefreshIconButton loading={loading} onRefresh={onRefresh} className={'  p-1! px-1.5! '}/>}

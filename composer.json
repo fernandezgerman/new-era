@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "awobaz/compoships": "^3.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "kitar/laravel-dynamodb": "^1.4",
         "laravel/framework": "^12.0",

@@ -26,4 +26,9 @@ class MercadoPagoQROrderSql extends Model
     {
         return $this->hasMany(MercadoPagoQROrderNotification::class, 'mercadopagoqrorderid');
     }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(MercadoPagoQRPayment::class, 'mercadopagoqrorderid');
+    }
 }

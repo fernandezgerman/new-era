@@ -8,7 +8,7 @@ use App\Services\Cajas\CajaManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class FixGastosMpIdUnicoCommand extends Command
+class MercadoPagoFixGastosMpIdUnicoCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -42,6 +42,7 @@ class FixGastosMpIdUnicoCommand extends Command
     }*/
     public function handle(CajaManager $cajaManager)
     {
+        return;
         $this->info('Starting fix-gastos-mp-idunico command...');
 
        // return;
@@ -157,8 +158,8 @@ class FixGastosMpIdUnicoCommand extends Command
             if ($caja) {
                 $this->info("Checking congruence for Caja {$caja->numero} (User: {$caja->idusuario}, Sucursal: {$caja->idsucursal})...");
                 $messages = $cajaManager->CheckCajaCongruence($caja, true);
-                foreach ($messages as $msg) {
-                    $this->line("  - {$msg}");
+                foreach ($messages as $issue) {
+                    $this->line("  - {$issue['message']}");
                 }
             } else {
                 $this->warn("Caja (Nro: {$cajaInfo['numero']}, Usuario: {$cajaInfo['idusuario']}, Sucursal: {$cajaInfo['idsucursal']}) not found during congruence check.");
