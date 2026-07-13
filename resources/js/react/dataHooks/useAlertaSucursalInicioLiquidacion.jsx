@@ -15,7 +15,7 @@ const useAlertaSucursalInicioLiquidacion = ({sucursalId}) => {
         },
         enabled: !!sucursalId,
         select: (data) => data,
-        staleTime: 1000 * 60 * 15 , // 15 minutos
+        staleTime: 1000 * 60 * 5 , // 15 minutos
     });
 
 }
