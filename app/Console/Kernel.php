@@ -68,6 +68,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('alertas:cleanup-old')
             ->dailyAt('02:00')->name('CleanupOldAlertas')->withoutOverlapping();
 
+        $schedule->command('alertas:sucursal-inicio-liquidacion-set-cache')
+            ->everyFifteenMinutes()->name('AlertaSucursalInicioLiquidacionSetCacheValue')->withoutOverlapping();
+
         $schedule->command('monitor:jobs')
             ->everyFifteenMinutes()->name('MonitorJobs')->withoutOverlapping();
 

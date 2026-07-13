@@ -2,6 +2,7 @@ import loginConnector from "./loginConnector.jsx";
 import dashboardConnector from "./dashboardConnector.jsx";
 import detectLeavingPageConnector from "./detectLeavingPageConnector.jsx";
 import mercadoPagoBySucursalConfigurationConnector from "@/connectors/mercadoPagoBySucursalConfigurationConnector.jsx";
+import InicioSucursalAlertasConnector from "@/connectors/InicioSucursalAlertasConnector.jsx";
 
 export default () =>
 {
@@ -9,4 +10,5 @@ export default () =>
     dashboardConnector();
     detectLeavingPageConnector();
     mercadoPagoBySucursalConfigurationConnector();
+    InicioSucursalAlertasConnector();
 }

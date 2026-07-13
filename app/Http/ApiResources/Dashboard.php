@@ -3,6 +3,7 @@
 namespace App\Http\ApiResources;
 
 use App\Services\Alertas\AlertasManager;
+use App\Services\Alertas\CacheHandlers\AlertaSucursalInicioLiquidacionCacheHandler;
 use App\Services\Alertas\Transformers\AlertaSummaryDTOTransformer;
 use App\Services\Alertas\Transformers\AlertaDetalleDTOToLegacyResponseTransformer;
 use Illuminate\Http\JsonResponse;
@@ -86,5 +87,16 @@ class Dashboard extends AbstractApiHandler
     {
         app(AlertasManager::class)->MarcarAlertasComoLeidas(auth()->user(), null, $alertaId, false);
         return $this->sendResponse([]);
+    }
+
+    public function getAlertaInicioSucursalLiquidacion(int $sucursalId): JsonResponse
+    {
+        $sucursal = get_entity_or_fail('Sucursal', $sucursalId);
+
+        $cacheHandler = new AlertaSucursalInicioLiquidacionCacheHandler($sucursal);
+
+        return $this->sendResponse(
+            $cacheHandler->getValue()->toArray()
+        );
     }
 }

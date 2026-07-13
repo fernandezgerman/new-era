@@ -113,7 +113,7 @@ export const MostrarCompra = ({titulo, compras, tipo}) => {
                     onChange={() => onToggle(compra.id)}
                     className={'rounded-1 w-4 h-4'}
                 />
-                <b>{compra.proveedor?.nombre}</b> - ({compra.sucursal?.nombre + ')' ?? 'n/a'}
+                <b>{compra.proveedor?.nombre}</b> - ({(compra.sucursal?.nombre ?? 'n/a' )+ ')' }
             </div>
         );
     };

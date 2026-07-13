@@ -13,6 +13,11 @@ select:focus  {
 	background-color: red;
 	color:white;
 }
+
+.filaOrange{
+    background-color: orange !important;
+    color:black !important;
+}
 .filaActualizacionesPendientes{
 	background-color: blue;
 	color:white;

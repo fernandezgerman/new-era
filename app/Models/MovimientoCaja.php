@@ -33,6 +33,20 @@ class MovimientoCaja extends BaseModel implements ActualizableItem
         'importe',
     ];
 
+    protected $appends = [
+        'descripcion_estado',
+    ];
+
+    public function getDescripcionEstadoAttribute()
+    {
+        return match ($this->idestado) {
+            1 => 'Pendiente',
+            2 => 'Aprobado',
+            3 => 'Rechazado',
+            default => 'Desconocido',
+        };
+    }
+
     public function usuario()
     {
         return $this->belongsTo(User::class, 'idusuario');

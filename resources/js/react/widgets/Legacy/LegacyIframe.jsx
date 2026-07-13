@@ -3,13 +3,15 @@ import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 import {isMobile} from "react-device-detect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeftLong, faPeopleArrowsLeftRight, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
-import {LegacyParametterCatcher} from "@/widgets/HistoricoCostoArticulos/LegacyParametterCatcher.jsx";
+
 import {
     LegacyParametterArticulosPreciosCatcher
 } from "@/widgets/HistoricoPreciosArticulos/LegacyParametterArticulosPreciosCatcher.jsx";
 import {
     LegacyParametterMPResumenCajaCatcher
 } from "@/widgets/MercadoPagoResumenCaja/LegacyParametterMPResumenCajaCatcher.jsx";
+import {LegacyParametterCatcher} from "@/components/LegacyParametterCatcher.jsx";
+import {ShowSucursalAlertasLiquidacion} from "@/widgets/InicioSucursalAlertas/ShowSucursalAlertasLiquidacion.jsx";
 
 export const LegacyFrame = ({iframeHrefs, children}) => {
     const iframeRef = React.useRef(null);
@@ -75,6 +77,9 @@ export const LegacyFrame = ({iframeHrefs, children}) => {
             <LegacyParametterCatcher/>
             <LegacyParametterArticulosPreciosCatcher />
             <LegacyParametterMPResumenCajaCatcher />
+            <LegacyParametterCatcher Component={ShowSucursalAlertasLiquidacion} accionKey={'INICIO_SUCURSAL_ALERTAS_LIQUIDACION'} />
+
+
             {/* Hidden form to post parameters into the iframe when available */}
             {hasPost && (
                 <form ref={formRef} method="POST" target="legacy_iframe" style={{display: 'none'}}>

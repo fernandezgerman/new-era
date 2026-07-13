@@ -35,4 +35,15 @@ export default class Dashboard extends ResourcesBase
         }
     }
 
+    async getAlertaSucursalInicioLiquidacion(sucursalId) {
+        try{
+            return this.processResponse(
+                await window.axios.get('api/dashboard/alertas/inicio/sucursal/'+sucursalId)
+            );
+        }catch(err)
+        {
+            this.handleError(err)
+        }
+    }
+
 }

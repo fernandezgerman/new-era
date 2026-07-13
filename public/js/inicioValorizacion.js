@@ -18,37 +18,37 @@ function recalcularValorizaciones(){
 }
 function inicioValorizacionExistencias(idsucursal){
 	$("#frmStockFiltros input[name=inpSucursalId]").val(idsucursal);
-	
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=rptstckrbr';
-	
+
 	$('#frmStockFiltros').attr('action',action);
-	$("#frmStockFiltros" ).submit();	
+	$("#frmStockFiltros" ).submit();
 }
 function inicioCajas(idsucursal){
 	$("#frmCajasFiltros input[name=inpSucursalId]").val(idsucursal);
-	
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=cajal';
-	
+
 	$('#frmCajasFiltros').attr('action',action);
-	$("#frmCajasFiltros" ).submit();	
+	$("#frmCajasFiltros" ).submit();
 }
 
 function inicioAbrirLiquidacion(){
 	if(confirm("Esta seguro que desea abrir una nueva liquidacion?")){
 		action = 'principal.php?token='+$('#mToken').val()+'&pagina=prmliqdr';
-		
+
 		$('#frmInicioAbrirLiquidacion').attr('action',action);
-		$("#frmInicioAbrirLiquidacion" ).submit();		
+		$("#frmInicioAbrirLiquidacion" ).submit();
 	}
-	
+
 }
 function inicioSaldoProvedores(idsucursal){
 	$("#frmSaldoFiltros input[name=inpInicioSucursalId]").val(idsucursal);
-	
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=rptcmrsimpgs';
-	
+
 	$('#frmSaldoFiltros').attr('action',action);
-	$("#frmSaldoFiltros" ).submit();	
+	$("#frmSaldoFiltros" ).submit();
 }
 function inicioMostrarDetalleSucursal(idsucursal){
 	$("#frmDetalleSucursal input[name=idsucursal]").val(idsucursal);
@@ -56,45 +56,67 @@ function inicioMostrarDetalleSucursal(idsucursal){
 	action = 'principal.php';
 
 	$('#frmDetalleSucursal').attr('action',action);
-	$("#frmDetalleSucursal" ).submit();	
+	$("#frmDetalleSucursal" ).submit();
 }
+
+function mostrarMovimientosPendientes(idSucursal){
+    /*
+    const div = document.getElementById('visualizar-historico-costos');
+    div.setAttribute('data-articulo-id', idarticulo); */
+
+    const mensaje = {
+        tipo: 'IFRAME_EVENT',
+        accion: 'MOSTRAR_DETALLE_MOVIMIENTOS_PENDIENTES_LIQ',
+        payload: {
+            idSucursal
+        }
+    };
+
+    // Obtiene: https://sitio.com
+    const baseUrl = window.location.origin;
+
+    // Enviar mensaje al padre (React)
+    window.parent.postMessage(mensaje, baseUrl); // Cambia por tu dominio en producción
+
+}
+
 /*
 function mostrarDetalleSobrantes(fecha,idsucursal){
 	$('#inpFechaAperturaHasta').val(fecha);
 	$('#inpFechaAperturaDesde').val(fecha);
 	$('#inpSucursalBalance').val(idsucursal);
-	
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=rptbalsuc';
 	$('#formSobrantes').attr('action',action);
-	$("#formSobrantes" ).submit();	
+	$("#formSobrantes" ).submit();
 }
 function mostrarDetalleArreglos(fecha,idsucursal){
 	$("#formGananciasArreglos input[name=inpFechaAperturaHasta]").val(fecha);
 	$("#formGananciasArreglos input[name=inpFechaAperturaDesde]").val(fecha);
 	$("#formGananciasArreglos input[name=inpSucursalBalance]").val(idsucursal);
-	
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=rptbalsuc';
 	$('#formGananciasArreglos').attr('action',action);
-	$("#formGananciasArreglos" ).submit();	
+	$("#formGananciasArreglos" ).submit();
 }
 function mostrarDetalleMovimientosStock(fecha,idsucursal){
 	$("#formMovimientosStock input[name=inpFechaHasta]").val(fecha);
 	$("#formMovimientosStock input[name=inpFechaDesde]").val(fecha);
 	$("#formMovimientosStock input[name=inpSucursalIdUnico]").val(idsucursal);
-	
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=rptstckbjs';
 	$('#formMovimientosStock').attr('action',action);
-	$("#formMovimientosStock" ).submit();	
+	$("#formMovimientosStock" ).submit();
 }
 function mostrarDetalleMovimientos(fecha,idsucursal){
 	$("#formMovimientos input[name=inpFechaHoraMovimientoHasta]").val(fecha);
 	$("#formMovimientos input[name=inpFechaHoraMovimientoDesde]").val(fecha);
 	$("#formMovimientos input[name=inpSucursalId]").val(idsucursal);
 	$("#formMovimientos input[name=cadenaMotivos]").val(getMotivos());
-	
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=mvmcjal';
 	$('#formMovimientos').attr('action',action);
-	$("#formMovimientos" ).submit();	
+	$("#formMovimientos" ).submit();
 }
 function modificarTotales(idcheck,tgan,tarr,tmov,tmovstck){
 	$("#divCelda"+idcheck).removeClass();
@@ -104,27 +126,27 @@ function modificarTotales(idcheck,tgan,tarr,tmov,tmovstck){
 	}else{
 		multiplo = -1;
 	}
-	
+
 	inpTotalMovimientoStock = parseFloat($('#inpTotalMovimientoStock').val()) + parseFloat(tmovstck) * multiplo;
 	inpTotalGanancia = parseFloat($('#inpTotalGanancia').val()) + parseFloat(tgan) * multiplo;
 	inpTotalArreglo = parseFloat($('#inpTotalArreglo').val()) + parseFloat(tarr) * multiplo;
 	inpTotalMovimiento = parseFloat($('#inpTotalMovimiento').val()) + parseFloat(tmov) * multiplo;
 	inpTotal = parseFloat($('#inpTotal').val()) + (parseFloat(tgan) + parseFloat(tmovstck) + parseFloat(tarr)+ parseFloat(tmov)) * multiplo;
-	
+
 	$('#inpTotalMovimientoStock').val(formatearPrecio(inpTotalMovimientoStock));
 	$('#inpTotalGanancia').val(formatearPrecio(inpTotalGanancia));
 	$('#inpTotalArreglo').val(formatearPrecio(inpTotalArreglo));
 	$('#inpTotalMovimiento').val(formatearPrecio(inpTotalMovimiento));
 	$('#inpTotal').val(formatearPrecio(inpTotal));
-	
-	
+
+
 	$('#totalMovimientosStock').html(formatearPrecio(inpTotalMovimientoStock));
 	$('#totalGanancia').html(formatearPrecio(inpTotalGanancia));
 	$('#totalArreglos').html(formatearPrecio(inpTotalArreglo));
 	$('#totalMovimientos').html(formatearPrecio(inpTotalMovimiento));
 	$('#total').html(formatearPrecio(inpTotal));
-	
-	
+
+
 }
 
 function datosValidosGuardar(){
@@ -132,12 +154,12 @@ function datosValidosGuardar(){
 		alert("Debe seleccionar el usuario que rindio el dinero");
 		return false;
 	}
-	
+
 	if($("#inpTotalRendidoAux").val() == "" || parseInt($("#inpTotalRendidoAux").val()) == 0){
 		alert("Debe ingresar un importe rendido.");
 		return false;
 	}
-	
+
 	celdas = $("#totalCeldas").val();
 	selecciono = false ;
 	for(i=0;i < celdas;i++ ){
@@ -154,11 +176,11 @@ function datosValidosGuardar(){
 	$("#inpObservaciones").val($("#inpObservacionesAux").val());
 	$("#inpUsuarioId").val($("#inpUsuarioIdAux").val());
 	$("#inpClaveOperacion").val($("#inpClaveOperacionAux").val());
-	
-	
+
+
 	action = 'principal.php?token='+$('#mToken').val()+'&pagina=lqdgrd';
 	$('#formLiquidacion').attr('action',action);
-	$("#formLiquidacion" ).submit();	
-	
+	$("#formLiquidacion" ).submit();
+
 	return true;
 } */
