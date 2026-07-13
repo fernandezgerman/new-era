@@ -29,4 +29,16 @@ class CacheManager
             default => (int) $expire->value,
         };
     }
+
+    public function getCacheValue(string $key): mixed
+    {
+        return Cache::get($key);
+    }
+
+    public function putCacheValue(string $key, mixed $value, ?CacheExpire $expire): void
+    {
+        Cache::put($key, $value, $expire ? $this->getExireTime($expire) : null);
+    }
+
+
 }
