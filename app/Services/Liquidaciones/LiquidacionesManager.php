@@ -18,7 +18,7 @@ class LiquidacionesManager extends CacheManager
     {
 
         return $this->Cache(
-            ['historico_valorizaciones_', md5(json_encode($sucursalesIds)), '_'.$pagina],
+            ['historico_valorizaciones_V2_', md5(json_encode($sucursalesIds)), '_'.$pagina],
             CacheExpire::NEXT_MONDAY,
             function () use ($sucursalesIds, $pagina) {
             $limit = 4 * 24;
@@ -32,6 +32,7 @@ class LiquidacionesManager extends CacheManager
                 ->select(
                     'l.fechahoradesde',
                     'l.id as liquidacionId',
+                    'l.idliquidacionperiodo',
                     'lc.id as id',
                     'lc.descripcion',
                     DB::raw('sum(ldc.importe) as importe')
@@ -64,7 +65,8 @@ class LiquidacionesManager extends CacheManager
                     $detalles->push(new HistoricoValorizacionDTO(
                         fecha: $item->fechahoradesde,
                         descripcion: $item->descripcion,
-                        importe: (float) $item->importe
+                        importe: (float) $item->importe,
+                        idPeriodoContable: $item->idliquidacionperiodo,
                     ));
                 }
 

@@ -10,6 +10,7 @@ class HistoricoValorizacionDTO implements DTOInterface
         public ?string $fecha = null,
         public ?string $descripcion = null,
         public ?float $importe = null,
+        public ?int $idPeriodoContable = null,
     ) {
     }
 
@@ -19,6 +20,7 @@ class HistoricoValorizacionDTO implements DTOInterface
             'fecha' => $this->fecha,
             'descripcion' => $this->descripcion,
             'importe' => $this->importe,
+            'idperiodo' => $this->idPeriodoContable ,
         ];
     }
 }

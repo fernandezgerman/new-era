@@ -5,6 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {LineChart, lineClasses} from '@mui/x-charts/LineChart';
 import {chartsTooltipClasses} from '@mui/x-charts/ChartsTooltip';
+import {useXScale, useDrawingArea} from '@mui/x-charts/hooks';
 
 import moment from "moment";
 import {processDate} from "@/utils/dates.jsx";
@@ -27,6 +28,46 @@ const STOCK = 3;
 const CAJAS = 2;
 const CTACTE = 1;
 const VAL = 0;
+
+const MonthBackground = ({areas}) => {
+    const xScale = useXScale('x-axis');
+    const {top, height} = useDrawingArea();
+
+    if (!xScale || !areas || areas.length === 0) return null;
+
+    return (
+        <g className="month-background">
+            {areas.map((area, index) => {
+                if (area.color === 'transparent') return null;
+
+                const x1 = xScale(area.x1);
+                const x2 = xScale(area.x2);
+
+                if (x1 === undefined || x2 === undefined) return null;
+
+                // Adjust for point scale: we want the area to cover the full month.
+                // Since it's 'point' scale, the points are at the exact positions.
+                // To cover the month, we might need some padding or just accept the point-to-point coverage.
+                // Usually, for point scale, we want to go from x1 to x2.
+
+                const left = Math.min(x1, x2);
+                const width = Math.abs(x2 - x1);
+
+                return (
+                    <rect
+                        key={index}
+                        x={left}
+                        y={top}
+                        width={width}
+                        height={height}
+                        fill={area.color}
+                        style={{pointerEvents: 'none'}}
+                    />
+                );
+            })}
+        </g>
+    );
+};
 
 export default function StyledLineChart({data, sucursales, setSucursales}) {
 
@@ -125,6 +166,40 @@ export default function StyledLineChart({data, sucursales, setSucursales}) {
     const xLabels = useMemo(() => {
         if (!data?.[0]?.detalles) return [];
         return data[0].detalles.map((item) => processDate(moment(item.fecha), true));
+    }, [data]);
+
+    const backgroundAreas = useMemo(() => {
+        if (!data?.[0]?.detalles || data[0].detalles.length === 0) return [];
+
+        const areas = [];
+        let currentMonth = data[0].detalles[0].idPeriodoContable;
+        let startIdx = 0;
+        let isGray = false;
+
+        data[0].detalles.forEach((item, index) => {
+            const itemMonth = item.idPeriodoContable;
+            if (itemMonth !== currentMonth) {
+                // Terminar área anterior
+                areas.push({
+                    x1: processDate(moment(data[0].detalles[startIdx].fecha), true),
+                    x2: processDate(moment(data[0].detalles[index].fecha), true),
+                    color: isGray ? 'rgba(200, 200, 200, 0.2)' : 'transparent',
+                });
+                // Cambiar para el nuevo mes
+                currentMonth = itemMonth;
+                startIdx = index;
+                isGray = !isGray;
+            }
+        });
+
+        // Añadir la última área
+        areas.push({
+            x1: processDate(moment(data[0].detalles[startIdx].fecha), true),
+            x2: processDate(moment(data[0].detalles[data[0].detalles.length - 1].fecha), true),
+            color: isGray ? 'rgba(200, 200, 200, 0.2)' : 'transparent',
+        });
+
+        return areas;
     }, [data]);
 
 
@@ -234,7 +309,9 @@ export default function StyledLineChart({data, sucursales, setSucursales}) {
                 }}
 
                 margin={margin}
-            />
+            >
+                <MonthBackground areas={backgroundAreas} />
+            </LineChart>
         </div>
     );
 }
