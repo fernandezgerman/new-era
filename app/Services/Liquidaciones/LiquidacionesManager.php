@@ -37,7 +37,7 @@ class LiquidacionesManager extends CacheManager
                     'lc.descripcion',
                     DB::raw('sum(ldc.importe) as importe')
                 )
-                ->groupBy('l.fechahoradesde', 'l.id', 'lc.descripcion', 'lc.id')
+                ->groupBy('l.idliquidacionperiodo','l.fechahoradesde', 'l.id', 'lc.descripcion', 'lc.id')
                 ->orderByDesc('l.fechahoradesde')
                 ->where('s.activo', 1)
                 ->where('s.id', '<>',  2)
