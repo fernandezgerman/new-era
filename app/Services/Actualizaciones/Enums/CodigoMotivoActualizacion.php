@@ -36,4 +36,6 @@ enum CodigoMotivoActualizacion: string
     case GET_LETRAS = 'GET-LETRAS';
     case GET_PAGOS = 'GET-PAGOS';
     case GET_PRECIOS_TEMPORALES = 'GET-PRECIOS-TMP';
+
+    case GET_LIMITE_VENTA_RUBRO_HORA = 'GET-LMT-RBR-HR';
 }

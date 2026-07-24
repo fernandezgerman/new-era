@@ -64,7 +64,8 @@ return [
         ],
     'tailwind' => [
         'pages-to-include-tailwind' => [
-            'sucm' => true
+            'sucm' => true,
+            'rbrm' => true
         ]
     ]
 ];

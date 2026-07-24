@@ -44,6 +44,7 @@ const Select = ({
                     clearSelectionLabel = 'Deseleccionar',
                     showClearAllMultiple = true,
                     clearAllMultipleLabel = 'Deseleccionar todo',
+                    itemClass =[]
                 }) => {
     const selectRef = useRef(null);
     const choicesRef = useRef(null);
@@ -53,7 +54,7 @@ const Select = ({
     keepSearchTextOnMultiSelectRef.current = keepSearchTextOnMultiSelect;
     const multipleRef = useRef(multiple);
     multipleRef.current = multiple;
-    const localClassName = className + " " + (isLoading ? "opacity-50 !color-gray cursor-not-allowed" : "");
+    const localClassName = className + " " + (isLoading ? "opacity-50 color-gray! cursor-not-allowed" : "");
 
     const hasMultiSelection =
         multiple
@@ -130,8 +131,12 @@ const Select = ({
             shouldSort: false,
             removeItems: true,
             classNames: {
-                containerOuter: ['choices', 'relative', 'min-w-[200px]', multiple ? 'bdg-gray-100!' : 'bg-transparent'],
-             /*   containerInner: ['choices__inner',  'border', 'border-gray-300', 'rounded-lg', 'p-2'],
+                containerOuter: ['choices', 'relative','relative', 'min-w-[200px]', multiple ? 'bdg-gray-100!' : 'bg-transparent'],
+               /* item: itemClass,
+                input: itemClass.concat(['w-full']),*/
+                item: ['choices__item'].concat(itemClass),
+                input: ['choices__input', 'bg-transparent', 'outline-none'].concat(['w-full']),
+                /*containerInner: ['choices__inner',  'border', 'border-gray-300', 'rounded-lg', 'p-2'],
                 input: ['choices__input', 'bg-transparent!', 'outline-none'],
                 list: ['choices__list'],
                 listSingle: ['choices__list--single'],
@@ -282,7 +287,7 @@ const Select = ({
                 onChange={onChange}
                 disabled={disabled}
                 multiple={multiple}
-                className={`focus:shadow-soft-primary-outline bg-white dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none h-30! ${localClassName}`}
+                className={`focus:shadow-soft-primary-outline bg-white dark:!ne-dark-input dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none h-30! ${localClassName}`}
             />
             {errorMessage && <LabelError className={'ml-2'}>{errorMessage}</LabelError>}
             {validMessage && <LabelSuccess className={'ml-2'}>{validMessage}</LabelSuccess>}

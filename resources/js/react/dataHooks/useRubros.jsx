@@ -18,4 +18,18 @@ const useRubros = () => {
 
 }
 
-export { useRubros };
+const useRubro = (rubroId) => {
+    return useQuery({
+        queryKey: ['rubro-'+rubroId],
+        queryFn: async () => {
+            const resource = new Resource();
+            return await resource.getEntity('rubro', rubroId);
+        },
+        enabled: !!rubroId,
+        select: (data) => data,
+        staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    });
+
+}
+
+export { useRubro, useRubros };

@@ -3,7 +3,7 @@ import {Select} from "@/components/Select.jsx";
 import ErrorBoundary from "@/components/ErrorBoundary.jsx";
 import {LabelError, LabelSuccess} from "@/components/Label.jsx";
 
-const TimePicker = ({value, setValue, label = "Seleccione Hora", className = "", errorMessage, validMessage}) => {
+const TimePicker = ({value, setValue, label = "Seleccione Hora", className = "", errorMessage, validMessage, itemClass=[], todos= true}) => {
     const hours = Array.from({length: 24}, (_, i) => {
         const hour = i.toString().padStart(2, '0');
         return {
@@ -12,14 +12,15 @@ const TimePicker = ({value, setValue, label = "Seleccione Hora", className = "",
         };
     });
 
-    const options = [
+    const options = todos ? [
         {value: 'Todos', label: 'Todos'},
         ...hours
-    ];
+    ] : hours;
 
     return (
         <ErrorBoundary>
             <Select
+                itemClass={itemClass}
                 options={options}
                 value={value}
                 setValue={setValue}

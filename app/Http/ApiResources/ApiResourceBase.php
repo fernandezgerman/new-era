@@ -2,15 +2,16 @@
 
 namespace App\Http\ApiResources;
 
+use App\Events\Traits\TriggerEventIfExist;
 use App\Http\Requests\Api\ApiResourceBaseGetEntity;
 use App\Http\Requests\Api\ApiResourceBaseInsert;
 use App\Http\Requests\Api\ApiResourceBasePatch;
 use App\Http\Requests\Api\ApiResourceBaseDelete;
-use App\Models\AgrupacionCaja;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\isArray;
 
@@ -20,6 +21,7 @@ use function PHPUnit\Framework\isArray;
  */
 class ApiResourceBase extends AbstractApiHandler
 {
+    use TriggerEventIfExist;
     /**
      * Retrieve a list of resources or a single resource by ID.
      *
@@ -142,6 +144,7 @@ class ApiResourceBase extends AbstractApiHandler
 
         $this->processRelations($request->all(), $model, 'id' . str_replace('-', '', $entity));
 
+        $this->triggerEventIfExists($entity, 'Inserted', $model);
 
         return $this->sendResponse($model);
     }
@@ -165,6 +168,7 @@ class ApiResourceBase extends AbstractApiHandler
 
                 if (Arr::get($item, 'deleted') !== true) {
                     $relationModel = $this->processInsert($entity, $itemToSave);
+                    $this->triggerEventIfExists($entity, 'Inserted', $relationModel);
                     $this->processRelations($relation, $relationModel, 'id' . $entity);
                 }
 
@@ -176,24 +180,30 @@ class ApiResourceBase extends AbstractApiHandler
     function processInsert($entity, $payload): Model
     {
         $modelClass = $this->resolveModelClass($entity);
-        return $modelClass::create($payload);
+        $model = $modelClass::create($payload);
+        return $model;
     }
 
     private
     function processUpdate($entity, $payload): Model
     {
         $modelClass = $this->resolveModelClass($entity);
-        return $modelClass::updateOrCreate(
+        $model = $modelClass::updateOrCreate(
             ['id' => $payload['id']],
             $payload
         );
+        return $model;
     }
 
     private
     function processDelete($entity, $payload)
     {
         $modelClass = $this->resolveModelClass($entity);
-        $modelClass::find($payload['id'])->delete();
+        $model = $modelClass::find($payload['id']);
+        if ($model) {
+            $this->triggerEventIfExists($entity, 'Deleted', $model);
+            $model->delete();
+        }
     }
 
     /**
@@ -247,6 +257,7 @@ class ApiResourceBase extends AbstractApiHandler
         $model->save();
 
         $this->processUpdateRelations($request->all(), $model, 'id' . str_replace('-', '', $entity));
+        $this->triggerEventIfExists($entity, 'Updated', $model);
         return $this->sendResponse($model);
     }
 
@@ -270,11 +281,13 @@ class ApiResourceBase extends AbstractApiHandler
                         $this->processDelete($entity, $itemToSave);
                     } else {
                         $relationModel = $this->processUpdate($entity, $itemToSave);
+                        $this->triggerEventIfExists($entity, 'Updated', $relationModel);
                         $this->processRelations($relation, $relationModel, 'id' . $entity);
                     }
                 } else {
                     if (Arr::get($itemToSave, 'deleted') !== true) {
                         $relationModel = $this->processInsert($entity, $itemToSave);
+                        $this->triggerEventIfExists($entity, 'Inserted', $relationModel);
                         $this->processRelations($relation, $relationModel, 'id' . $entity);
                     }
                 }
@@ -305,6 +318,8 @@ class ApiResourceBase extends AbstractApiHandler
         if (!$model) {
             return $this->sendResponsePageNotFound();
         }
+
+        $this->triggerEventIfExists($entity, 'Deleted', $model);
 
         $model->delete();
 

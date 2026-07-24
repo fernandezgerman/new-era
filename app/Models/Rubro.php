@@ -48,4 +48,9 @@ class Rubro extends BaseModel
     {
         return new \App\Collections\RubroCollection($models);
     }
+
+    public function limiteVentaPorHora(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LimiteVentaPorHoraRubro::class, 'idrubro');
+    }
 }
