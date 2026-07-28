@@ -239,7 +239,7 @@ const AlertaMenu = ({alertaMenu, onMenuSelected, loading, refetchHeader}) => {
                                 return (
                                     <div
                                         key={index}
-                                        className={'ml-0.5 text-xs float-right rounded-[15px] ' + colour + ' h-[20px] p-0.5 w-[20px] text-center text-white align-middle'}>
+                                        className={'ml-0.5 text-xs float-right rounded-[15px] ' + colour + ' h-[20px] p-1 pt-0.5! min-w-[20px] text-center text-white align-middle'}>
                                         {circle.value}
                                     </div>
                                 )
