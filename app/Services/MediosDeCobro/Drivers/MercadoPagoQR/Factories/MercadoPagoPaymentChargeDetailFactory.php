@@ -16,7 +16,10 @@ class MercadoPagoPaymentChargeDetailFactory
         $dto->name = (string) (Arr::get($data, 'name') ?? '');
         $dto->rate = (float) (Arr::get($data, 'rate') ?? 0);
         $dto->amount = (float) (Arr::get($data, 'amounts.original') ?? 0);
-        $dto->payedByCustomer = Arr::get($data, 'accounts.from') === "payer";
+        $from = Arr::get($data, 'accounts.from');
+        $to = Arr::get($data, 'accounts.to');
+        $dto->payedByCustomer = !($from === "collector");
+
 
         $type = (string) (Arr::get($data, 'type') ?? '');
         $dto->type = match ($type) {

@@ -135,5 +135,6 @@ class MovimientosCajaManager
             return $mov;
         });
     }
+
 }
 

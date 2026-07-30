@@ -74,7 +74,12 @@ class VentaSucursalCobro extends BaseModel
 
     public function MercadoPagoOrders()
     {
-        return $this->hasMany(MercadoPagoQROrderSql::class, 'idventasucursalcobro');
+        return $this->hasMany(MercadoPagoQROrderSql::class, 'ventasucursalcobroid');
+    }
+
+    public function cobroSucursalGastos()
+    {
+        return $this->hasMany(CobroSucursalGasto::class, 'idventasucursalcobro');
     }
 
 }

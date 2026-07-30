@@ -11,6 +11,7 @@ import {ProveedoresListasImportar} from "@/pages/proveedoresImportarListas/index
 import {OrdenesDeCompraReporte} from "@/pages/ordenesDeCompra/index.jsx";
 import RustDeskInstalacionDocumentacion from "@/pages/documentacion/RustDeskDocumentacion/index.jsx";
 import {ExistenciasSinCompras} from "@/pages/ExistenciasSinCompras/index.jsx";
+import {ListadoMovimientosDeCaja} from "@/pages/ListadoMovimientosDeCaja/index.jsx";
 
 // Documentacion: https://reactcommunity.org/react-modal/
 const ReactMenu = {
@@ -33,7 +34,8 @@ const ReactMenu = {
     "mis-indicadores" : ArreglosDeStockChartCard,
     "rep-gastos": ReporteGastos,
     "impr-cmp": ProveedoresListasImportar,
-    "ord-cmp-2": OrdenesDeCompraReporte
+    "ord-cmp-2": OrdenesDeCompraReporte,
+    "mvmcjal": ListadoMovimientosDeCaja
 };
 
 export default ReactMenu;

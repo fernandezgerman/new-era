@@ -2,7 +2,9 @@
 
 namespace App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Models;
 
+use App\Models\Compra;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MercadoPagoQROrderSql extends Model

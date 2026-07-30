@@ -16,6 +16,7 @@ use App\Models\LiquidacionPeriodoGasto;
 use App\Models\Proveedor;
 use App\Models\Sucursal;
 use App\Models\User;
+use App\Models\VentaSucursalCobro;
 use App\Services\Actualizaciones\ActualizacionesManager;
 use App\Services\Gastos\Enums\TiposGastos;
 use App\Services\PeriodosContables\Exceptions\NoHayUnPeriodoContableAbiertoException;
@@ -44,6 +45,7 @@ class GastosManager
             "articuloId" => config('medios_de_cobro.drivers.MercadoPagoQR.gastos.articuloId'),
         ];
     }
+
 
     public function createGastoByTipo(
         int         $usuarioId,
@@ -74,7 +76,7 @@ class GastosManager
         $gasto->observaciones = $observaciones;
         $gasto->fechacreacion = Carbon::now()->format('Y-m-d H:i:s');
         $gasto->idletra = null;
-        $gasto->idunico = 'MPGST' . Carbon::now()->format('Y-m-d H:i:s').'S'.$sucursalId.'U'.$usuarioId.'I'.$totalGasto;
+        $gasto->idunico = 'MPGST' . Carbon::now()->format('Y-m-d H:i:s') . 'S' . $sucursalId . 'U' . $usuarioId . 'I' . $totalGasto;
         $gasto->save();
 
         try {

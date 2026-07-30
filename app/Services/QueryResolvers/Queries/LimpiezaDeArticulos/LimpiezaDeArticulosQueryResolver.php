@@ -95,33 +95,33 @@ class LimpiezaDeArticulosQueryResolver extends QueryResolverAbstractClass
         return $query;
     }
 
-    protected function decorateResult(\Illuminate\Pagination\LengthAwarePaginator $paginator): \Illuminate\Pagination\LengthAwarePaginator
+    protected function decorateResult($item)
     {
 
-        $paginator->getCollection()->each(function ($item) {
-         /*   $ultimaventaid = VentaSucursal::query()
-                ->where('idsucursal', '=', $item->sucursalId)
-                ->where('idarticulo', '=', $item->id)
-                ->max('id');
 
-            $ultimaventa = VentaSucursal::query()
-                ->where('id', '=', $ultimaventaid);
+     /*   $ultimaventaid = VentaSucursal::query()
+            ->where('idsucursal', '=', $item->sucursalId)
+            ->where('idarticulo', '=', $item->id)
+            ->max('id');
 
-            $item->ultima_venta = $ultimaventa->exists() ? $ultimaventa->first()->fechaenvio->diffInDays() : null; */
+        $ultimaventa = VentaSucursal::query()
+            ->where('id', '=', $ultimaventaid);
 
-            $item->ultima_venta = null;
+        $item->ultima_venta = $ultimaventa->exists() ? $ultimaventa->first()->fechaenvio->diffInDays() : null; */
 
-            $ultimaRendicion = RendicionStock::query()
-                ->join('rendicionstockdetalle', 'rendicionstockdetalle.idrendicion', '=', 'rendicionesstock.id')
-                ->where('idsucursal', '=', $item->sucursalId)
-                ->where('idarticulo', '=', $item->id)
-                ->orderBy('rendicionesstock.id', 'desc')
-                ->with('rendicionstockdetalle')
-                ->first();
+        $item->ultima_venta = null;
 
-            $item->ultima_rendicion = $ultimaRendicion;
-        });
+        $ultimaRendicion = RendicionStock::query()
+            ->join('rendicionstockdetalle', 'rendicionstockdetalle.idrendicion', '=', 'rendicionesstock.id')
+            ->where('idsucursal', '=', $item->sucursalId)
+            ->where('idarticulo', '=', $item->id)
+            ->orderBy('rendicionesstock.id', 'desc')
+            ->with('rendicionstockdetalle')
+            ->first();
 
-        return $paginator;
+        $item->ultima_rendicion = $ultimaRendicion;
+
+
+        return $item;
     }
 }

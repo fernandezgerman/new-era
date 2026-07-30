@@ -134,4 +134,9 @@ class Compra extends BaseModel
     {
         return $this->belongsToMany(LiquidacionPeriodo::class, 'liquidacionesperiodogastos', 'idgasto', 'idperiodo');
     }
+
+    public function cobroSucursalGasto()
+    {
+        return $this->hasOne(CobroSucursalGasto::class, 'idcompra');
+    }
 }
