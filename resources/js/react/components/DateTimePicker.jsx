@@ -38,6 +38,7 @@ const DateTimePicker = ({
             <ConfigProvider locale={esES}>
                 <AntdDatePicker
                     showTime={{format: 'HH:mm'}}
+                    needConfirm={false}
                     format={DATE_TIME_FORMAT}
                     value={dayjsValue}
                     onChange={(next) => setValue(next ? next.toDate() : null)}

@@ -4,6 +4,7 @@ namespace App\Listeners\MediosDeCobro;
 
 use App\DataAccessor\MedioDeCobroSucursalConfiguracionDataAccessor;
 use App\Events\Events\MediosDeCobro\MediosDeCobroStatusChangeEvent;
+use App\Models\CobroSucursalGasto;
 use App\Models\MedioDeCobroSucursalConfiguracion;
 use App\Models\MovimientoCajaVentaSucursalCobro;
 use App\Models\VentaSucursalCobro;
@@ -18,6 +19,7 @@ use App\Services\MovimientosDeCaja\MovimientosCajaManager;
 use App\Services\Ventas\VentasManager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Event\Code\Throwable;
 
 class MediosDeCobroStatusChangeListener
 {
@@ -100,7 +102,7 @@ class MediosDeCobroStatusChangeListener
         }
 
         if ($amount > 0) {
-            app(GastosManager::class)->createGastoByTipo(
+            $gasto = app(GastosManager::class)->createGastoByTipo(
                 $configuracion->idusuariocajadestino,
                 $configuracion->idsucursalcajadestino,
                 $amount * ($isRefund ? -1 : 1),
@@ -108,6 +110,15 @@ class MediosDeCobroStatusChangeListener
                 TiposGastos::MERCADO_PAGO,
                 $paymentDetails->orderDTO->externalId ?? 'N/A'
             );
+
+            try{
+                CobroSucursalGasto::create([
+                    'idcompra' => $gasto->id,
+                    'idventasucursalcobro' => $cobro->id,
+                ]);
+            }catch (\Exception $exception){
+                Log::error('Error al agregar el gasto a la venta sucursal: '.$exception->getMessage());
+            }
         }
 
     }

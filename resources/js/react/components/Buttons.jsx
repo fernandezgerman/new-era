@@ -84,8 +84,8 @@ const IconButton = ({icon, className, onClick, iconClassName, title}) => {
 const EditIconButton = ({className, onClick}) => {
     return <IconButton icon={faPencil} className={className} onClick={onClick} />
 }
-const ViewIconButton = ({className, onClick}) => {
-    return <IconButton icon={faMagnifyingGlass} className={className} onClick={onClick} />
+const ViewIconButton = ({className, onClick, title= ''}) => {
+    return <IconButton icon={faMagnifyingGlass} title={title} className={className} onClick={onClick} />
 }
 
 const DeleteIconButton = ({className, onClick, restore = false, withConfirmation = false, confirmationTitle = ' Esta seguro que desea eliminar?'}) => {

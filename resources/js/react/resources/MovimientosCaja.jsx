@@ -12,4 +12,15 @@ export default class MovimientosCaja extends ResourcesBase
             this.handleError(err);
         }
     }
+
+    async getReporteMercadoPago(payload = {})
+    {
+        try {
+            return this.processResponse(
+                await window.axios.post('/api/movimientos-caja/reporte-mercado-pago', payload),
+            );
+        } catch (err) {
+            this.handleError(err);
+        }
+    }
 }
