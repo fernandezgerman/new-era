@@ -140,7 +140,7 @@ class GastosManager
             'lp.descripcion',
             'rbr.nombre',
             'rbr.id',
-            DB::raw('sum(cmp.totalfactura) as importe'),
+            DB::raw('sum(cd.precio * cd.cantidad) as importe'),
             DB::raw("($subquerySql) as sucursales_per_periodo")
         )
             ->groupBy('rbr.nombre', 'rbr.id', 'lp.descripcion', 'lp.id')
@@ -195,7 +195,7 @@ class GastosManager
             'lp.descripcion',
             'art.nombre',
             'art.id',
-            DB::raw('sum(cmp.totalfactura) as importe'),
+            DB::raw('sum(cd.precio * cd.cantidad) as importe'),
             DB::raw("($subquerySql) as sucursales_per_periodo")
         )
             ->where('art.idrubro', $idrubro)
@@ -234,7 +234,7 @@ class GastosManager
     {
         $query = $this->getBaseQuery($periodos, $fechaDesde, $fechaHasta, $sucursales);
 
-        $results = $query->select(DB::raw('count(1) as total'), 'lp.descripcion', 'lp.id as periodo_id', 'art.nombre', 'art.id', DB::raw('sum(cmp.totalfactura) as importe'), 'suc.nombre as sucursal_nombre')
+        $results = $query->select(DB::raw('count(1) as total'), 'lp.descripcion', 'lp.id as periodo_id', 'art.nombre', 'art.id', DB::raw('sum(cd.precio * cd.cantidad) as importe'), 'suc.nombre as sucursal_nombre')
             ->join('sucursales as suc', 'cmp.idsucursal', '=', 'suc.id')
             ->where('art.id', $idarticulo)
             ->orderBy('suc.nombre')
