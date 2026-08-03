@@ -140,6 +140,11 @@ class Articulo extends BaseModel implements ActualizableItem
         return $this->hasMany(Existencia::class, 'idarticulo');
     }
 
+    public function comprasDudosasCache(): HasMany
+    {
+        return $this->hasMany(CompraDudosaCache::class, 'idarticulo');
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(

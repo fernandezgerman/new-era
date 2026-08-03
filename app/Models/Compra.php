@@ -139,4 +139,9 @@ class Compra extends BaseModel
     {
         return $this->hasOne(CobroSucursalGasto::class, 'idcompra');
     }
+
+    public function comprasDudosasCache()
+    {
+        return $this->hasMany(CompraDudosaCache::class, 'idcompra');
+    }
 }

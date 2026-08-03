@@ -23,4 +23,9 @@ class Proveedor extends BaseModel
     {
         return $this->hasMany(Compra::class, 'idproveedor');
     }
+
+    public function comprasDudosasCache()
+    {
+        return $this->hasMany(CompraDudosaCache::class, 'idproveedor');
+    }
 }

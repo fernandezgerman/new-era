@@ -69,17 +69,15 @@ class ApiResourceBase extends AbstractApiHandler
         }
 
         foreach ($filtros as $key => $value) {
-            if (is_array($value)) {
-                $operador = match ($value['operador']) {
-                    'menoroigual' => '<=',
-                    'mayoroigual' => '>=',
-                    default => '=',
-                };
-                $query->where($key, $operador, $value['valor']);
+            if (is_array($value) && array_is_list($value)) {
+                foreach ($value as $condition) {
+                    $this->applyFiltroCondition($query, $key, $condition);
+                }
+            } elseif (is_array($value)) {
+                $this->applyFiltroCondition($query, $key, $value);
             } else {
                 $query->where($key, $value);
             }
-
         }
 
         foreach ($orden as $o) {
@@ -331,6 +329,35 @@ class ApiResourceBase extends AbstractApiHandler
     {
         $class = Str::studly(Str::singular($entity));
         return "App\\Models\\$class";
+    }
+
+    /**
+     * Apply a single filtro condition (equality or operator object) to the query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $key
+     * @param  mixed  $value
+     */
+    private function applyFiltroCondition($query, string $key, $value): void
+    {
+        if (! is_array($value)) {
+            $query->where($key, $value);
+            return;
+        }
+
+        $operador = match ($value['operador'] ?? null) {
+            'menoroigual' => '<=',
+            'mayoroigual' => '>=',
+            'in' => 'in',
+            default => '=',
+        };
+
+        if ($operador === 'in') {
+            $query->whereIn($key, $value['valor'] ?? []);
+            return;
+        }
+
+        $query->where($key, $operador, $value['valor'] ?? null);
     }
 
     /**

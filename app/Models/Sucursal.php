@@ -178,6 +178,11 @@ class Sucursal extends BaseModel implements ActualizableItem
         return $this->hasMany(PrecioTemporal::class, 'idsucursal');
     }
 
+    public function comprasDudosasCache()
+    {
+        return $this->hasMany(CompraDudosaCache::class, 'idsucursal');
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(

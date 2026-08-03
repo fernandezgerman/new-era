@@ -24,15 +24,21 @@ export default class Resource extends ResourcesBase
     orden= {orden1: {name: 'fecha', direction: 'asc'}} or 'descripcion'
 
      */
-    async getEntities(entity, includes = [], filtros =null, orden = null, limit = null)
+    async getEntities(entity, includes = [], filtros =null, orden = null, limit = null, page = null, perPage = null)
     {
         try{
             const f = filtros ? JSON.stringify(filtros, null, 2) : '';
             const o = orden ? JSON.stringify( (typeof orden === "string") ? {orden1: {name: orden, direction: 'asc'}} : orden, null, 2) : '';
 
+            let url = '/api/resources/'+entity+'?includes='+includes+'&filtros='+encodeURIComponent(f)+'&orden='+encodeURIComponent(o);
+            if (perPage != null) {
+                url += '&per_page=' + perPage + '&page=' + (page ?? 1);
+            } else {
+                url += '&limit=' + (limit ?? 500);
+            }
 
             return this.processResponse(
-                await window.axios.get('/api/resources/'+entity+'?includes='+includes+'&filtros='+f+'&orden='+o+'&limit='+( limit ?? 500) )
+                await window.axios.get(url)
             );
         }catch(err)
         {

@@ -27,10 +27,10 @@ class ProcesamientoDeCostosManager
     public function procesarCostosDeCompra(int $compraId): void
     {
 
-        if($compraId === -1) return;
+        if ($compraId === -1) return;
         $compra = get_entity_or_fail('Compra', $compraId);
 
-        if($compra->idtipocomprobante != TipoComprobanteCompra::FACTURA->value)
+        if ($compra->idtipocomprobante != TipoComprobanteCompra::FACTURA->value)
             return;
 
         $compraDetalles = app(ComprasManager::class)->getCompraDetallesLimpiasQuery()
@@ -65,6 +65,7 @@ class ProcesamientoDeCostosManager
         $articuloscostoshistorico->idusuario = $compra->idusuario;
         $articuloscostoshistorico->save();
     }
+
     /**
      * Metodo para establecer el costo de articulos pertenecientes a una compra en los siguientes casos:
      * - Compra anulada
@@ -92,6 +93,7 @@ class ProcesamientoDeCostosManager
 
         $this->actualizarReferenciaDeCostosPorDetalles($compraDetalles);
     }
+
     private function actualizarReferenciaDeCostosPorDetalles(Collection $compraDetalles): void
     {
 
@@ -106,8 +108,7 @@ class ProcesamientoDeCostosManager
                 $codigo = $articulo->codigo;
 
                 //Si la compra no define costo del articulo, continua con el siguiente
-                if($compraDetalle->articulo->idcompradetalle !== $compraDetalle->id)
-                {
+                if ($compraDetalle->articulo->idcompradetalle !== $compraDetalle->id) {
                     continue;
                 }
 
@@ -128,23 +129,22 @@ class ProcesamientoDeCostosManager
                     ->whereNot('articuloscostoshistorico.idcompradetalle', $compraDetalle->id)
                     ->orderBy('articuloscostoshistorico.id', 'desc');
 
-                Log::info('query: '. query_builder_to_raw_sql($articuloCostoHistorico));
+                Log::info('query: ' . query_builder_to_raw_sql($articuloCostoHistorico));
                 $articuloCostoHistorico = $articuloCostoHistorico->first();
 
                 //Si existe un historico anterior
-                if(!blank($articuloCostoHistorico)){
+                if (!blank($articuloCostoHistorico)) {
                     //Si el costo anterior es por una compra y no manual
-                    if(!blank($articuloCostoHistorico->compradetalle))
-                    {
+                    if (!blank($articuloCostoHistorico->compradetalle)) {
                         $this->setCompraDetalleAsArticuloCosto(
                             $articuloCostoHistorico->compradetalle,
                             ArticulosCostoHistoricoMotivos::RECALCULO->value,
                             'Compra establecida por ser la anterior en el historial.'
                         );
-                    }else{
+                    } else {
                         //Si el costo es manual
                         $articulo = $compraDetalle->articulo;
-                        $articulo->costo = $articuloCostoHistorico->precioauxiliar ;
+                        $articulo->costo = $articuloCostoHistorico->precioauxiliar;
                         $articulo->idcompradetalle = null;
                         $articulo->save();
 
@@ -158,7 +158,7 @@ class ProcesamientoDeCostosManager
 
                         $articuloscostoshistorico->save();
                     }
-                }else{
+                } else {
                     //Si no tiene ningun historico de costo, toma la ultima compra al mismo proveedor
                     $ultimaCompraParaEseProveedor = app(ComprasManager::class)->getCompraDetallesLimpiasQuery()
                         ->where('comprasdetalle.idarticulo', $compraDetalle->idarticulo)
@@ -167,14 +167,13 @@ class ProcesamientoDeCostosManager
                         ->orderBy('comprasdetalle.id', 'desc')
                         ->first();
 
-                    if(!blank($ultimaCompraParaEseProveedor))
-                    {
+                    if (!blank($ultimaCompraParaEseProveedor)) {
                         $this->setCompraDetalleAsArticuloCosto(
                             $ultimaCompraParaEseProveedor,
                             ArticulosCostoHistoricoMotivos::RECALCULO->value,
                             'Se tomo la ultima compra al proveedor por no existir otra en el historial'
                         );
-                    }else{
+                    } else {
 
                         //Si el mismo proveedor no tiene compras, se toma la ultima compra
                         $ultimaCompra = app(ComprasManager::class)->getCompraDetallesLimpiasQuery()
@@ -183,13 +182,13 @@ class ProcesamientoDeCostosManager
                             ->orderBy('comprasdetalle.id', 'desc')
                             ->first();
 
-                        if(!blank($ultimaCompra)) {
+                        if (!blank($ultimaCompra)) {
                             $this->setCompraDetalleAsArticuloCosto(
                                 $ultimaCompra,
                                 ArticulosCostoHistoricoMotivos::RECALCULO->value,
                                 'Se tomo la ultima compra de la cadena por no tener historial ni compra al mismo proveedor'
                             );
-                        }else{
+                        } else {
                             $this->setCompraDetalleAsArticuloCosto(
                                 $compraDetalle,
                                 ArticulosCostoHistoricoMotivos::RECALCULO->value,
@@ -203,6 +202,7 @@ class ProcesamientoDeCostosManager
         });
 
     }
+
     public function ActualizarVentaPorCompraDetalleAnulada(CompraDetalle $compraDetalle)
     {
         //Para reemplazar la referencia en ventas (para calcular ganancia) se toma la primer compra anterior a la anulada de la sucursal
@@ -216,8 +216,7 @@ class ProcesamientoDeCostosManager
             ->orderBy('comprasdetalle.id', 'desc')
             ->first();
 
-        if(blank($compraReemplazante))
-        {
+        if (blank($compraReemplazante)) {
             //Si la inmediatamente anterior no existe, se toma la posterior de la sucursal
             $compraReemplazante = app(ComprasManager::class)
                 ->getCompraDetallesLimpiasQuery()
@@ -230,19 +229,20 @@ class ProcesamientoDeCostosManager
                 ->first();
         }
 
-        if(blank($compraReemplazante))
-        {
+        if (blank($compraReemplazante)) {
             //Si la sucursal no tiene compras, se toma la compra del articulo
             $compraReemplazante = $compraDetalle->articulo->compradetalle;
         }
 
-      //  $compra = $compraReemplazante?->compra;
+        //  $compra = $compraReemplazante?->compra;
         $idCompraDetalleUpdate = blank($compraReemplazante) ? ' null ' : $compraReemplazante->id;
         $costo = blank($compraReemplazante) ? $compraDetalle->articulo->costo : $compraReemplazante->precio;
 
         $res = DB::update('UPDATE ventassucursal as vs LEFT JOIN ventassucursalextra as vse ON vs.id = vse.idventa
-                    SET vse.idcompradetalle = '.$idCompraDetalleUpdate.', costosucursal = '.(int)$costo.'
-                    WHERE vse.idcompradetalle = '.$compraDetalle->id);
+                    SET vse.idcompradetalle = ' . $idCompraDetalleUpdate . ', costosucursal = ' . (int)$costo . '
+                    WHERE vse.idcompradetalle = ' . $compraDetalle->id);
         return $costo;
     }
+
+    
 }

@@ -1,8 +1,8 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import moment from 'moment';
 import ErrorBoundary from '@/components/ErrorBoundary.jsx';
 import {PageHeader, RefreshIconButton} from '@/components/H.jsx';
-import {Button} from '@/components/Buttons.jsx';
+import {Button, CancelarButton} from '@/components/Buttons.jsx';
 import {DateTimePicker} from '@/components/DateTimePicker.jsx';
 import {Select} from '@/components/Select.jsx';
 import {SelectSucursal} from '@/components/selects/SelectSucursales.jsx';
@@ -11,11 +11,18 @@ import {SelectMotivoMovimientoCaja} from '@/components/selects/SelectMotivoMovim
 import {AlternativeCard} from '@/components/Card.jsx';
 import {LabelError} from '@/components/Label.jsx';
 import {useReporteMercadoPago} from '@/dataHooks/useReporteMercadoPago.jsx';
+import {useReporteMovimientosCaja} from '@/dataHooks/useReporteMovimientosCaja.jsx';
 import {ReporteMercadoPagoLista} from './ReporteMercadoPagoLista.jsx';
+import {ReporteMovimientosCajaLista} from './ReporteMovimientosCajaLista.jsx';
 import {
     buildReporteMercadoPagoPayload,
     validateReporteMercadoPagoFilters,
 } from './reporteMercadoPagoUtils.jsx';
+import {
+    buildMovimientosCajaFiltros,
+    getMovimientosCajaPaginationMeta,
+    validateMovimientosCajaFilters,
+} from './reporteMovimientosCajaUtils.jsx';
 
 const todayStartDateTime = () => moment().startOf('day').toDate();
 const todayEndDateTime = () => moment().endOf('day').milliseconds(0).toDate();
@@ -39,22 +46,44 @@ export const ListadoMovimientosDeCaja = () => {
     const [tipoReporte, setTipoReporte] = useState(TIPO_REPORTE_MERCADO_PAGO);
     const [fieldErrors, setFieldErrors] = useState({});
     const [submittedFilters, setSubmittedFilters] = useState(null);
+    const [page, setPage] = useState(1);
 
     const isMercadoPago = tipoReporte === TIPO_REPORTE_MERCADO_PAGO;
+    const isMovimientosCaja = tipoReporte === TIPO_REPORTE_MOVIMIENTOS_CAJA;
     const hasSearched = submittedFilters != null;
 
-    const reporteQuery = useReporteMercadoPago({
+    const reporteMercadoPagoQuery = useReporteMercadoPago({
         filters: submittedFilters,
         enabled: isMercadoPago && hasSearched,
     });
 
-    const items = Array.isArray(reporteQuery.data) ? reporteQuery.data : [];
-    const isLoading = reporteQuery.isFetching;
+    const reporteMovimientosCajaQuery = useReporteMovimientosCaja({
+        filters: submittedFilters,
+        page,
+        enabled: isMovimientosCaja && hasSearched,
+    });
+
+    const mercadoPagoItems = Array.isArray(reporteMercadoPagoQuery.data)
+        ? reporteMercadoPagoQuery.data
+        : [];
+    const movimientosCajaItems = reporteMovimientosCajaQuery.data?.data ?? [];
+    const paginationMeta = useMemo(
+        () => getMovimientosCajaPaginationMeta(reporteMovimientosCajaQuery.data),
+        [reporteMovimientosCajaQuery.data],
+    );
+
+    const activeQuery = isMercadoPago ? reporteMercadoPagoQuery : reporteMovimientosCajaQuery;
+    const isLoading = activeQuery.isFetching;
+
+    useEffect(() => {
+        setPage(1);
+    }, [submittedFilters]);
 
     const onTipoReporteChange = (value) => {
         setTipoReporte(value);
         setFieldErrors({});
         setSubmittedFilters(null);
+        setPage(1);
 
         if (value === TIPO_REPORTE_MERCADO_PAGO) {
             setSucursalesDestino([]);
@@ -65,6 +94,8 @@ export const ListadoMovimientosDeCaja = () => {
             return;
         }
 
+        setFechaHoraDesde(todayStartDateTime());
+        setFechaHoraHasta(todayEndDateTime());
         setSucursalesOrigen((prev) => {
             if (Array.isArray(prev)) {
                 return prev;
@@ -73,13 +104,43 @@ export const ListadoMovimientosDeCaja = () => {
         });
     };
 
+    const onFechaHoraDesdeChange = useCallback((value) => {
+        setFechaHoraDesde(value);
+        if (!value) {
+            return;
+        }
+        setFechaHoraHasta(moment(value).endOf('day').milliseconds(0).toDate());
+    }, []);
+
     const onBuscar = useCallback(() => {
-        if (!isMercadoPago) {
+        if (isMercadoPago) {
+            const {isValid, fieldErrors: nextErrors} = validateReporteMercadoPagoFilters({
+                sucursal: sucursalesOrigen,
+                fechaHoraDesde,
+                fechaHoraHasta,
+            });
+
+            setFieldErrors(nextErrors);
+
+            if (!isValid) {
+                return;
+            }
+
+            setSubmittedFilters(
+                buildReporteMercadoPagoPayload({
+                    sucursal: sucursalesOrigen,
+                    fechaHoraDesde,
+                    fechaHoraHasta,
+                }),
+            );
             return;
         }
 
-        const {isValid, fieldErrors: nextErrors} = validateReporteMercadoPagoFilters({
-            sucursal: sucursalesOrigen,
+        const origenes = Array.isArray(sucursalesOrigen)
+            ? sucursalesOrigen
+            : (sucursalesOrigen ? [sucursalesOrigen] : []);
+
+        const {isValid, fieldErrors: nextErrors} = validateMovimientosCajaFilters({
             fechaHoraDesde,
             fechaHoraHasta,
         });
@@ -90,14 +151,28 @@ export const ListadoMovimientosDeCaja = () => {
             return;
         }
 
+        setPage(1);
         setSubmittedFilters(
-            buildReporteMercadoPagoPayload({
-                sucursal: sucursalesOrigen,
+            buildMovimientosCajaFiltros({
+                sucursalesOrigen: origenes,
+                sucursalesDestino,
+                emisores,
+                destinatarios,
+                tiposMovimiento,
                 fechaHoraDesde,
                 fechaHoraHasta,
             }),
         );
-    }, [isMercadoPago, sucursalesOrigen, fechaHoraDesde, fechaHoraHasta]);
+    }, [
+        isMercadoPago,
+        sucursalesOrigen,
+        sucursalesDestino,
+        emisores,
+        destinatarios,
+        tiposMovimiento,
+        fechaHoraDesde,
+        fechaHoraHasta,
+    ]);
 
     return (
         <ErrorBoundary>
@@ -131,7 +206,7 @@ export const ListadoMovimientosDeCaja = () => {
                             errorMessage={isMercadoPago ? fieldErrors.sucursal : null}
                         />
                     </div>
-                    {!isMercadoPago ? (
+                    {isMovimientosCaja ? (
                         <div>
                             <SelectSucursal
                                 multiple
@@ -142,7 +217,7 @@ export const ListadoMovimientosDeCaja = () => {
                             />
                         </div>
                     ) : null}
-                    {!isMercadoPago ? (
+                    {isMovimientosCaja ? (
                         <div>
                             <SelectUsuario
                                 multiple
@@ -153,7 +228,7 @@ export const ListadoMovimientosDeCaja = () => {
                             />
                         </div>
                     ) : null}
-                    {!isMercadoPago ? (
+                    {isMovimientosCaja ? (
                         <div>
                             <SelectUsuario
                                 multiple
@@ -164,7 +239,7 @@ export const ListadoMovimientosDeCaja = () => {
                             />
                         </div>
                     ) : null}
-                    {!isMercadoPago ? (
+                    {isMovimientosCaja ? (
                         <div>
                             <SelectMotivoMovimientoCaja
                                 multiple
@@ -178,11 +253,11 @@ export const ListadoMovimientosDeCaja = () => {
                     <div>
                         <DateTimePicker
                             value={fechaHoraDesde}
-                            setValue={setFechaHoraDesde}
+                            setValue={onFechaHoraDesdeChange}
                             label={'Fecha Hora Desde'}
                             placeHolder={'Seleccione fecha hora desde'}
                             className={''}
-                            errorMessage={isMercadoPago ? fieldErrors.fechaHoraDesde : null}
+                            errorMessage={fieldErrors.fechaHoraDesde ?? null}
                         />
                     </div>
                     <div>
@@ -192,30 +267,31 @@ export const ListadoMovimientosDeCaja = () => {
                             label={'Fecha Hora Hasta'}
                             placeHolder={'Seleccione fecha hora hasta'}
                             className={'h-10'}
-                            errorMessage={isMercadoPago ? fieldErrors.fechaHoraHasta : null}
+                            errorMessage={fieldErrors.fechaHoraHasta ?? null}
                         />
                     </div>
                 </div>
 
-                {isMercadoPago && reporteQuery.isError ? (
+                {activeQuery.isError ? (
                     <div className={'mt-4'}>
                         <LabelError>
-                            {reporteQuery.error?.message ?? 'Error al cargar el reporte de Mercado Pago.'}
+                            {activeQuery.error?.message
+                                ?? (isMercadoPago
+                                    ? 'Error al cargar el reporte de Mercado Pago.'
+                                    : 'Error al cargar el reporte de movimientos de caja.')}
                         </LabelError>
                     </div>
                 ) : null}
 
-                {isMercadoPago ? (
-                    <div className={'mt-4 flex justify-end'}>
-                        <Button
-                            onClick={onBuscar}
-                            disabled={isLoading}
-                            className={'w-full md:w-auto'}
-                        >
-                            Buscar
-                        </Button>
-                    </div>
-                ) : null}
+                <div className={'mt-4 flex justify-end'}>
+                    <Button
+                        onClick={onBuscar}
+                        disabled={isLoading}
+                        className={'w-full md:w-auto'}
+                    >
+                        Buscar
+                    </Button>
+                </div>
             </AlternativeCard>
 
             {isMercadoPago ? (
@@ -225,17 +301,76 @@ export const ListadoMovimientosDeCaja = () => {
                         <div className={'mb-4 flex flex-wrap items-center justify-end gap-2 border-b border-slate-200 pb-2 dark:border-slate-700'}>
                             {hasSearched ? (
                                 <RefreshIconButton
-                                    onRefresh={reporteQuery.refetch}
+                                    onRefresh={reporteMercadoPagoQuery.refetch}
                                     loading={isLoading}
                                     className={'p-1! px-1.5!'}
                                 />
                             ) : null}
                         </div>
                         <ReporteMercadoPagoLista
-                            items={items}
+                            items={mercadoPagoItems}
                             isLoading={isLoading && hasSearched}
                             hasSearched={hasSearched}
                         />
+                    </AlternativeCard>
+                </>
+            ) : null}
+
+            {isMovimientosCaja ? (
+                <>
+                    <br/>
+                    <AlternativeCard>
+                        <div className={'mb-4 flex flex-wrap items-center justify-end gap-2 border-b border-slate-200 pb-2 dark:border-slate-700'}>
+                            {hasSearched ? (
+                                <RefreshIconButton
+                                    onRefresh={reporteMovimientosCajaQuery.refetch}
+                                    loading={isLoading}
+                                    className={'p-1! px-1.5!'}
+                                />
+                            ) : null}
+                        </div>
+                        <ReporteMovimientosCajaLista
+                            items={movimientosCajaItems}
+                            isLoading={isLoading && hasSearched}
+                            hasSearched={hasSearched}
+                        />
+                        <div className={'mt-4 flex flex-wrap items-center justify-between gap-3'}>
+                            <p className={'text-xs text-slate-500 dark:text-slate-400'}>
+                                {!hasSearched
+                                    ? 'Presione Buscar para cargar los resultados.'
+                                    : paginationMeta.total > 0
+                                        ? `Mostrando ${paginationMeta.from}–${paginationMeta.to} de ${paginationMeta.total} registros`
+                                        : 'Sin registros'}
+                                {hasSearched ? (
+                                    <>
+                                        {' '}
+                                        (página {paginationMeta.currentPage} de {paginationMeta.lastPage})
+                                    </>
+                                ) : null}
+                            </p>
+                            <div className={'flex items-center gap-2'}>
+                                <CancelarButton
+                                    format={'xs'}
+                                    className={'mt-0! px-3! py-1.5! text-xs!'}
+                                    disabled={!hasSearched || isLoading || paginationMeta.currentPage <= 1}
+                                    onClick={() => setPage((currentPage) => Math.max(1, currentPage - 1))}
+                                >
+                                    Anterior
+                                </CancelarButton>
+                                <CancelarButton
+                                    format={'xs'}
+                                    className={'mt-0! px-3! py-1.5! text-xs!'}
+                                    disabled={
+                                        !hasSearched
+                                        || isLoading
+                                        || paginationMeta.currentPage >= paginationMeta.lastPage
+                                    }
+                                    onClick={() => setPage((currentPage) => currentPage + 1)}
+                                >
+                                    Siguiente
+                                </CancelarButton>
+                            </div>
+                        </div>
                     </AlternativeCard>
                 </>
             ) : null}

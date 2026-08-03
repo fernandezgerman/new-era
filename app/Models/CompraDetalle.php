@@ -63,4 +63,14 @@ class CompraDetalle extends BaseModel
     {
         return $this->belongsTo(Articulo::class, 'idarticulo');
     }
+
+    public function comprasDudosasCache()
+    {
+        return $this->hasMany(CompraDudosaCache::class, 'iddetalle');
+    }
+
+    public function comprasDudosasCacheAsociadas()
+    {
+        return $this->hasMany(CompraDudosaCache::class, 'iddetallecostoasociado');
+    }
 }

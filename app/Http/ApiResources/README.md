@@ -53,9 +53,9 @@ File: `ApiResourceBase.php`
 Validates input via dedicated `FormRequest`s under `App\Http\Requests\Api\...`:
 
 - `index(ApiResourceBaseGetEntity $request)` handles both list and single fetch.
-- `insertResource(ApiResourceBaseInsert $request)` creates a new model (and optional nested relations).
-- `updateResource(ApiResourceBasePatch $request)` performs a patch-like update with deep-merge for JSON/array attributes.
-- `deleteResource(ApiResourceBaseDelete $request)` deletes a model by id.
+- `insertResource(ApiResourceBaseInsert $request)` creates a new model (and optional nested relations). Triggers `{entity}Inserted` event.
+- `updateResource(ApiResourceBasePatch $request)` performs a patch-like update with deep-merge for JSON/array attributes. Triggers `{entity}Updated` event.
+- `deleteResource(ApiResourceBaseDelete $request)` deletes a model by id. Triggers `{entity}Deleted` event.
 
 
 #### 1) GET list/single: includes, filters, order
@@ -69,13 +69,29 @@ Supported query/body fields (depending on your `FormRequest` configuration):
 
 - `includes` (array of strings)
   - If an item matches a relation method on the model, it is eager loaded via `$query->with($include)`.
+  - Supports dot notation for nested eager loading (e.g., `pedidos.articulos`).
   - If it matches a custom accessor `get{Include}Attribute`, its value is added to each item in the response.
 
 - `filtros` (associative array)
-  - Each `key => value` becomes `$query->where(key, value)`.
+  - Each `key => value` becomes `$query->where(key, value)`. 
+  - To use operators, use an object: `filtros[key][operador]=...&filtros[key][valor]=...`
+  - Supported operators:
+    - `menoroigual`: `<=`
+    - `mayoroigual`: `>=`
+    - `in`: `whereIn` (expects an array in `valor`)
+    - Default is `=`
+  - To apply multiple operators on the same field (e.g. date range), pass an array of operator objects:
+    `filtros[fechahoramovimiento]=[{"operador":"mayoroigual","valor":"..."},{"operador":"menoroigual","valor":"..."}]`
 
 - `orden` (array)
-  - Each item becomes `$query->orderBy(item)`.
+  - Each item can be a string (field name) or an object `{"name": "field", "direction": "asc|desc"}`.
+  - Strings default to `asc` order.
+
+- `limit` (integer)
+  - Maximum number of records to return (default: 500).
+
+- `page` & `per_page` (integers)
+  - Used for pagination. If `per_page` is provided, the response will be paginated using Laravel's length-aware paginator.
 
 Response
 
@@ -179,18 +195,19 @@ The resource endpoints depend on `FormRequest` classes under `App\Http\Requests\
 - To expose related data via `includes`:
   - Define relationship methods on the model (e.g., `public function pedidos() { return $this->hasMany(...); }`).
   - Or add custom accessors like `getSaldoAttribute()` to compute attributes on the fly, then include `"saldo"` in `includes`.
-- For complex filters or sorting, consider extending `index()` to parse operators (e.g., `>`, `<`, `like`) or adopt a query filter pattern.
+- For complex filters or sorting, consider extending `index()` to parse operators (e.g., `>`, `<`, `like`, `in`) or adopt a query filter pattern.
 - When using PATCH with JSON columns, configure Eloquent casts appropriately (e.g., `$casts = [ 'config' => 'array' ];`) to benefit from deep-merge behavior.
 - Transactions: For multi-level `relations` inserts, wrap `insertResource()` and `processRelations()` in a DB transaction if you need all-or-nothing behavior.
 - Authorization: Apply policies/middleware as needed; the current base class focuses on validation and data shaping, not permissions.
+- Events: The controller triggers events using the `TriggerEventIfExist` trait. Event names follow the pattern `{EntityName}{Action}` (e.g., `ClienteInserted`).
 
 
 ### Example flows
 
-1) Fetch clientes with pedidos and computed saldo, filtered and ordered:
+1) Fetch clientes with pedidos and computed saldo, filtered (with operators) and ordered:
 
 ```http
-GET /api/resources/clientes?includes[]=pedidos&includes[]=saldo&filtros[activo]=1&orden[]=nombre
+GET /api/resources/clientes?includes[]=pedidos.articulos&includes[]=saldo&filtros[activo]=1&filtros[total][operador]=mayoroigual&filtros[total][valor]=100&orden[][name]=nombre&orden[][direction]=desc
 Accept: application/json
 ```
 
