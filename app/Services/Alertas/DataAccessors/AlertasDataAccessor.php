@@ -107,9 +107,12 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
         }
         //Toma las alertas de Tareas
 
+        try{
         $tareas = TareasSummaryFactory::makeFromUserId($usuarioId);
         $alertasCollection->add($tareas);
-
+        }catch (\Exception $exception){
+            Log::error('Error al cargar alertas de tareas: '.$exception->getMessage());
+        }
         if($puedeAgregarMovimientosDeCaja) {
             //Toma los movimientos de la ultima caja
             $movimientosUltimoCaja = MovimientosDeCajaSummaryFactory::makeFromMovimientos(
