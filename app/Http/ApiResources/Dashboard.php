@@ -6,11 +6,74 @@ use App\Services\Alertas\AlertasManager;
 use App\Services\Alertas\CacheHandlers\AlertaSucursalInicioLiquidacionCacheHandler;
 use App\Services\Alertas\Transformers\AlertaSummaryDTOTransformer;
 use App\Services\Alertas\Transformers\AlertaDetalleDTOToLegacyResponseTransformer;
+use App\Services\TareasManager\DataAccessors\TareasDataAccessor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 
 class Dashboard extends AbstractApiHandler
 {
+    /**
+     * Obtiene un resumen de las tareas creadas por el usuario autenticado.
+     *
+     * Documentación para Agentes de IA:
+     *
+     * Endpoint: GET /api/tareas/creados-por-mi/resumen
+     *
+     * Request Payload (Query Parameters / Body):
+     * - Ninguno: Utiliza el ID del usuario autenticado.
+     *
+     * Example: GET /api/tareas/creados-por-mi/resumen
+     *
+     * Json Response:
+     * {
+     *     "referencias": {
+     *         "red": "Bloqueado",
+     *         "green": "Terminado",
+     *         "blue": "En proceso",
+     *         "gray": "Pendiente"
+     *     },
+     *     "data": [
+     *         {
+     *             "id": 1836471422872979000,
+     *             "estado": "Pendiente",
+     *             "name": "Tarea de german",
+     *             "description": null,
+     *             "updated_at": "2026-08-07 15:20:53",
+     *             "creador": "sistemas",
+     *             "usuario_creador": {
+     *                 "id": 1,
+     *                 "nombre": "Sistema",
+     *                 "apellido": "informatico",
+     *                 "nombre_completo": "Sistema informatico",
+     *                 ...
+     *             }
+     *         }
+     *     ]
+     * }
+     *
+     * Reglas:
+     * - Retorna tareas donde el usuario autenticado es el creador.
+     * - Incluye tareas en estados: Pendiente, Bloqueado, En proceso.
+     * - Incluye tareas en estado Terminado solo si fueron movidas a ese estado hoy.
+     *
+     * @return array
+     */
+    public function getTareasCreadosPorMiResumen()
+    {
+        $tareaDataAccessor = new TareasDataAccessor();
+
+        return [
+            "updated_at" => Carbon::now(),
+            "referencias" => [
+                'red' => config('planka.estados.bloqueado'),
+                'green' => config('planka.estados.terminado'),
+                'blue' => config('planka.estados.en_proceso'),
+                'gray' => config('planka.estados.pendiente'),
+            ],
+            "data" => $tareaDataAccessor->getTareasPorCreador(auth()->user()->id)
+        ];
+    }
     public function getUserMenu(): JsonResponse
     {
         $user = auth()->user();
@@ -24,11 +87,11 @@ class Dashboard extends AbstractApiHandler
     {
         $user = auth()->user();
 
-        $arr = session('permisos');
+     /* $arr = session('permisos');
         if (Arr::get($arr,'alrtgral','PERMITIDO') ==="RESTRINGIDO")
         {
             return new JsonResponse([]);
-        }
+        }*/
         $usuarioDataAccessor = app(\App\DataAccessor\UsuarioDataAccessor::class, ['user' => $user]);
 
         return $this->sendResponse(
@@ -42,7 +105,8 @@ class Dashboard extends AbstractApiHandler
         $user = auth()->user();
 
         // If the alert is not "solicitud de pago", return legacy ajax response
-        if (config('alertas.solicitud_de_pago_alerta_id') !== $alertaId) {
+        if (config('alertas.solicitud_de_pago_alerta_id') !== $alertaId
+            && config('alertas.tareas_alerta_id') !== $alertaId) {
             // Mimic legacy request parameters
             request()->merge([
                 'IncluirVistas' => null,

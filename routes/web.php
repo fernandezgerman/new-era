@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Cache;
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware('mobile.redirection')->name('login');
 Route::post('/login', [AuthController::class, 'login'])->middleware('mobile.redirection');
+
+// OIDC Authentication Routes
+Route::get('/oidc/login', [\App\Http\Controllers\OidcAuthController::class, 'showLoginForm'])->name('oidc.login');
+Route::post('/oidc/login', [\App\Http\Controllers\OidcAuthController::class, 'login']);
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/test-job', function() {

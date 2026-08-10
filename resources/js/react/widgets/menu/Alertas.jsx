@@ -223,7 +223,7 @@ const AlertaMenu = ({alertaMenu, onMenuSelected, loading, refetchHeader}) => {
                     !loading && <AlertaMenuDetalles refetchHeader={refetchHeader} onMenuSelected={onMenuSelected}
                                                     alertaTipoId={alertaMenu.id}/>}
                 >
-                    <div className={'h-[35px]'}>
+                    <div className={'h-[35px] ml-2'}>
                         <div
                             className={'capitalize ne-body dark:ne-dark-body dark:ne-dark-color px-2 py-1 cursor-pointer transition-colors hover:bg-gray-200 hover:text-black rounded-[5px] border dark:!border-gray-600 '}>
                             {alertaMenu.codigo.toLowerCase()} <FontAwesomeIcon className={'ml-2'} icon={faChevronDown}/>
@@ -314,8 +314,7 @@ export const Alertas = ({onMenuSelected}) => {
     const loading = isLoading || isRefetching;
 
     return (alertas ?? []).length > 0 && (
-        <RefreshNode onRefresh={refetch} loading={loading}
-                     className={'w-auto max-w-[680px] px-3 my-auto flex items-center justify-end gap-4  nelg:ml-auto pt-5 nelg:pt-0 nelg:mt-0!'}>
+        <RefreshNode loading={loading} onRefresh={refetch} className={'flex justify-end ml-auto'}>
             {(alertas ?? []).map((menu) => <AlertaMenu key={menu.id} loading={loading} onMenuSelected={onMenuSelected}
                                                        refetchHeader={refetch}
                                                        alertaMenu={menu}/>)}

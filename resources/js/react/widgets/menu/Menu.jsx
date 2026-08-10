@@ -17,6 +17,11 @@ import {UserAndBreadcrumb} from "@/widgets/menu/UserAndBreadcrum.jsx";
 import {faBars, faCog} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { AlertasMobile} from "@/widgets/menu/Alertas.jsx";
+import {AlertasPlanka} from "@/widgets/Planka/AlertaTareasCreadasPorUsuario.jsx";
+import {usePermisos} from "@/dataHooks/usePermisos.jsx";
+import {CODIGO_PAGINAS} from "@/constantes/CodigoPaginas.jsx";
+import {get} from 'lodash';
+
 
 
 const Menu = ({onMenuSelected, onModuloSelected, leftMenuIsOpen}) => {
@@ -172,6 +177,10 @@ const MenuGeneral = ({openMenu, onMenuSelected, setOpenMenu} ) =>
 
     const {data: authUser} = useAuthUsuario();
 
+    const {data, isLoading, isRefetching} = usePermisos(CODIGO_PAGINAS.TAREAS_DASHOARD);
+
+    const puedeGenerarTareas = data ? get(data, CODIGO_PAGINAS.TAREAS_DASHOARD ) : 0 ;
+
     return (
     <div
         onMouseEnter={() => setOpenMenu(true)}
@@ -182,7 +191,10 @@ const MenuGeneral = ({openMenu, onMenuSelected, setOpenMenu} ) =>
         {!isMobile && <WebLogo openMenu={openMenu} onClick={() => setOpenMenu(!openMenu)}/>}
         {isMobile && <MobileLogo openMenu={openMenu || isMobile} onClick={() => setOpenMenu(!openMenu)}/>}
 
+
         <SucursalActual openMenu={openMenu || isMobile} onIconClick={() => setOpenMenu(true)}/>
+
+        {puedeGenerarTareas && (<AlertasPlanka onMenuSelected={onMenuSelected}/>)}
 
         <MenuGroup
             menuGroupValues={{

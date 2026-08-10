@@ -182,6 +182,51 @@ services:
             retries: 5
             timeout: 5s
             interval: 10s
+#    planka:
+#        image: 'ghcr.io/plankanban/planka:latest'
+#        ports:
+#            - '${PLANKA_PORT:-3000}:1337'
+#        environment:
+#            BASE_URL: '${PLANKA_BASE_URL:-http://localhost:3000}'
+#            DATABASE_URL: 'postgresql://${PLANKA_DB_USERNAME:-planka}:${PLANKA_DB_PASSWORD:-secret}@planka-db:5432/${PLANKA_DB_DATABASE:-planka}'
+#            SECRET_KEY: '${PLANKA_SECRET_KEY}'
+#            TRUST_PROXY: 1
+#            OIDC_ISSUER: '${PLANKA_OIDC_ISSUER}'
+#            OIDC_CLIENT_ID: '${PLANKA_OIDC_CLIENT_ID}'
+#            OIDC_CLIENT_SECRET: '${PLANKA_OIDC_CLIENT_SECRET}'
+#            OIDC_ENFORCED: '${PLANKA_OIDC_ENFORCED}'
+#            OIDC_IGNORE_ROLES: '${PLANKA_OIDC_IGNORE_ROLES}'
+#            OIDC_DEBUG: '${PLANKA_OIDC_DEBUG:-false}'
+#            OIDC_ADMIN_ROLES: '${PLANKA_OIDC_ADMIN_ROLES}'
+#            OIDC_IGNORE_USERNAME: '${PLANKA_OIDC_IGNORE_USERNAME}'
+#            OIDC_EMAIL_ATTRIBUTE: '${PLANKA_OIDC_EMAIL_ATTRIBUTE}'
+#            OIDC_NAME_ATTRIBUTE: '${PLANKA_OIDC_NAME_ATTRIBUTE}'
+#            OIDC_USERNAME_ATTRIBUTE: '${PLANKA_OIDC_USERNAME_ATTRIBUTE}'
+#            OIDC_CLAIMS_SOURCE: '${PLANKA_OIDC_CLAIMS_SOURCE}'
+#        volumes:
+#            - 'sail-planka-data:/app/public/user-avatars'
+#            - 'sail-planka-data:/app/public/project-background-images'
+#            - 'sail-planka-data:/app/private/attachments'
+#        networks:
+#            - sail
+#        depends_on:
+#            - planka-db
+    planka-db:
+        image: 'postgres:14-alpine'
+        environment:
+            POSTGRES_DB: '${PLANKA_DB_DATABASE:-planka}'
+            POSTGRES_USER: '${PLANKA_DB_USERNAME:-planka}'
+            POSTGRES_PASSWORD: '${PLANKA_DB_PASSWORD:-secret}'
+        volumes:
+            - 'sail-planka-db:/var/lib/postgresql/data'
+        networks:
+            - sail
+        ports:
+            - '${FORWARD_PLANKA_DB_PORT:-54032}:5432'
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${PLANKA_DB_USERNAME:-planka} -d ${PLANKA_DB_DATABASE:-planka}"]
+            retries: 3
+            timeout: 5s
 networks:
     sail:
         driver: bridge
@@ -193,4 +238,8 @@ volumes:
     sail-meilisearch:
         driver: local
     sail-dynamodb:
+        driver: local
+    sail-planka-data:
+        driver: local
+    sail-planka-db:
         driver: local

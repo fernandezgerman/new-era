@@ -2,8 +2,13 @@
 
 namespace App\Providers;
 
+use App\Services\OIDC\TokenResponseType as AppTokenResponseType;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Laravel\Passport\Passport;
+use Admin9\OidcServer\Services\TokenResponseType as PackageTokenResponseType;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -11,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Reemplazamos la clase del paquete por la nuestra
+        $this->app->bind(PackageTokenResponseType::class, AppTokenResponseType::class);
     }
 
     /**
@@ -29,5 +35,25 @@ class AppServiceProvider extends ServiceProvider
             URL::forceHttps();           // Laravel 12 tiene forceHttps() nativo
             // URL::forceScheme('https'); // alternativa clásica
         }
+
+        Passport::tokensCan([
+            'openid'  => 'OpenID Connect',
+            'profile' => 'Access to profile information',
+            'email'   => 'Access to email address',
+        ]);
+
+        // Opcional pero recomendado
+        Passport::setDefaultScope([
+            'openid',
+            'profile',
+            'email',
+        ]);
+
+
+        Route::matched(function ($event) {
+            if ($event->route?->uri() === 'oauth/authorize') {
+                $event->route->middleware(\App\Http\Middleware\StoreOidcNonce::class);
+            }
+        });
     }
 }

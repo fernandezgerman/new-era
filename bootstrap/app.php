@@ -37,6 +37,19 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
+        $middleware->redirectGuestsTo(function ($request) {
+            // Si viene del flujo OAuth / OIDC, usar tu form
+            if ($request->is('oauth/*') || $request->session()->has('url.intended')) {
+                // más preciso: solo authorize
+            }
+
+            if ($request->is('oauth/authorize') || str_contains($request->path(), 'oauth')) {
+                return route('oidc.login'); // o url('/oidc/login')
+            }
+
+            return route('login'); // login normal del resto del sistema
+        });
+
         // Modify the 'web' middleware group
         $middleware->web(
             // Append middleware to the end of the web group

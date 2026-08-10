@@ -16,7 +16,7 @@ export default class Dashboard extends ResourcesBase
     async getAlertas(){
         try{
             return this.processResponse(
-                await window.axios.get('/api/dashboard/alertas',)
+                await window.axios.get('/api/alerta',)
             );
         }catch(err)
         {
@@ -27,7 +27,7 @@ export default class Dashboard extends ResourcesBase
     async getAlertaDetalle(alertaTipoId) {
         try{
             return this.processResponse(
-                await window.axios.get('api/dashboard/alerta/'+alertaTipoId+'/detalles')
+                await window.axios.get('api/alerta/'+alertaTipoId+'/detalles')
             );
         }catch(err)
         {
@@ -38,7 +38,7 @@ export default class Dashboard extends ResourcesBase
     async getAlertaSucursalInicioLiquidacion(sucursalId) {
         try{
             return this.processResponse(
-                await window.axios.get('api/dashboard/alertas/inicio/sucursal/'+sucursalId)
+                await window.axios.get('api/alerta/inicio/sucursal/'+sucursalId)
             );
         }catch(err)
         {

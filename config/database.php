@@ -125,6 +125,20 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'planka' => [
+            'driver' => 'pgsql',
+            'host' => env('PLANKA_DB_HOST', 'planka-db'),
+            'port' => env('PLANKA_DB_PORT', '5432'),
+            'database' => env('PLANKA_DB_DATABASE', 'planka'),
+            'username' => env('PLANKA_DB_USERNAME', 'postgres'),
+            'password' => env('PLANKA_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),

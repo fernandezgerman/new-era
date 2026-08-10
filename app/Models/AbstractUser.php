@@ -1,0 +1,199 @@
+<?php
+
+namespace App\Models;
+
+use Admin9\OidcServer\Concerns\HasOidcClaims;
+use Admin9\OidcServer\Contracts\OidcUserInterface;
+use App\Services\Actualizaciones\Contracts\ActualizableItem;
+use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
+use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens as PassportHasApiTokens;
+
+class AbstractUser extends Authenticatable implements ActualizableItem
+{
+
+    protected $connection = 'mysql';
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'usuarios';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'nombre',
+        'apellido',
+        'usuario',
+        'clave',
+        'email',
+        'activo',
+    ];
+
+    protected $appends = [
+        'nombre_completo',
+    ];
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'clave',
+        'remember_token',
+    ];
+
+    /**
+     * The column name for the "username" used for authentication.
+     *
+     * @var string
+     */
+    public function username()
+    {
+        return 'usuario';
+    }
+
+    public function getNombreCompletoAttribute()
+    {
+        return "{$this->nombre} {$this->apellido}";
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->clave;
+    }
+
+    /**
+     * Get the sucursales for the user.
+     */
+    public function sucursales()
+    {
+        return $this->belongsToMany(Sucursal::class, 'usuariossucursales', 'idusuario', 'idsucursal')
+            ->where('sucursales.activo', 1)
+            ->where('usuariossucursales.activo', 1);
+    }
+
+    /**
+     * Get the sales made by the user.
+     */
+    public function ventasSucursal()
+    {
+        return $this->hasMany(VentaSucursal::class, 'idusuario');
+    }
+
+    public function sucursalesCaja()
+    {
+        return $this->belongsToMany(Sucursal::class, 'usuariossucursalescajas', 'idusuario', 'idsucursal')
+            ->where('sucursales.activo', 1)
+            ->where('usuariossucursalescajas.activo', 1);
+    }
+
+    /**
+     * Get the sucursales supervised by the user.
+     */
+    public function sucursalesSupervised()
+    {
+        return $this->hasMany(Sucursal::class, 'idsupervisor');
+    }
+
+    /**
+     * Compras realizadas por este usuario (operador)
+     */
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'idusuario');
+    }
+
+    /**
+     * Compras registradas por este usuario de caja (idusuariocaja)
+     */
+    public function comprasCaja()
+    {
+        return $this->hasMany(Compra::class, 'idusuariocaja');
+    }
+
+    /**
+     * Get the empresa that the user belongs to.
+     */
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'idempresa');
+    }
+
+    /**
+     * Get the perfil that the user belongs to.
+     */
+    public function perfil()
+    {
+        return $this->belongsTo(Perfil::class, 'idperfil');
+    }
+
+    /**
+     * Get the accessos por hora for the user.
+     */
+    public function accessosPorHora()
+    {
+        return $this->morphMany(AccesosPorHora::class, 'target', 'targettype', 'targetid');
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * Get the historic prices created by the user.
+     */
+    public function historicoPrecios()
+    {
+        return $this->hasMany(PrecioHistorico::class, 'idusuario');
+    }
+
+    /**
+     * Get the temporary prices audited by the user.
+     */
+    public function preciosTemporalesAuditados()
+    {
+        return $this->hasMany(PrecioTemporal::class, 'idusuarioaudito');
+    }
+
+    public function importacionesCabecera()
+    {
+        return $this->hasMany(ImportacionProveedorListaCabecera::class, 'idusuario');
+    }
+
+    public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
+    {
+        return new ActualizacionIdentifierDTO(
+            CodigoMotivoActualizacion::GET_USUARIO,
+            $this->id
+        );
+    }
+}

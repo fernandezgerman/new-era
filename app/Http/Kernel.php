@@ -73,5 +73,6 @@ class Kernel extends HttpKernel
         'custom.auth' => \App\Http\Middleware\CustomAuth::class,
         'restrict.access.per.hour' => \App\Http\Middleware\RestringirAccesoPorHora::class,
         'auth.integraciones' => \App\Http\Middleware\AuthenticateIntegracionesArticulos::class,
+        'auth.oidc' => \App\Http\Middleware\AuthenticateOidc::class,
     ];
 }

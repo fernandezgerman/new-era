@@ -12,7 +12,12 @@ use App\Services\Alertas\Collections\AlertasSummaryCollection;
 use App\Services\Alertas\DTOs\AlertaSummaryDTO;
 use App\Services\Alertas\Exceptions\NotImplementedException;
 use App\Services\Alertas\Factories\AlertaDetalleDTOFactory;
+use App\Services\Alertas\Factories\MovimientosDeCajaSummaryFactory;
+use App\Services\Alertas\Factories\SolicitudesDePagoSummaryFactory;
+use App\Services\Alertas\Factories\TareasSummaryFactory;
+use App\Services\TareasManager\DataAccessors\TareasDataAccessor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -48,59 +53,82 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
 
     public function getAlertasSummary(int $usuarioId, ?int $alertaTipoId): AlertasSummaryCollection
     {
-        $alertasSummary = AlertaTipo::query()
-            ->selectRaw("
-                COUNT(1) AS cantidad,
-                alertastipos.id AS idalertatipo,
-                SUM(IF(alertas.color = 'NEGRO' AND fechahoravisto is null, 1, 0)) AS negro,
-                SUM(IF((alertas.color = 'AZUL' OR alertas.color IS NULL) AND fechahoravisto is null AND not alertas.id  is null, 1, 0)) AS azul,
-                SUM(IF(alertas.color = 'VERDE' AND fechahoravisto is null, 1, 0)) AS verde,
-                SUM(IF(alertas.color = 'ROJO' AND fechahoravisto is null, 1, 0)) AS rojo,
-                SUM(IF(alertas.color = 'AMARILLO' AND fechahoravisto is null, 1, 0)) AS amarillo,
-                0 AS violeta
-            ")
-            ->leftjoin('alertas', 'alertas.idalertatipo', '=', 'alertastipos.id')
-            ->leftjoin('alertasdestinatarios', 'alertas.id', '=', 'alertasdestinatarios.idalerta')
-            ->where(function (Builder $query) use ($usuarioId){
-                $query->where('idusuario', $usuarioId);
-                $query->orWhereNull('alertas.id');
-            })
-            ->whereIn('alertastipos.id',[2,4] )
+        $arr = session('permisos');
 
-            //->where('fechahoravisto', null)
-            ->groupBy('alertastipos.id');
+        $alertasPermitido = !(Arr::get($arr,'alrtgral','PERMITIDO') ==="RESTRINGIDO");
+        $alertasDeSolicitudesDePagoPermitido = !(Arr::get($arr,'pgsscrsl','PERMITIDO') ==="RESTRINGIDO");
+        $puedeAgregarMovimientosDeCaja = !(Arr::get($arr,'agrmovcaja','PERMITIDO') === "RESTRINGIDO");
 
-        if ($alertaTipoId !== null) {
-            $alertasSummary->where('idalertatipo', $alertaTipoId);
-        };
+        $alertasCollection = new Collection();
 
-        $alertasCollection = $alertasSummary
-            ->get();
+        //Filtra aertas por precios y arreglos
+        if($alertasPermitido)
+        {
+            $alertasSummary = AlertaTipo::query()
+                ->selectRaw("
+                    COUNT(1) AS cantidad,
+                    alertastipos.id AS idalertatipo,
+                    SUM(IF(alertas.color = 'NEGRO' AND fechahoravisto is null, 1, 0)) AS negro,
+                    SUM(IF((alertas.color = 'AZUL' OR alertas.color IS NULL) AND fechahoravisto is null AND not alertas.id  is null, 1, 0)) AS azul,
+                    SUM(IF(alertas.color = 'VERDE' AND fechahoravisto is null, 1, 0)) AS verde,
+                    SUM(IF(alertas.color = 'ROJO' AND fechahoravisto is null, 1, 0)) AS rojo,
+                    SUM(IF(alertas.color = 'AMARILLO' AND fechahoravisto is null, 1, 0)) AS amarillo,
+                    0 AS violeta
+                ")
+                ->leftjoin('alertas', 'alertas.idalertatipo', '=', 'alertastipos.id')
+                ->leftjoin('alertasdestinatarios', 'alertas.id', '=', 'alertasdestinatarios.idalerta')
+                ->where(function (Builder $query) use ($usuarioId){
+                    $query->where('idusuario', $usuarioId);
+                    $query->orWhereNull('alertas.id');
+                })
+                ->whereIn('alertastipos.id',[2,4] )
 
-        $alertasCollection = $alertasCollection->map(function ($alerta) {
-            return new AlertaSummaryDTO(
-                (int)$alerta->cantidad,
-                (int)$alerta->idalertatipo,
-                (int)$alerta->negro,
-                (int)$alerta->azul,
-                (int)$alerta->verde,
-                (int)$alerta->rojo,
-                (int)$alerta->amarillo
-            );
-        });
+                //->where('fechahoravisto', null)
+                ->groupBy('alertastipos.id');
 
-        //Toma los movimientos de la ultima caja
-        $movimientosUltimoCaja = $this->transformMovimientosToAlertaSummary(
-            app(CajasDataAccessor::class)
-                ->getMovimientosUltimaCaja(
-                    $usuarioId,
-                    config('general.central_sucursal_id')
-                ), $usuarioId);;
-        $alertasCollection->add($movimientosUltimoCaja);
+            if ($alertaTipoId !== null) {
+                $alertasSummary->where('idalertatipo', $alertaTipoId);
+            };
 
-        // Agrega resumen de Solicitudes de Pago (alerta tipo 6)
-        $solicitudesPagoSummary = $this->getSolicitudesPagoSummary($usuarioId);
-        $alertasCollection->add($solicitudesPagoSummary);
+            $alertasCollection = $alertasSummary
+                ->get();
+
+            $alertasCollection = $alertasCollection->map(function ($alerta) {
+                return new AlertaSummaryDTO(
+                    (int)$alerta->cantidad,
+                    (int)$alerta->idalertatipo,
+                    (int)$alerta->negro,
+                    (int)$alerta->azul,
+                    (int)$alerta->verde,
+                    (int)$alerta->rojo,
+                    (int)$alerta->amarillo
+                );
+            });
+        }
+        //Toma las alertas de Tareas
+
+        $tareas = TareasSummaryFactory::makeFromUserId($usuarioId);
+        $alertasCollection->add($tareas);
+
+        if($puedeAgregarMovimientosDeCaja) {
+            //Toma los movimientos de la ultima caja
+            $movimientosUltimoCaja = MovimientosDeCajaSummaryFactory::makeFromMovimientos(
+                app(CajasDataAccessor::class)
+                    ->getMovimientosUltimaCaja(
+                        $usuarioId,
+                        config('general.central_sucursal_id')
+                    ), $usuarioId);;
+
+            $alertasCollection->add($movimientosUltimoCaja);
+        }
+
+
+        if($alertasDeSolicitudesDePagoPermitido) {
+
+            // Agrega resumen de Solicitudes de Pago (alerta tipo 6)
+            $solicitudesPagoSummary = SolicitudesDePagoSummaryFactory::makeFromUserId($usuarioId);
+            $alertasCollection->add($solicitudesPagoSummary);
+        }
 
         $alertas = new AlertasSummaryCollection($alertasCollection);
         //Muestra los missed alertas en el menu
@@ -113,79 +141,10 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
             /** @var \App\Services\Alertas\DTOs\AlertaSummaryDTO $item */
             return $item->alertaTipo->codigo;
         })->values();
+
+
         return new AlertasSummaryCollection($sorted);
     }
-
-    private function transformMovimientosToAlertaSummary(Collection $movimientos, int $usuarioId): AlertaSummaryDTO
-    {
-        $alertaSummary = new AlertaSummaryDTO(null, self::ALERTA_TIPO_MOVIMIENTOS_ID);
-
-        /** @var AlertaSummaryDTO $alertaSummary */
-        $alertaSummary = $movimientos->reduce(function ($carry, $movimiento) use ($usuarioId) {
-            $carry->cantidad++;
-            $carry->negro += (int)$movimiento->idestado === 1 && $movimiento->idusuario === $usuarioId ? 1 : 0;
-            $carry->azul += (int)$movimiento->idestado === 1 && $movimiento->idusuariodestino === $usuarioId ? 1 : 0;
-            $carry->verde += (int)$movimiento->idestado === 2 && $movimiento->idusuario === $usuarioId ? 1 : 0;
-            $carry->rojo += (int)$movimiento->idestado === 3 && $movimiento->idusuario === $usuarioId ? 1 : 0;
-            $carry->amarillo = 0;
-            $carry->violeta = 0;
-
-            return $carry;
-
-        }, $alertaSummary);
-
-        return $alertaSummary;
-    }
-
-    private function getSolicitudesPagoSummary(int $usuarioId): AlertaSummaryDTO
-    {
-        // Alerta tipo 6 segun requerimiento
-        $alertaTipoId = config( 'alertas.solicitud_de_pago_alerta_id');
-
-        $query = DB::table('solicitudespago as sdp')
-            ->selectRaw('
-                SUM(IF(spe.estado = "PENDIENTE",1,0)) as azul,
-                SUM(IF(spe.estado = "CADUCADA",1,0)) as violeta,
-                SUM(IF(spe.estado = "RECHAZADA",1,0)) as rojo,
-                SUM(IF(spe.estado = "APROBADA",1,0)) as verde
-            ')
-            ->join(DB::raw('(SELECT MAX(id) as ultimoid, idsolicitudpago FROM solicitudespagoestados GROUP BY idsolicitudpago) as ueid'), function ($join) {
-                $join->on('sdp.id', '=', 'ueid.idsolicitudpago');
-            })
-            ->join('solicitudespagoestados as spe', function ($join) {
-                $join->on('sdp.id', '=', 'spe.idsolicitudpago')
-                    ->on('ueid.ultimoid', '=', 'spe.id');
-            })
-            ->join('usuariossucursales as us', 'sdp.idsucursal', '=', 'us.idsucursal')
-            ->where('us.activo', 1)
-            ->where('us.idusuario', $usuarioId)
-            ->where(function ($w) {
-                $w->where('spe.estado', 'PENDIENTE')
-                  ->orWhere(function ($w2) {
-                      $w2->whereIn('spe.estado', ['CADUCADA', 'RECHAZADA', 'APROBADA'])
-                         ->whereRaw('DATE(NOW()) < DATE_ADD(spe.fechahora, INTERVAL 1 DAY)');
-                  });
-            });
-
-//        Log::info(query_builder_to_raw_sql($query));
-        $row = $query->first();
-
-        $dto = new AlertaSummaryDTO(0, $alertaTipoId);
-        if ($row) {
-            $dto->azul = (int)($row->azul ?? 0);
-            $dto->violeta = (int)($row->violeta ?? 0);
-            $dto->rojo = (int)($row->rojo ?? 0);
-            $dto->verde = (int)($row->verde ?? 0);
-            $dto->amarillo = 0;
-            $dto->negro = 0;
-            $dto->cantidad = $dto->azul + $dto->violeta + $dto->rojo + $dto->verde + $dto->amarillo + $dto->negro;
-        } else {
-            $dto->cantidad = 0;
-        }
-
-        return $dto;
-    }
-
     /**
      * @param int $usuarioId
      * @param int $idAlertaDetalleTipo
@@ -194,16 +153,16 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
      */
     public function getAlertaDetalles(int $usuarioId, int $idAlertaDetalleTipo): AlertaDetalleCollection
     {
-        if(config( 'alertas.solicitud_de_pago_alerta_id') !== $idAlertaDetalleTipo)
-        {
-            throw new NotImplementedException('Detalle de alerta solo disponible para solicitudes de pago. Refiera a legacy version para otras alertas.');
-        }
+        $data = match ($idAlertaDetalleTipo) {
+        config( 'alertas.solicitud_de_pago_alerta_id') =>
+            (app(SolicitudDePagoDataAccessor::class)->getSolicitudesDePagoAlertas($usuarioId))
+                ->map(fn($solicitudDePago) => AlertaDetalleDTOFactory::makeFromSolicitudPago($solicitudDePago)),
+        config( 'alertas.tareas_alerta_id') =>
+        (app(TareasDataAccessor::class)->getTareas($usuarioId))
+            ->map(fn($tarea) => AlertaDetalleDTOFactory::makeFromTareas($tarea)),
+        default => throw new NotImplementedException('Detalle de alerta solo disponible para solicitudes de pago. Refiera a legacy version para otras alertas.'),
+        };
 
-        $solicitudesPagoAlerta = app(SolicitudDePagoDataAccessor::class)
-            ->getSolicitudesDePagoAlertas($usuarioId);
-
-        return new AlertaDetalleCollection(
-            $solicitudesPagoAlerta->map(fn($solicitudDePago) => AlertaDetalleDTOFactory::makeFromSolicitudPago($solicitudDePago))
-        );
+        return new AlertaDetalleCollection($data);
     }
 }

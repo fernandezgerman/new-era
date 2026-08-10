@@ -12,6 +12,7 @@ use App\Services\Authentication\Exceptions\InvalidCredentialsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\LoginRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use phpDocumentor\Parser\Exception;
 
@@ -75,6 +76,15 @@ class Authentication extends AbstractApiHandler
 
     public function getSucursalActual(): JsonResponse
     {
+        if(!session('idSucursalActual'))
+        {
+            $user = Auth::user();
+            $user->load('sucursalesCaja');
+
+            $sucursalAEstablecer = Arr::get($user->sucursalesCaja,'0.id', null);
+
+            session(['idSucursalActual' => $sucursalAEstablecer]);
+        }
         $sucursalActual = Sucursal::query()->findOrFail(session('idSucursalActual'));
 
         return $this->sendResponse($sucursalActual);

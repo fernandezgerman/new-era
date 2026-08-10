@@ -40,4 +40,9 @@ return [
         'geocoding_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'planka' => [
+        'base_url' => env('PLANKA_BASE_URL_DOCK', env('PLANKA_BASE_URL')),
+        'admin_token' => env('PLANKA_ADMIN_TOKEN'),
+    ],
+
 ];

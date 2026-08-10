@@ -12,6 +12,8 @@ import {OrdenesDeCompraReporte} from "@/pages/ordenesDeCompra/index.jsx";
 import RustDeskInstalacionDocumentacion from "@/pages/documentacion/RustDeskDocumentacion/index.jsx";
 import {ExistenciasSinCompras} from "@/pages/ExistenciasSinCompras/index.jsx";
 import {ListadoMovimientosDeCaja} from "@/pages/ListadoMovimientosDeCaja/index.jsx";
+import {TareasDashboard} from "@/pages/tareasDashboard/index.jsx";
+import {PlankaTarea} from "@/widgets/Planka/PlankaTarea.jsx";
 
 // Documentacion: https://reactcommunity.org/react-modal/
 const ReactMenu = {
@@ -35,7 +37,9 @@ const ReactMenu = {
     "rep-gastos": ReporteGastos,
     "impr-cmp": ProveedoresListasImportar,
     "ord-cmp-2": OrdenesDeCompraReporte,
-    "mvmcjal": ListadoMovimientosDeCaja
+    "mvmcjal": ListadoMovimientosDeCaja,
+    "tbltsk": TareasDashboard,
+    "plnkcard": PlankaTarea,
 };
 
 export default ReactMenu;

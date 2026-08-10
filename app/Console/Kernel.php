@@ -30,36 +30,43 @@ class Kernel extends ConsoleKernel
         /*$schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronTest.php')))
             ->everyMinute()->name('cronTest')->withoutOverlapping();*/
 
-
-        $schedule->command('mercado-pago:check-notifications-events')
-            ->hourly()->name('MercadoPagoCheckNotificationsEvents')->withoutOverlapping();
-
-        $schedule->command('transferencias:rechazar-antiguas')
-            ->dailyAt('02:03')->name('transferencias.rechazar-antiguas')->withoutOverlapping();
-
+        // Every Minute
         $schedule->command('medios:trigger-status-change')
             ->everyMinute()->withoutOverlapping()->name('VentasCobrosTriggerStatusChange')->withoutOverlapping();
 
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronDiario.php')))
-            ->dailyAt('00:03')->name('cronDiario')->withoutOverlapping();
+        // Every 5 Minutes
+        $schedule->command('alertas:sucursal-inicio-liquidacion-set-cache')
+            ->everyFiveMinutes()->name('AlertaSucursalInicioLiquidacionSetCacheValue')->withoutOverlapping();
 
-        // Every hour at minute 55 - cronPorHora.php
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronPorHora.php')))
-            ->hourlyAt(55)->name('cronPorHora')->withoutOverlapping();
-
-        // Every 15 minutes - cron15min.php
+        // Every 15 Minutes
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron15min.php')))
             ->everyFifteenMinutes()->name('cron15min');
 
         $schedule->command('arreglos:check-duplicity-on-detalle')
             ->everyFifteenMinutes()->name('CheckRendicionStockDuplicity')->withoutOverlapping();
 
-        $schedule->command('caja:check-congruence')
-            ->dailyAt('09:00')->name('CheckCajasCongruence')->withoutOverlapping();
+        $schedule->command('monitor:jobs')
+            ->everyFifteenMinutes()->name('MonitorJobs')->withoutOverlapping();
 
-        // 07:00 daily - cron7AM.php
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron7AM.php')))
-            ->dailyAt('07:00')->name('cron7AM')->withoutOverlapping();
+        $schedule->command('queue:retry all')
+            ->everyFifteenMinutes()->name('QueueRetryAll')->withoutOverlapping();
+
+        // Hourly
+        $schedule->command('mercado-pago:check-notifications-events')
+            ->hourly()->name('MercadoPagoCheckNotificationsEvents')->withoutOverlapping();
+
+        // Every hour at minute 55 - cronPorHora.php
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronPorHora.php')))
+            ->hourlyAt(55)->name('cronPorHora')->withoutOverlapping();
+
+        // 4 times a day (9:10, 13:10, 17:10, 21:10)
+        // 10 past at 9,13,17,21 - cronNotificacionesGanancias.php
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))
+            ->cron('10 9,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
+
+        // Daily
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronDiario.php')))
+            ->dailyAt('00:03')->name('cronDiario')->withoutOverlapping();
 
         // 02:00 daily - cron2AM.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron2AM.php')))
@@ -68,38 +75,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('alertas:cleanup-old')
             ->dailyAt('02:00')->name('CleanupOldAlertas')->withoutOverlapping();
 
-        $schedule->command('alertas:sucursal-inicio-liquidacion-set-cache')
-            ->everyFiveMinutes()->name('AlertaSucursalInicioLiquidacionSetCacheValue')->withoutOverlapping();
-
-        $schedule->command('monitor:jobs')
-            ->everyFifteenMinutes()->name('MonitorJobs')->withoutOverlapping();
-
-        $schedule->command('queue:retry all')
-            ->everyFifteenMinutes()->name('QueueRetryAll')->withoutOverlapping();
-
-        // Monday 08:00 - cronLunes8AM.php
-        $schedule->command('email:comparativo-semanal')
-            ->weeklyOn(1, '08:00')->name('comparativoSemanal')->withoutOverlapping();
-
-
-        // Monday 07:00 - cronLunes7AM.php
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronLunes7AM.php')))
-            ->weeklyOn(1, '07:00')->name('cronLunes7AM')->withoutOverlapping();
-
-        /*
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronMartes.php')))
-            ->weeklyOn(2, '04:00')->name('cronMartes')->withoutOverlapping();
-*/
-        // Tuesday 03:00 - email:nobleza-ventas
-        $schedule->command('email:nobleza-ventas')
-            ->weeklyOn(2, '03:00')->name('emailNoblezaVentas')->withoutOverlapping();
-
-        // 10 past at 9,13,17,21 - cronNotificacionesGanancias.php
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))
-            ->cron('10 9,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
-
-        $schedule->command('liquidacion:update-cambio')
-            ->cron('0 0 */15 * *')->name('UpdateLiquidacionPeriodoCambio')->withoutOverlapping();
+        $schedule->command('transferencias:rechazar-antiguas')
+            ->dailyAt('02:03')->name('transferencias.rechazar-antiguas')->withoutOverlapping();
 
         // Daily: delete .log files in storage/logs not modified for one week
         $schedule->call(function () {
@@ -121,6 +98,35 @@ class Kernel extends ConsoleKernel
             }
             Log::info('Old log cleanup executed', ['deleted' => $deleted]);
         })->dailyAt('03:10')->name('cleanupOldLogs')->withoutOverlapping();
+
+        // 07:00 daily - cron7AM.php
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cron7AM.php')))
+            ->dailyAt('07:00')->name('cron7AM')->withoutOverlapping();
+
+        $schedule->command('caja:check-congruence')
+            ->dailyAt('09:00')->name('CheckCajasCongruence')->withoutOverlapping();
+
+        // Weekly
+        // Monday 07:00 - cronLunes7AM.php
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronLunes7AM.php')))
+            ->weeklyOn(1, '07:00')->name('cronLunes7AM')->withoutOverlapping();
+
+        // Monday 08:00 - cronLunes8AM.php
+        $schedule->command('email:comparativo-semanal')
+            ->weeklyOn(1, '08:00')->name('comparativoSemanal')->withoutOverlapping();
+
+        // Tuesday 03:00 - email:nobleza-ventas
+        $schedule->command('email:nobleza-ventas')
+            ->weeklyOn(2, '03:00')->name('emailNoblezaVentas')->withoutOverlapping();
+
+        /*
+        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronMartes.php')))
+            ->weeklyOn(2, '04:00')->name('cronMartes')->withoutOverlapping();
+*/
+
+        // Every 15 days
+        $schedule->command('liquidacion:update-cambio')
+            ->cron('0 0 */15 * *')->name('UpdateLiquidacionPeriodoCambio')->withoutOverlapping();
     }
 
     /**

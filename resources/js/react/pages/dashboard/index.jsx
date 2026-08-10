@@ -21,9 +21,22 @@ const Dashboard = () => {
 
     const [iframeHrefs, setIframeHrefs] = React.useState(() => ({url: `iframe-content.php?pagina=${getInitialPagina()}`}));
     const [component, setComponent] = useState(null);
+    const [componentProps, setComponentProps] = useState({});
     const [flag, setFlag] = useState(0);
     const [breadcrumb1, setBreadcrumb1] = useState('Inicio');
     const [breadcrumb2, setBreadcrumb2] = useState('');
+
+    const buildComponentPropsFromPostData = (postData) => {
+        if (postData == null || !Array.isArray(postData)) {
+            return {};
+        }
+        return postData.reduce((props, item) => {
+            if (item?.name != null) {
+                props[item.name] = item.value;
+            }
+            return props;
+        }, {});
+    };
 
     const onMenuSelected = (codigo, nbreadcrumb1, nbreadcrumb2, method = 'get', postData =[]) => {
         setBreadcrumb1(nbreadcrumb1);
@@ -39,9 +52,11 @@ const Dashboard = () => {
 
         if(get(ReactMenu, codigo)){
             setIframeHrefs(null);
+            setComponentProps(buildComponentPropsFromPostData(postData));
             setComponent(codigo);
         }else {
             setComponent(null);
+            setComponentProps({});
             setIframeHrefs({
                 url: 'iframe-content.php?f=' + flag + '&pagina=' + codigo,
                 method: method,
@@ -68,7 +83,7 @@ const Dashboard = () => {
                 {component !== null && <div className={'m-4 ne-body! dark:ne-dark-body! max-h-[calc(100vh-150px)] h-full overflow-y-scroll scrollbar-hidden'}>
                     {(() => {
                         const SpecificComponent = ReactMenu[component];
-                        return SpecificComponent ? <SpecificComponent /> : <></>
+                        return SpecificComponent ? <SpecificComponent {...componentProps} /> : <></>
                     })()}
                 </div>}
 
