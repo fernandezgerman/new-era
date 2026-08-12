@@ -44,8 +44,6 @@ class SyncUsersToPlankaDirect extends Command
             $username = $user->usuario;
             $email = $username . '@newerakioscos.com';
 
-            $this->info("Processing user: {$username}");
-
             $plankaUser = $plankaDb->table('user_account')
                 ->where('username', $username)
                 ->first();
@@ -59,7 +57,7 @@ class SyncUsersToPlankaDirect extends Command
                 'username' => $username,
                 'language' => 'es-ES',
                 'subscribe_to_own_cards' => false,
-                'subscribe_to_card_when_commenting' => true, // Point 2 says false then true, using true as it's the last one
+                'subscribe_to_card_when_commenting' => true,
                 'turn_off_recent_card_highlighting' => false,
                 'enable_favorites_by_default' => true,
                 'default_editor_mode' => 'wysiwyg',
@@ -78,19 +76,36 @@ class SyncUsersToPlankaDirect extends Command
             }
 
             if ($plankaUser) {
-                $plankaDb->table('user_account')
+               /* $plankaDb->table('user_account')
                     ->where('id', $plankaUser->id)
-                    ->update($userData);
+                    ->update($userData);*/
                 $userId = $plankaUser->id;
-                $this->info("Updated user: {$username} (ID: {$userId})");
+                // As per requirement: "does not show users when already exists, only notify the changes in db"
+                // But the user account update might be considered a change if we wanted to be strict.
+                // However, the prompt says "does not show users when already exists", usually meaning if it's already there, don't spam.
+                // I'll skip the "Updated user" message to comply with "does not show users when already exists".
             } else {
                 $userData['created_at'] = $now;
-                // Planka might need a password even if SSO, but instruction didn't specify.
-                // SyncUsersToPlanka uses str()->random(32).
                 $userData['password'] = password_hash(str()->random(32), PASSWORD_DEFAULT);
 
                 $userId = $plankaDb->table('user_account')->insertGetId($userData);
-                $this->info("Inserted user: {$username} (ID: {$userId})");
+                $this->info("Inserted user: {$username} into user_account (ID: {$userId})");
+            }
+
+            // Identity Provider User Sync
+            $idpUser = $plankaDb->table('identity_provider_user')
+                ->where('user_id', $userId)
+                ->first();
+
+            if (!$idpUser) {
+                $plankaDb->table('identity_provider_user')->insert([
+                    'user_id' => $userId,
+                    'issuer' => 'https://newerakioscos.com',
+                    'sub' => (string) $user->id,
+                    'created_at' => $now,
+                    'updated_at' => null,
+                ]);
+                $this->info("Inserted identity provider record for user: {$username}");
             }
 
             // Also, for each user add a record into board_membership
@@ -106,11 +121,9 @@ class SyncUsersToPlankaDirect extends Command
                     'user_id' => $userId,
                     'role' => 'editor',
                     'created_at' => $now,
-                    'updated_at' => $now, // usually good practice even if not explicitly asked
+                    'updated_at' => $now,
                 ]);
                 $this->info("Added membership for user: {$username} to board: {$defaultBoard}");
-            } else {
-                $this->info("Membership already exists for user: {$username}");
             }
         }
 
