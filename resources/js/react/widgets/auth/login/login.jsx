@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Input} from "../../../components/Input.jsx";
 import {DivCenterContentHyV} from "../../../components/Containers/DivCenterContentHyV.jsx";
 import {Button} from "../../../components/Buttons.jsx";
@@ -11,12 +11,16 @@ import {Select} from "../../../components/Select.jsx";
 import {useUsuarioSucursalesCaja} from "../../../dataHooks/useUsuarioHooks.jsx";
 import ErrorBoundary from "../../../components/ErrorBoundary.jsx";
 
-import {Button as Bf,  Datepicker } from "flowbite-react";
+import {Button as Bf, Datepicker} from "flowbite-react";
+import {TareasDashboard} from "@/pages/tareasDashboard/index.jsx";
+
 const SelectUserAndPassword = ({setAuthUser}) => {
     const [usuario, setUsuario] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
+
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -59,8 +63,8 @@ const SelectUserAndPassword = ({setAuthUser}) => {
                     )}
                     <div className="text-center">
                         <Button type="submit"
-                                       className={'w-full! float-right'}
-                                       disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</Button>
+                                className={'w-full! float-right'}
+                                disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</Button>
                     </div>
                 </form>
             </div>
@@ -120,9 +124,9 @@ export const SelectSucursal = ({authUser}) => {
                 )}
                 <div className="text-center">
                     <Button type="button"
-                                   onClick={handleSubmit}
-                                    className={'w-full'}
-                                   disabled={loading || sucursal === null}>{loading ? 'Aguarde...' : 'Continuar'}</Button>
+                            onClick={handleSubmit}
+                            className={'w-full'}
+                            disabled={loading || sucursal === null}>{loading ? 'Aguarde...' : 'Continuar'}</Button>
                 </div>
             </div>
         </>
@@ -133,6 +137,40 @@ export const Login = () => {
     const darkMode = useSystemTheme();
 
     const [authUser, setAuthUser] = React.useState(null);
+    const [readyToLogin, setReadyToLogin] = React.useState(null);
+
+
+    const iframeRef = useRef(null);
+    const timeoutRef = useRef(null);
+
+    useEffect(() => {
+        const iframe = iframeRef.current;
+        if (!iframe) return;
+
+        const handleLoad = () => {
+            // Cancelamos el timeout anterior
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+
+            // Esperamos un poco para ver si hay otra redirección
+            timeoutRef.current = setTimeout(() => {
+                setReadyToLogin(true);
+                // Aquí puedes ejecutar tu lógica
+            }, 500);
+        };
+
+        iframe.addEventListener('load', handleLoad);
+
+        // Limpieza
+        return () => {
+            iframe.removeEventListener('load', handleLoad);
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
+
 
     return (<>
             <DivCenterContentHyV className="md:items-center">
@@ -140,25 +178,31 @@ export const Login = () => {
                     className="relative flex flex-col break-words bg-transparent border-0 shadow-none lg:py4 rounded-2xl bg-clip-border max-w-400px w-[400px]">
                     <img src={darkMode ? darkLogo : lightLogo} className={'p-6'} alt="Logo"/>
 
-                    {authUser === null && <SelectUserAndPassword setAuthUser={setAuthUser}/>}
-                    {authUser !== null && (
-                        <ErrorBoundary fallback={({error, resetErrorBoundary}) => (
-                            <div className="p-6">
-                                <div className="text-red-700 font-semibold mb-2">Ocurrió un problema al cargar las
-                                    sucursales.
-                                </div>
+                    <TareasDashboard ref={iframeRef} logout={true} className={'hidden'}/>
 
-                                <div
-                                    className="text-xs text-red-600 mb-2 whitespace-pre-wrap">{String(error?.message || error)}</div>
+                    {!readyToLogin && (<div className={'h-[150px] mt-20 text-center w-full'}>Aguarde...</div>)}
 
-                                <div className="text-center">
-                                    <Button type="button" onClick={resetErrorBoundary}>Reintentar</Button>
+                    {readyToLogin && (<>
+                        {authUser === null && <SelectUserAndPassword setAuthUser={setAuthUser}/>}
+                        {authUser !== null && (
+                            <ErrorBoundary fallback={({error, resetErrorBoundary}) => (
+                                <div className="p-6">
+                                    <div className="text-red-700 font-semibold mb-2">Ocurrió un problema al cargar las
+                                        sucursales.
+                                    </div>
+
+                                    <div
+                                        className="text-xs text-red-600 mb-2 whitespace-pre-wrap">{String(error?.message || error)}</div>
+
+                                    <div className="text-center">
+                                        <Button type="button" onClick={resetErrorBoundary}>Reintentar</Button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}>
-                            <SelectSucursal authUser={authUser}/>
-                        </ErrorBoundary>
-                    )}
+                            )}>
+                                <SelectSucursal authUser={authUser}/>
+                            </ErrorBoundary>
+                        )}
+                    </>)}
                 </div>
             </DivCenterContentHyV>
         </>

@@ -92,6 +92,12 @@ return Application::configure(basePath: dirname(__DIR__))
         );
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
+            if ($request->is('iframe-content.php')) {
+                return response('<br /> <br /> <br /> <br />Sesion vencida, haga login de nuevo', 401);
+            }
+        });
+
         $exceptions->render(function (Exception $e, \Illuminate\Http\Request $request) {
             // Only customize for API requests
             if ($request->is('api/*') || $e instanceof \App\Http\Exceptions\Api\Exceptions\ApiException) {
