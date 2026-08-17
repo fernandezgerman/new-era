@@ -37,7 +37,7 @@ class TareasDataAccessor
         $results = $this->getQueryBuilderForCard()
             ->where('user_account.username', $username)
             ->whereIn('list.name', [$pendiente, $bloqueado, $enProceso])
-            ->select(DB::raw('list.name as estado'), 'card.id', 'card.name', 'card.description', 'card.created_at', DB::raw('creator.username as creador'))
+            ->select(DB::raw('list.name as estado'), 'card.id', 'card.name', 'card.description', db::raw("(card.created_at - INTERVAL '3 hours') as created_at"), DB::raw('creator.username as creador'))
             ->get();
 
         return $results->map(fn($raw) => \App\Services\TareasManager\Factories\TareaDTOFactory::fromRaw($raw));

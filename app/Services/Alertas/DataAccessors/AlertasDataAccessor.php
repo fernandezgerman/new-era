@@ -55,15 +55,14 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
     {
         $arr = session('permisos');
 
-        $alertasPermitido = !(Arr::get($arr,'alrtgral','PERMITIDO') ==="RESTRINGIDO");
-        $alertasDeSolicitudesDePagoPermitido = !(Arr::get($arr,'pgsscrsl','PERMITIDO') ==="RESTRINGIDO");
-        $puedeAgregarMovimientosDeCaja = !(Arr::get($arr,'agrmovcaja','PERMITIDO') === "RESTRINGIDO");
+        $alertasPermitido = !(Arr::get($arr, 'alrtgral', 'PERMITIDO') === "RESTRINGIDO");
+        $alertasDeSolicitudesDePagoPermitido = !(Arr::get($arr, 'pgsscrsl', 'PERMITIDO') === "RESTRINGIDO");
+        $puedeAgregarMovimientosDeCaja = !(Arr::get($arr, 'agrmovcaja', 'PERMITIDO') === "RESTRINGIDO");
 
         $alertasCollection = new Collection();
 
         //Filtra aertas por precios y arreglos
-        if($alertasPermitido)
-        {
+        if ($alertasPermitido) {
             $alertasSummary = AlertaTipo::query()
                 ->selectRaw("
                     COUNT(1) AS cantidad,
@@ -77,11 +76,11 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
                 ")
                 ->leftjoin('alertas', 'alertas.idalertatipo', '=', 'alertastipos.id')
                 ->leftjoin('alertasdestinatarios', 'alertas.id', '=', 'alertasdestinatarios.idalerta')
-                ->where(function (Builder $query) use ($usuarioId){
+                ->where(function (Builder $query) use ($usuarioId) {
                     $query->where('idusuario', $usuarioId);
                     $query->orWhereNull('alertas.id');
                 })
-                ->whereIn('alertastipos.id',[2,4] )
+                ->whereIn('alertastipos.id', [2, 4])
 
                 //->where('fechahoravisto', null)
                 ->groupBy('alertastipos.id');
@@ -107,13 +106,13 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
         }
         //Toma las alertas de Tareas
 
-        try{
-        $tareas = TareasSummaryFactory::makeFromUserId($usuarioId);
-        $alertasCollection->add($tareas);
-        }catch (\Exception $exception){
-            Log::error('Error al cargar alertas de tareas: '.$exception->getMessage());
+        try {
+            $tareas = TareasSummaryFactory::makeFromUserId($usuarioId);
+            $alertasCollection->add($tareas);
+        } catch (\Exception $exception) {
+            Log::error('Error al cargar alertas de tareas: ' . $exception->getMessage());
         }
-        if($puedeAgregarMovimientosDeCaja) {
+        if ($puedeAgregarMovimientosDeCaja) {
             //Toma los movimientos de la ultima caja
             $movimientosUltimoCaja = MovimientosDeCajaSummaryFactory::makeFromMovimientos(
                 app(CajasDataAccessor::class)
@@ -126,7 +125,7 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
         }
 
 
-        if($alertasDeSolicitudesDePagoPermitido) {
+        if ($alertasDeSolicitudesDePagoPermitido) {
 
             // Agrega resumen de Solicitudes de Pago (alerta tipo 6)
             $solicitudesPagoSummary = SolicitudesDePagoSummaryFactory::makeFromUserId($usuarioId);
@@ -135,8 +134,8 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
 
         $alertas = new AlertasSummaryCollection($alertasCollection);
         //Muestra los missed alertas en el menu
-       /* $missingAlertas = $this->getMisssingAlertaTipo($alertas);
-        $merged = $alertas->merge($missingAlertas); */
+        /* $missingAlertas = $this->getMisssingAlertaTipo($alertas);
+         $merged = $alertas->merge($missingAlertas); */
 
         $merged = $alertas;
         // Order by alertaTipo->codigo ascending
@@ -148,6 +147,7 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
 
         return new AlertasSummaryCollection($sorted);
     }
+
     /**
      * @param int $usuarioId
      * @param int $idAlertaDetalleTipo
@@ -157,13 +157,13 @@ class AlertasDataAccessor extends \App\DataAccessor\DataAccessorBase
     public function getAlertaDetalles(int $usuarioId, int $idAlertaDetalleTipo): AlertaDetalleCollection
     {
         $data = match ($idAlertaDetalleTipo) {
-        config( 'alertas.solicitud_de_pago_alerta_id') =>
+            config('alertas.solicitud_de_pago_alerta_id') =>
             (app(SolicitudDePagoDataAccessor::class)->getSolicitudesDePagoAlertas($usuarioId))
                 ->map(fn($solicitudDePago) => AlertaDetalleDTOFactory::makeFromSolicitudPago($solicitudDePago)),
-        config( 'alertas.tareas_alerta_id') =>
-        (app(TareasDataAccessor::class)->getTareas($usuarioId))
-            ->map(fn($tarea) => AlertaDetalleDTOFactory::makeFromTareas($tarea)),
-        default => throw new NotImplementedException('Detalle de alerta solo disponible para solicitudes de pago. Refiera a legacy version para otras alertas.'),
+            config('alertas.tareas_alerta_id') =>
+            (app(TareasDataAccessor::class)->getTareas($usuarioId))
+                ->map(fn($tarea) => AlertaDetalleDTOFactory::makeFromTareas($tarea)),
+            default => throw new NotImplementedException('Detalle de alerta solo disponible para solicitudes de pago. Refiera a legacy version para otras alertas.'),
         };
 
         return new AlertaDetalleCollection($data);
