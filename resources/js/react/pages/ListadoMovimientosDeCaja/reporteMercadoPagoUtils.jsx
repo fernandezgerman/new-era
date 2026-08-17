@@ -144,7 +144,7 @@ const OrdenId = ({item}) => {
 const PaymentId = ({item}) => {
 
     if(item?.info?.venta_sucursal_cobro?.mercado_pago_orders && item?.info?.venta_sucursal_cobro?.mercado_pago_orders[0].payments){
-        return item?.info?.venta_sucursal_cobro?.mercado_pago_orders[0].payments[0].externalpaymentid;
+        return item?.info?.venta_sucursal_cobro?.mercado_pago_orders[0].payments[0]?.externalpaymentid;
     }
     return '??';
 }
