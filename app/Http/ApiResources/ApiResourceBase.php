@@ -338,7 +338,7 @@ class ApiResourceBase extends AbstractApiHandler
      * @param  string  $key
      * @param  mixed  $value
      */
-    private function applyFiltroCondition($query, string $key, $value): void
+    public static function applyFiltroCondition($query, string $key, $value): void
     {
         if (! is_array($value)) {
             $query->where($key, $value);

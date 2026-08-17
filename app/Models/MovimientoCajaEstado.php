@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MovimientoCajaEstado extends BaseModel
 {
-    use HasFactory;
+    use HasFactory,Compoships;
 
     protected $table = 'movimientoscajaestado';
 

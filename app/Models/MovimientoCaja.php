@@ -82,6 +82,11 @@ class MovimientoCaja extends BaseModel implements ActualizableItem
         return $this->belongsToMany(VentaSucursalCobro::class, 'movimientocajaventasucursalcobro', 'idmovimientocaja', 'idventasucursalcobro');
     }
 
+    public function cambiosDeEstado()
+    {
+        return $this->hasMany(MovimientoCajaEstado::class, ['idsucursal', 'idusuario', 'fechahoramovimiento'], ['idsucursal', 'idusuario', 'fechahoramovimiento']);
+    }
+
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
     {
         return new ActualizacionIdentifierDTO(

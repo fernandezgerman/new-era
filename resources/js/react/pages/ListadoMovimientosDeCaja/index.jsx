@@ -11,9 +11,13 @@ import {SelectMotivoMovimientoCaja} from '@/components/selects/SelectMotivoMovim
 import {AlternativeCard} from '@/components/Card.jsx';
 import {LabelError} from '@/components/Label.jsx';
 import {useReporteMercadoPago} from '@/dataHooks/useReporteMercadoPago.jsx';
-import {useReporteMovimientosCaja} from '@/dataHooks/useReporteMovimientosCaja.jsx';
+import {
+    useReporteMovimientosCaja,
+    useReporteMovimientosCajaTotalizado
+} from '@/dataHooks/useReporteMovimientosCaja.jsx';
 import {ReporteMercadoPagoLista} from './ReporteMercadoPagoLista.jsx';
 import {ReporteMovimientosCajaLista} from './ReporteMovimientosCajaLista.jsx';
+import {ReporteMovimientosCajaTotalizadoLista} from './ReporteMovimientosCajaTotalizadoLista.jsx';
 import {
     buildReporteMercadoPagoPayload,
     validateReporteMercadoPagoFilters,
@@ -63,6 +67,11 @@ export const ListadoMovimientosDeCaja = () => {
         enabled: isMovimientosCaja && hasSearched,
     });
 
+    const reporteTotalizado = useReporteMovimientosCajaTotalizado({
+        filters: submittedFilters,
+        enabled: isMovimientosCaja && hasSearched,
+    });
+
     const mercadoPagoItems = Array.isArray(reporteMercadoPagoQuery.data)
         ? reporteMercadoPagoQuery.data
         : [];
@@ -73,7 +82,13 @@ export const ListadoMovimientosDeCaja = () => {
     );
 
     const activeQuery = isMercadoPago ? reporteMercadoPagoQuery : reporteMovimientosCajaQuery;
-    const isLoading = activeQuery.isFetching;
+    const isLoading = isMercadoPago
+        ? reporteMercadoPagoQuery.isFetching
+        : (reporteMovimientosCajaQuery.isFetching || reporteTotalizado.isFetching);
+    const onRefreshMovimientosCaja = useCallback(() => {
+        reporteMovimientosCajaQuery.refetch();
+        reporteTotalizado.refetch();
+    }, [reporteMovimientosCajaQuery, reporteTotalizado]);
 
     useEffect(() => {
         setPage(1);
@@ -272,10 +287,12 @@ export const ListadoMovimientosDeCaja = () => {
                     </div>
                 </div>
 
-                {activeQuery.isError ? (
+                {(isMercadoPago && activeQuery.isError)
+                || (isMovimientosCaja && (activeQuery.isError || reporteTotalizado.isError)) ? (
                     <div className={'mt-4'}>
                         <LabelError>
                             {activeQuery.error?.message
+                                ?? reporteTotalizado.error?.message
                                 ?? (isMercadoPago
                                     ? 'Error al cargar el reporte de Mercado Pago.'
                                     : 'Error al cargar el reporte de movimientos de caja.')}
@@ -323,17 +340,24 @@ export const ListadoMovimientosDeCaja = () => {
                         <div className={'mb-4 flex flex-wrap items-center justify-end gap-2 border-b border-slate-200 pb-2 dark:border-slate-700'}>
                             {hasSearched ? (
                                 <RefreshIconButton
-                                    onRefresh={reporteMovimientosCajaQuery.refetch}
+                                    onRefresh={onRefreshMovimientosCaja}
                                     loading={isLoading}
                                     className={'p-1! px-1.5!'}
                                 />
                             ) : null}
                         </div>
-                        <ReporteMovimientosCajaLista
-                            items={movimientosCajaItems}
-                            isLoading={isLoading && hasSearched}
+                        <ReporteMovimientosCajaTotalizadoLista
+                            data={reporteTotalizado.data}
+                            isLoading={reporteTotalizado.isFetching && hasSearched}
                             hasSearched={hasSearched}
                         />
+                        <div className={'mt-6 border-t border-slate-200 pt-4 dark:border-slate-700'}>
+                            <ReporteMovimientosCajaLista
+                                items={movimientosCajaItems}
+                                isLoading={reporteMovimientosCajaQuery.isFetching && hasSearched}
+                                hasSearched={hasSearched}
+                            />
+                        </div>
                         <div className={'mt-4 flex flex-wrap items-center justify-between gap-3'}>
                             <p className={'text-xs text-slate-500 dark:text-slate-400'}>
                                 {!hasSearched

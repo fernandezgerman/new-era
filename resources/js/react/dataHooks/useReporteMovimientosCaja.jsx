@@ -17,6 +17,21 @@ export const useReporteMovimientosCaja = ({
             perPage: MOVIMIENTOS_CAJA_PER_PAGE,
         }),
         enabled: enabled && filters != null,
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 60 * 24,
+    });
+};
+
+
+export const useReporteMovimientosCajaTotalizado = ({
+                                              filters,
+                                              enabled = true,
+                                          }) => {
+    return useQuery({
+        queryKey: ['reporte-movimientos-caja-totalizado', filters],
+        queryFn: () => resource.getReporteMovimientosCajaTotalizado({
+            filtros: filters
+        }),
+        enabled: enabled && filters != null,
+        staleTime: 1000 * 60 * 60 * 24,
     });
 };

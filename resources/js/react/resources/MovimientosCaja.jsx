@@ -7,6 +7,7 @@ const MOVIMIENTO_CAJA_INCLUDES = [
     'sucursal',
     'sucursalDestino',
     'motivo',
+    'cambiosDeEstado'
 ];
 
 export default class MovimientosCaja extends ResourcesBase
@@ -45,5 +46,29 @@ export default class MovimientosCaja extends ResourcesBase
             page,
             perPage,
         );
+    }
+
+    async getReporteMovimientosCajaTotalizado({filtros = {}})
+    {
+        try {
+            const f = filtros ? JSON.stringify(filtros) : '';
+
+            const data = this.processResponse(
+                await window.axios.get('/api/movimientos-caja/totalizado?filtros='+encodeURIComponent(f)),
+            );
+
+            const items = Array.isArray(data) ? data : [];
+            const total = items.reduce(
+                (sum, item) => sum + (Number(item?.total) || 0),
+                0,
+            );
+
+            return {
+                items,
+                total,
+            };
+        } catch (err) {
+            this.handleError(err);
+        }
     }
 }

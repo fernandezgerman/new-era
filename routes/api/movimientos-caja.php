@@ -12,5 +12,8 @@ route::prefix('movimientos-caja')->withoutMiddleware(['restrict.access.per.hour'
     Route::post('/reporte-mercado-pago', [MovimientosCajaController::class, 'getReporteMercadoPago'])
         ->name('movimientos-caja.reporte-mercado-pago');
 
+    Route::get('/totalizado', [MovimientosCajaController::class, 'getMovimientosTotalizados'])
+        ->name('movimientos-caja.reporte-totalizado');
+
 });
 
