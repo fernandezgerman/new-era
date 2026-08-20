@@ -16,10 +16,10 @@ class CacheManager
      * @param Closure $functionWithTheValues
      * @return string
      */
-    public function Cache(array $key, CacheExpire $expire, Closure $functionWithTheValues)
+    public function Cache($key, CacheExpire $expire, Closure $functionWithTheValues)
     {
-        return Cache::store('redis')->remember(
-            serialize($key), $this->getExireTime($expire), $functionWithTheValues);
+        return Cache::remember(
+            is_array($key) ? serialize($key) : $key, $this->getExireTime($expire), $functionWithTheValues);
     }
 
     protected function getExireTime(CacheExpire $expire): int|Carbon
@@ -30,9 +30,9 @@ class CacheManager
         };
     }
 
-    public function getCacheValue(string $key): mixed
+    public function getCacheValue($key): mixed
     {
-        return Cache::get($key);
+        return Cache::get(is_array($key) ? serialize($key) : $key);
     }
 
     public function putCacheValue(string $key, mixed $value, ?CacheExpire $expire): void
@@ -40,5 +40,9 @@ class CacheManager
         Cache::put($key, $value, $expire ? $this->getExireTime($expire) : null);
     }
 
+    public function clearCache($key): mixed
+    {
+        return Cache::forget(is_array($key) ? serialize($key) :$key);
+    }
 
 }

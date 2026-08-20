@@ -27,6 +27,7 @@ class VentaSucursal extends BaseModel
         'numerocaja',
         'idventa',
         'costosucursal',
+        'costosucursalcriterio',
     ];
 
     protected $casts = [
@@ -42,6 +43,7 @@ class VentaSucursal extends BaseModel
         'fechacreacion' => 'datetime',
         'numerocaja' => 'integer',
         'costosucursal' => 'decimal:3',
+        'costosucursalcriterio' => 'string',
     ];
 
     /**
@@ -74,5 +76,21 @@ class VentaSucursal extends BaseModel
     public function lista()
     {
         return $this->belongsTo(Lista::class, 'idlista');
+    }
+
+    /**
+     * Get the extra information for the sale.
+     */
+    public function extra()
+    {
+        return $this->hasOne(VentaSucursalExtra::class, 'idventa');
+    }
+
+    /**
+     * Get the compound articles for this sale.
+     */
+    public function articulosCompuestos()
+    {
+        return $this->hasMany(VentaArticuloCompuesto::class, 'idventa', 'idventa');
     }
 }

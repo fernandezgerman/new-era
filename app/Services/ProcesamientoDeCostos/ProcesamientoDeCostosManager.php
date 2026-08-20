@@ -244,5 +244,5 @@ class ProcesamientoDeCostosManager
         return $costo;
     }
 
-    
+
 }

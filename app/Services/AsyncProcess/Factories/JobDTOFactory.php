@@ -9,6 +9,7 @@ use App\Services\AsyncProcess\Interfaces\AsyncProcessDTOInterface;
 use App\Services\MediosDeCobro\ModosDeCobroManager;
 use App\Services\ProcesamientoDeCostos\ProcesamientoDeCostosManager;
 use App\Services\Test\TestManager;
+use App\Services\Ventas\VentasManager;
 
 class JobDTOFactory
 {
@@ -22,6 +23,7 @@ class JobDTOFactory
             AvailableAsyncProcess::TEST->value => TestManager::class,
             /** MERCARDO PAGO */
             AvailableAsyncProcess::MERCARDO_PAGO_PROCESAR_EVENTO->value => ModosDeCobroManager::class,
+            AvailableAsyncProcess::PROCESAR_VENTA_SUCURSAL->value => VentasManager::class,
             default => throw new AsyncProcessNotExistException('No existe le proceso que desea ingresar en la cola'),
         };
 
@@ -32,6 +34,7 @@ class JobDTOFactory
             AvailableAsyncProcess::ACTUALIZAR_REFERENCIAS_COSTOS_POR_DETALLES->value => 'actualizarReferenciaDeCostoscompraDetallesIds',
             /** MERCARDO PAGO */
             AvailableAsyncProcess::MERCARDO_PAGO_PROCESAR_EVENTO->value => 'processEvent',
+            AvailableAsyncProcess::PROCESAR_VENTA_SUCURSAL->value => 'procesarVentaSucursal',
             AvailableAsyncProcess::TEST->value => 'logMessage',
             default => throw new AsyncProcessNotExistException('No existe el metodo en el servicio'),
         };

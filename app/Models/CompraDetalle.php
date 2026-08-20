@@ -73,4 +73,9 @@ class CompraDetalle extends BaseModel
     {
         return $this->hasMany(CompraDudosaCache::class, 'iddetallecostoasociado');
     }
+
+    public function ventasExtra()
+    {
+        return $this->hasMany(VentaSucursalExtra::class, 'idcompradetalle');
+    }
 }

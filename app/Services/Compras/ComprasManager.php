@@ -27,8 +27,7 @@ class ComprasManager
             ->where(function ($query) {
                 $query->whereNotIn('comprasdudosas.audicionresultado', [1, 3]);
                 $query->orWhereNull('comprasdudosas.audicionresultado');
-            })
-            ->whereNull('comprasanuladas.idcompra');
+            });
     }
 
     public function getCompraDetallesARecalcularQuery(): \Illuminate\Database\Eloquent\Builder

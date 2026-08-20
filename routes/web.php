@@ -7,6 +7,7 @@ use App\Services\AsyncProcess\AsyncProcessManager;
 use App\Services\MediosDeCobro\Drivers\MercadoPagoQR\Factories\MercadoPagoPaymentDetailFactory;
 use App\Services\MediosDeCobro\DTOs\OrderDTO;
 use App\Services\ProcesamientoDeCostos\ProcesamientoDeCostosManager;
+use App\Services\Ventas\VentasManager;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,6 +26,11 @@ Route::post('/oidc/login', [\App\Http\Controllers\OidcAuthController::class, 'lo
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/test-job', function() {
+
+   /* $asyncTest = new  \App\Services\AsyncProcess\DTOs\AsyncProcessVentaSucursalDTO(38003173);
+    AsyncProcessManager::handle($asyncTest); */
+
+    //app(VentasManager::class)->procesarVentaSucursal(38003228);
     /*
     $asyncTest = new  \App\Services\AsyncProcess\DTOs\AsyncProcessTestDTO();
     AsyncProcessManager::handle($asyncTest);

@@ -50,6 +50,17 @@ class Articulo extends BaseModel implements ActualizableItem
         'costo' => 'decimal:3',
     ];
 
+    public function getCostoAttribute(): float
+    {
+        if (!$this->escompuesto) {
+            return (float) ($this->attributes['costo'] ?? 0);
+        }
+
+        return (float) $this->componentes->reduce(function ($carry, $componente) {
+            return $carry + ($componente->articulo->costo * $componente->cantidad);
+        }, 0);
+    }
+
     // Relationships
     public function marca()
     {
@@ -143,6 +154,14 @@ class Articulo extends BaseModel implements ActualizableItem
     public function comprasDudosasCache(): HasMany
     {
         return $this->hasMany(CompraDudosaCache::class, 'idarticulo');
+    }
+
+    /**
+     * Get the visible stock information for the article.
+     */
+    public function stockVisible()
+    {
+        return $this->hasOne(ArticuloStockVisible::class, 'id');
     }
 
     public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
