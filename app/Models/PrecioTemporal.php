@@ -110,4 +110,12 @@ class PrecioTemporal extends BaseModel
     {
         return $this->belongsTo(Sucursal::class, 'idsucursal');
     }
+
+    /**
+     * Get the sales associated with this temporary price.
+     */
+    public function ventas()
+    {
+        return $this->hasMany(VentaPrecioTemporal::class, 'idpreciotemporal');
+    }
 }

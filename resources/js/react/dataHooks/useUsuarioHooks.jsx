@@ -46,4 +46,16 @@ const useUsuarios = (includes = [], orden = 'usuarios.nombre', filter = {'activo
 
 }
 
-export { useUsuarioSucursalesCaja, useUsuarioSucursalesHabilitadas, useUsuarios };
+const useUsuario = ({ idUsuario }) => {
+    return useQuery({
+        queryKey: ['usuario-' + idUsuario],
+        queryFn: async () => {
+            const resource = new Resource();
+            return await resource.getEntity('user', idUsuario, ['perfil']);
+        },
+        enabled: !!idUsuario && idUsuario !== undefined,
+        staleTime: 1000 * 60 * 60, // 1 hour
+    });
+}
+
+export { useUsuarioSucursalesCaja, useUsuarioSucursalesHabilitadas, useUsuarios, useUsuario };

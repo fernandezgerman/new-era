@@ -12,3 +12,9 @@ export const camelCaseToSpace = (text) => {
     const spaced = text.replace(/([A-Z])/g, ' $1').replace(/\s+/g, ' ').trim();
     return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 };
+
+export const snakeCaseToSpace = (text) => {
+    if (!text) return text;
+    const spaced = text.replace(/_/g, ' ').toLowerCase().replace(/\s+/g, ' ').trim();
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+};

@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Promocion extends BaseModel
 {
-    use HasFactory;
-
     /**
      * The table associated with the model.
      *
@@ -27,7 +25,21 @@ class Promocion extends BaseModel
      *
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string|null
+     */
+    const CREATED_AT = 'fechacreacion';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string|null
+     */
+    const UPDATED_AT = 'fechamodificacion';
 
     /**
      * The attributes that are mass assignable.
@@ -39,10 +51,8 @@ class Promocion extends BaseModel
         'activa',
         'cantidadcompra',
         'cantidadregalo',
-        'fechacreacion',
         'idusuarioinserto',
         'idusuariomodifico',
-        'fechamodificacion',
         'tipopromocion',
         'tipohorario',
         'horainicio',
@@ -55,6 +65,7 @@ class Promocion extends BaseModel
      * @var array
      */
     protected $casts = [
+        'id' => 'integer',
         'activa' => 'boolean',
         'cantidadcompra' => 'decimal:2',
         'cantidadregalo' => 'decimal:2',
@@ -62,15 +73,41 @@ class Promocion extends BaseModel
         'idusuarioinserto' => 'integer',
         'idusuariomodifico' => 'integer',
         'fechamodificacion' => 'datetime',
+        'tipopromocion' => 'string',
+        'tipohorario' => 'string',
         'horainicio' => 'integer',
         'horaduracion' => 'integer',
     ];
 
     /**
-     * Get the articles for the promotion.
+     * Get the user who created the promotion.
      */
-    public function promocionesArticulos()
+    public function usuarioInserto(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'idusuarioinserto');
+    }
+
+    /**
+     * Get the user who last modified the promotion.
+     */
+    public function usuarioModifico(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'idusuariomodifico');
+    }
+
+    /**
+     * Get the articles associated with this promotion.
+     */
+    public function articulos()
     {
         return $this->hasMany(PromocionArticulo::class, 'idpromocion');
+    }
+
+    /**
+     * Get the sales associated with this promotion.
+     */
+    public function ventas()
+    {
+        return $this->hasMany(PromocionVenta::class, 'idpromocion');
     }
 }

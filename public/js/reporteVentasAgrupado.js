@@ -4,30 +4,30 @@ var contenedorDeResultados = Array();
 
 $(document).ready(function(){
 	_.templateSettings.variable = "filtros";
-	
+
     var template = _.template($( "#filtrosGeneralesFechaDesdeTemplate" ).html());
-    $( "#filtroFechaDesde" ).html(template(contenedorFiltros));    
+    $( "#filtroFechaDesde" ).html(template(contenedorFiltros));
 
     var template = _.template($( "#filtrosGeneralesFechaHastaTemplate" ).html());
     $( "#filtroFechaHasta" ).html(template(contenedorFiltros));
 
     var template = _.template($( "#filtrosGeneralesSucursalesTemplate" ).html());
-    $( "#filtroSucursales" ).html(template(contenedorFiltros)); 
-    
+    $( "#filtroSucursales" ).html(template(contenedorFiltros));
+
     var template = _.template($( "#filtrosGeneralesUsuariosTemplate" ).html());
     $( "#filtroUsuarios" ).html(template(contenedorFiltros));
 
     var template = _.template($( "#filtrosGeneralesListasTemplate" ).html());
-    $( "#filtroListas" ).html(template(contenedorFiltros));    
+    $( "#filtroListas" ).html(template(contenedorFiltros));
 
     var template = _.template($( "#filtrosGeneralesRubrosTemplate" ).html());
-    $( "#filtroRubros" ).html(template(contenedorFiltros));    
-    
+    $( "#filtroRubros" ).html(template(contenedorFiltros));
+
     var template = _.template($( "#filtrosGeneralesHoraDesdeTemplate" ).html());
-    $( "#filtroHoraDesde" ).html(template(contenedorFiltros));    
+    $( "#filtroHoraDesde" ).html(template(contenedorFiltros));
 
     var template = _.template($( "#filtrosGeneralesHoraHastaTemplate" ).html());
-    $( "#filtroHoraHasta" ).html(template(contenedorFiltros));    
+    $( "#filtroHoraHasta" ).html(template(contenedorFiltros));
 
     var template = _.template($( "#filtrosGeneralesArticuloTemplate" ).html());
     $( "#filtroArticuloCodigo" ).html(template(contenedorFiltros));
@@ -36,8 +36,8 @@ $(document).ready(function(){
 	$( "#filtroTurno" ).html(template());
 
 	cargaInstantanea = obtenerParametroDesdeRequest('inpCargaInstantanea');
-    
-    
+
+
     if(cargaInstantanea==1){
     	sucursales = obtenerParametroDesdeRequest('inpSucursales');
     	rubros = obtenerParametroDesdeRequest('inpRubros');
@@ -48,30 +48,30 @@ $(document).ready(function(){
     	horaDesde = obtenerParametroDesdeRequest('inpHoraDesde');
     	horaHasta = obtenerParametroDesdeRequest('inpHoraHasta');
     	articulo = obtenerParametroDesdeRequest('inpArticulo');
-    	
+
     	$("#inpFiltroCodigoArticulo").val(articulo);
     	$("#inpFiltroFechaDesde").val(fechaDesde);
     	$("#inpFiltroFechaHasta").val(fechaHasta);
     	$("#inpFiltroHoraDesde").val(horaDesde);
     	$("#inpFiltroHoraHasta").val(horaHasta);
-    	
+
     	seleccionarMultiSelectArreglo('inpFiltroSucursales',sucursales.split(','));
     	seleccionarMultiSelectArreglo('inpFiltroUsuarios',usuarios.split(','));
     	seleccionarMultiSelectArreglo('inpFiltroListas',listas.split(','));
     	seleccionarMultiSelectArreglo('inpFiltroRubros',rubros.split(','));
-    	
+
     	mostrarDatos();
-    	
+
     }
     cargaInstantanea = obtenerParametroDesdeRequest('inpCargaInstantanea');
 
-   	
+
     $("#divPresentacionDiscriminarsucursal").hide();
 });
 
 
 function mostrarDatos(){
-	if (validarDatosBusqueda()){	
+	if (validarDatosBusqueda()){
 		$('#idBotonBuscar').hide();
 		$('#reporteCompleto').addClass('divBuscandoInformacion');
 		$( "#main" ).html("");
@@ -100,10 +100,10 @@ function mostrarDatos(){
 				  		res = $.parseJSON(resultado);
 				  		filtros = res['filtros'];
 				  		filtros['contenedor'] = 'main';
-				  		
+
 						_.templateSettings.variable = "resultados";
-						
-						
+
+
 						if ($('#inpChkMostrarSucursal').is(':checked') && $('input:radio[name=inpRadioMostrarSucursal]:checked').val() == 'TOTALIZAR_POR_SUCURSAL'){
 							res['template'] = "templateReporteVentasAgrupadasPorSucursal";
 						}else{
@@ -112,8 +112,8 @@ function mostrarDatos(){
 						contenedorDeResultados['main'] = res;
 						var template = _.template($( "#"+res['template']).html());
 					    $( "#main" ).html(template(res));
-					    
-					    
+
+
 				  		$('#reporteCompleto').removeClass('divBuscandoInformacion');
 				  		$('#idBotonBuscar').show();
 					},
@@ -152,21 +152,21 @@ function mostrarDetalleRubroPorRenglon(contenedor,idsucursal){
 			     'filtroCodigoArticulo': filtros['filtroCodigoArticulo'],
 			     'discriminarPorSucursal': 0,
 			     'discriminarMostrarSeparado':filtros['discriminarMostrarSeparado'],
-			     'contenedor':contenedor			     
+			     'contenedor':contenedor
 			     },
 		  success: function(resultado){
 			  		dt = $.parseJSON(resultado);
-			  		
+
 			  		filtros = dt['filtros'];
-			  		cont = filtros['contenedor']; 
-			  		
-			  		
+			  		cont = filtros['contenedor'];
+
+
 					_.templateSettings.variable = "resultados";
 					dt['template'] = "templateReporteVentasAgrupadasPorRubro";
 					contenedorDeResultados[cont] = dt;
 				    var template = _.template($( "#"+dt['template'] ).html());
 				    $( "#"+cont).html(template(dt));
-				    
+
 			  		$('#reporteCompleto').removeClass('divBuscandoInformacion');
 			  		$('#idBotonBuscar').show();
 				},
@@ -185,12 +185,12 @@ function mostrarDetalleArticuloPorRenglon(contenedor,idsucursal,idrubro,idPadre)
 	if(filtros['discriminarPorSucursal']=='true'){
 		if(idsucursal != ''){
 			sucursal = Array();
-			sucursal[0] = idsucursal;			
+			sucursal[0] = idsucursal;
 		}
 
 	}
-	
-	
+
+
 	$('#idBotonBuscar').hide();
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
 	$( "#"+contenedor ).html("");
@@ -212,19 +212,19 @@ function mostrarDetalleArticuloPorRenglon(contenedor,idsucursal,idrubro,idPadre)
 			     'filtroCodigoArticulo': filtros['filtroCodigoArticulo'],
 			     'discriminarPorSucursal': 0,
 			     'discriminarMostrarSeparado':filtros['discriminarMostrarSeparado'],
-			     'contenedor':contenedor			     
+			     'contenedor':contenedor
 			     },
 		  success: function(resultado){
 			  		dt = $.parseJSON(resultado);
 			  		filtros = dt['filtros'];
-			  		cont = filtros['contenedor']; 			  		
-			  		
+			  		cont = filtros['contenedor'];
+
 					_.templateSettings.variable = "resultados";
 					dt['template'] = "templateReporteVentasAgrupadasPorArticulos";
 					contenedorDeResultados[cont] = dt;
 				    var template = _.template($( "#"+dt['template'] ).html());
 				    $( "#"+cont).html(template(dt));
-				    
+
 			  		$('#reporteCompleto').removeClass('divBuscandoInformacion');
 			  		$('#idBotonBuscar').show();
 				},
@@ -240,7 +240,7 @@ function mostrarDetalleTodasVentasArticulo(contenedor,idarticulo,idPadre,codigoA
 	resultadoCentral = contenedorDeResultados[idPadre];
 	filtros = resultadoCentral['filtros'];
 	sucursal = filtros['filtroSucursales'];
-	
+
 	$('#idBotonBuscar').hide();
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
 	$( "#"+contenedor ).html("");
@@ -262,20 +262,20 @@ function mostrarDetalleTodasVentasArticulo(contenedor,idarticulo,idPadre,codigoA
 			     'filtroCodigoArticulo': codigoArticulo,
 			     'discriminarPorSucursal': 0,
 			     'discriminarMostrarSeparado':filtros['discriminarMostrarSeparado'],
-			     'contenedor':contenedor			     
+			     'contenedor':contenedor
 			     },
 		  success: function(resultado){
 			  		dt = $.parseJSON(resultado);
 			  		filtros = dt['filtros'];
-			  		cont = filtros['contenedor']; 
-			  		
-			  		
+			  		cont = filtros['contenedor'];
+
+
 					_.templateSettings.variable = "resultados";
 					dt['template'] = "templateReporteVentasPorArticulosTodas";
 					contenedorDeResultados[cont] = dt;
 				    var template = _.template($( "#"+dt['template'] ).html());
 				    $( "#"+cont).html(template(dt));
-				    
+
 			  		$('#reporteCompleto').removeClass('divBuscandoInformacion');
 			  		$('#idBotonBuscar').show();
 				},
@@ -349,7 +349,7 @@ function mostrarSucursalSeparado(){
 		$("#divPresentacionDiscriminarsucursal").show(500);
 	}else{
 		$("#divPresentacionDiscriminarsucursal").hide(500);
-		
+
 	}
 }
 function validarDatosBusqueda(){
@@ -362,7 +362,7 @@ function validarDatosBusqueda(){
 		alert("Debe ingresar una fecha hasta.");
 		$('#inpFiltroFechaHasta').focus();
 		return false;
-	}	
+	}
 	return true;
 }
 function ordenarRubrosPorNombre(subreporte){
@@ -371,8 +371,8 @@ function ordenarRubrosPorNombre(subreporte){
 	filtros = contenedorResultado['filtros'];
 	cont = filtros['contenedor'];
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenNombre']==1){
 		contenedorResultado['ordenNombre']=-1;
 	}else{
@@ -383,18 +383,18 @@ function ordenarRubrosPorNombre(subreporte){
 		if(fila['rubronombre']){
 			cadena = cadena.toUpperCase();
 		}
-		return cadena; 
+		return cadena;
 		});
 	contenedorResultado['registros'] = lista ;
-	
+
 	contenedorDeResultados[subreporte] = contenedorResultado;
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
 }
 function ordenarVentasPorFecha(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
@@ -402,8 +402,8 @@ function ordenarVentasPorFecha(subreporte){
 	filtros = contenedorResultado['filtros'];
 	cont = filtros['contenedor'];
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['fechahoraorden']==1){
 		contenedorResultado['fechahoraorden']=-1;
 	}else{
@@ -414,18 +414,18 @@ function ordenarVentasPorFecha(subreporte){
 		if(fila['fechahoraorden']){
 			cadena = cadena.toUpperCase();
 		}
-		return cadena; 
+		return cadena;
 		});
 	contenedorResultado['registros'] = lista ;
-	
+
 	contenedorDeResultados[subreporte] = contenedorResultado;
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
 }
 function ordenarArticulosPorNombre(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
@@ -433,8 +433,8 @@ function ordenarArticulosPorNombre(subreporte){
 	filtros = contenedorResultado['filtros'];
 	cont = filtros['contenedor'];
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenNombre']==1){
 		contenedorResultado['ordenNombre']=-1;
 	}else{
@@ -445,29 +445,29 @@ function ordenarArticulosPorNombre(subreporte){
 		if(fila['articulonombre']){
 			cadena = cadena.toUpperCase();
 		}
-		return cadena; 
+		return cadena;
 		});
 	contenedorResultado['registros'] = lista ;
-	
+
 	contenedorDeResultados[subreporte] = contenedorResultado;
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
 }
 function ordenarSucursalesPorNombre(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
-	
+
 	lista = contenedorResultado['registros'];
 	filtros = contenedorResultado['filtros'];
 	cont = filtros['contenedor'];
-	
+
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenNombreSucursal']==1){
 		contenedorResultado['ordenNombreSucursal']=-1;
 	}else{
@@ -478,161 +478,178 @@ function ordenarSucursalesPorNombre(subreporte){
 		if(fila['sucursalnombre']){
 			cadena = cadena.toUpperCase();
 		}
-		return cadena; 
+		return cadena;
 		});
 	contenedorResultado['registros'] = lista ;
 	contenedorDeResultados[subreporte] = contenedorResultado;
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
 }
 
 function ordenarRubrosPorImporteGanancia(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
-	
+
 	lista = contenedorResultado['registros'];
 	filtros = contenedorResultado['filtros'];
-	cont = filtros['contenedor'];	
+	cont = filtros['contenedor'];
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenGananciaImporte']==1){
 		contenedorResultado['ordenGananciaImporte']=-1;
 	}else{
 		contenedorResultado['ordenGananciaImporte']=1;
 	}
-	lista = _.sortBy(lista, function(fila){ 
-		return parseFloat(fila['ganancia'])*contenedorResultado['ordenGananciaImporte'] ; 
+	lista = _.sortBy(lista, function(fila){
+		return parseFloat(fila['ganancia'])*contenedorResultado['ordenGananciaImporte'] ;
 		});
 	contenedorResultado['registros'] = lista ;
-	
+
 	contenedorDeResultados[subreporte] = contenedorResultado;
-	
+
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
+}
+function enviarSolicitudParaVerCostoVenta(idVentaSucursal)
+{
+    console.log('Enviando mensaje');
+    const mensaje = {
+        tipo: 'IFRAME_EVENT',
+        accion: 'MOSTRAR_DETALLE_DE_VENTASUCURSAL',
+        payload: {
+            idVentaSucursal
+        }
+    };
+
+    // Obtiene: https://sitio.com
+    const baseUrl = window.location.origin;
+
+    // Enviar mensaje al padre (React)
+    window.parent.postMessage(mensaje, baseUrl); // Cambia por tu dominio en producción
 }
 
 function ordenarRubrosPororcentajeGanancia(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
-	
+
 	lista = contenedorResultado['registros'];
 	filtros = contenedorResultado['filtros'];
-	cont = filtros['contenedor'];	
+	cont = filtros['contenedor'];
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenGananciaPorcentaje']==1){
 		contenedorResultado['ordenGananciaPorcentaje']=-1;
 	}else{
 		contenedorResultado['ordenGananciaPorcentaje']=1;
 	}
-	lista = _.sortBy(lista, function(fila){ 
-		return (parseFloat(fila['preciounitario']) - parseFloat(fila['costosucursal'])) / parseFloat(fila['preciounitario']) * 100 *contenedorResultado['ordenGananciaPorcentaje']; 
+	lista = _.sortBy(lista, function(fila){
+		return (parseFloat(fila['preciounitario']) - parseFloat(fila['costosucursal'])) / parseFloat(fila['preciounitario']) * 100 *contenedorResultado['ordenGananciaPorcentaje'];
 		});
 	contenedorResultado['registros'] = lista ;
-	
+
 	_.templateSettings.variable = "resultados";
-	
+
 	contenedorDeResultados[subreporte] = contenedorResultado;
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
 
 	document.getElementById('nombre').value
 }
 function ordenarRubrosCostoSucursal(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
-	
+
 	lista = contenedorResultado['registros'];
 	filtros = contenedorResultado['filtros'];
-	cont = filtros['contenedor'];	
+	cont = filtros['contenedor'];
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenCostoSucursal']==1){
 		contenedorResultado['ordenCostoSucursal']=-1;
 	}else{
 		contenedorResultado['ordenCostoSucursal']=1;
 	}
-	lista = _.sortBy(lista, function(fila){ 
-		return parseFloat(fila['costosucursal'])*contenedorResultado['ordenCostoSucursal']; 
+	lista = _.sortBy(lista, function(fila){
+		return parseFloat(fila['costosucursal'])*contenedorResultado['ordenCostoSucursal'];
 		});
 	contenedorResultado['registros'] = lista ;
 	contenedorDeResultados[subreporte] = contenedorResultado;
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
 }
 function ordenarRubrosCantidad(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
-	
+
 	lista = contenedorResultado['registros'];
 	filtros = contenedorResultado['filtros'];
-	cont = filtros['contenedor'];	
+	cont = filtros['contenedor'];
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenCantidad']==1){
 		contenedorResultado['ordenCantidad']=-1;
 	}else{
 		contenedorResultado['ordenCantidad']=1;
 	}
-	lista = _.sortBy(lista, function(fila){ 
-		return parseFloat(fila['cantidad'])*contenedorResultado['ordenCantidad']; 
+	lista = _.sortBy(lista, function(fila){
+		return parseFloat(fila['cantidad'])*contenedorResultado['ordenCantidad'];
 		});
 	contenedorResultado['registros'] = lista ;
 	contenedorDeResultados[subreporte] = contenedorResultado;
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
 }
 function ordenarRubrosImporteVendido(subreporte){
 	contenedorResultado = contenedorDeResultados[subreporte];
-	
+
 	lista = contenedorResultado['registros'];
 	filtros = contenedorResultado['filtros'];
 	cont = filtros['contenedor'];
-	
+
 	$('#reporteCompleto').addClass('divBuscandoInformacion');
-	
-	
+
+
 	if (contenedorResultado['ordenImporteVendido']==1){
 		contenedorResultado['ordenImporteVendido']=-1;
 	}else{
 		contenedorResultado['ordenImporteVendido']=1;
 	}
-	lista = _.sortBy(lista, function(fila){ 
-		return parseFloat(fila['preciounitario'])*contenedorResultado['ordenImporteVendido']; 
+	lista = _.sortBy(lista, function(fila){
+		return parseFloat(fila['preciounitario'])*contenedorResultado['ordenImporteVendido'];
 		});
 	contenedorResultado['registros'] = lista ;
 	contenedorDeResultados[subreporte] = contenedorResultado;
-	
+
 	_.templateSettings.variable = "resultados";
-	
+
     var template = _.template($( "#"+contenedorResultado['template'] ).html());
     $( "#"+cont ).html(template(contenedorResultado));
-    
+
 	$('#reporteCompleto').removeClass('divBuscandoInformacion');
-	
+
 }
 function ExistenciaExportarExcel(){
 	if (validarDatosBusqueda()){

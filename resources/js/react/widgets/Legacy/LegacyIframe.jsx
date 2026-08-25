@@ -12,6 +12,9 @@ import {
 } from "@/widgets/MercadoPagoResumenCaja/LegacyParametterMPResumenCajaCatcher.jsx";
 import {LegacyParametterCatcher} from "@/components/LegacyParametterCatcher.jsx";
 import {ShowSucursalAlertasLiquidacion} from "@/widgets/InicioSucursalAlertas/ShowSucursalAlertasLiquidacion.jsx";
+import {
+    DetalleVentaSucursalLegacyParametterCatcher
+} from "@/widgets/DetalleVentaSucursal/DetalleVentaSucursalLegacyParametterCatcher.jsx";
 
 export const LegacyFrame = ({iframeHrefs, children}) => {
     const iframeRef = React.useRef(null);
@@ -73,7 +76,7 @@ export const LegacyFrame = ({iframeHrefs, children}) => {
 
     return (
         <ErrorBoundary>
-
+            <DetalleVentaSucursalLegacyParametterCatcher />
             <LegacyParametterCatcher/>
             <LegacyParametterArticulosPreciosCatcher />
             <LegacyParametterMPResumenCajaCatcher />

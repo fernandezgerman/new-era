@@ -55,6 +55,7 @@ class Compra extends BaseModel
 
     protected $appends = [
         'tipo_de_salida',
+        'numero_comprobante',
     ];
 
     public function getTipoDeSalidaAttribute(): string
@@ -80,6 +81,23 @@ class Compra extends BaseModel
         }
 
         return TipoDeSalida::COMPRAS->value;
+    }
+
+    public function getNumeroComprobanteAttribute(): string
+    {
+        $letra = match ($this->idletra){
+            1 => 'A',
+            2 => 'B',
+            default => 'X'
+        };
+
+        $tipoCmp = match ($this->idtipocomprobante){
+            3 => 'PG',
+            2 => 'NC',
+            default => 'FC'
+        };
+
+        return $tipoCmp.$letra.'-'.$this->numero;
     }
     // Relaciones
     public function usuario()

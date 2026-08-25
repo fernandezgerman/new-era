@@ -93,4 +93,36 @@ class VentaSucursal extends BaseModel
     {
         return $this->hasMany(VentaArticuloCompuesto::class, 'idventa', 'idventa');
     }
+
+    /**
+     * Get the discounts for this sale.
+     */
+    public function descuentos()
+    {
+        return $this->hasMany(VentaDescuento::class, 'idventa');
+    }
+
+    /**
+     * Get the temporary prices for this sale.
+     */
+    public function preciosTemporales()
+    {
+        return $this->hasMany(VentaPrecioTemporal::class, 'idventasucursal');
+    }
+
+    /**
+     * Get the promotion records for this sale as a regular sale.
+     */
+    public function promocionesVentas()
+    {
+        return $this->hasMany(PromocionVenta::class, 'idunicoventa', 'idventa');
+    }
+
+    /**
+     * Get the promotion record for this sale as a promotional gift.
+     */
+    public function promocionVenta()
+    {
+        return $this->hasOne(PromocionVenta::class, 'idunicoventapromo', 'idventa');
+    }
 }
