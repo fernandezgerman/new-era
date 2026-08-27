@@ -14,6 +14,7 @@ import {ExistenciasSinCompras} from "@/pages/ExistenciasSinCompras/index.jsx";
 import {ListadoMovimientosDeCaja} from "@/pages/ListadoMovimientosDeCaja/index.jsx";
 import {TareasDashboard} from "@/pages/tareasDashboard/index.jsx";
 import {PlankaTarea} from "@/widgets/Planka/PlankaTarea.jsx";
+import {BalanceGeneral} from "@/widgets/BalanceGeneral/index.jsx";
 
 // Documentacion: https://reactcommunity.org/react-modal/
 const ReactMenu = {
@@ -40,6 +41,7 @@ const ReactMenu = {
     "mvmcjal": ListadoMovimientosDeCaja,
     "tbltsk": TareasDashboard,
     "plnkcard": PlankaTarea,
+    "ctbblncgrl": BalanceGeneral,
 };
 
 export default ReactMenu;

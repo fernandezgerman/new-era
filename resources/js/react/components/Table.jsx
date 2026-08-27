@@ -45,8 +45,17 @@ export const Table = ({
                 <thead>
                 <tr>
                     {header.map((head) => (
-                        <th key={head.key ?? head.name}
-                            className={"font-bold uppercase text-slate-500 text-xxs dark:text-slate-500 " + (head.className ?? '')}>{head.content ?? head.name}</th>
+                        <th
+                            key={head.key ?? head.name}
+                            onClick={head.onClick}
+                            className={
+                                "font-bold uppercase text-slate-500 text-xxs dark:text-slate-500 "
+                                + (head.onClick ? ' cursor-pointer select-none hover:text-slate-700 dark:hover:text-slate-300 ' : '')
+                                + (head.className ?? '')
+                            }
+                        >
+                            {head.content ?? head.name}
+                        </th>
                     ))}
                 </tr>
                 </thead>

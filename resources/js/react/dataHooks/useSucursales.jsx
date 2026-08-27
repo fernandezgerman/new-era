@@ -3,14 +3,17 @@ import Resource from "../resources/Resource.jsx";
 import {useQuery} from "@tanstack/react-query";
 import Authentication from "@/resources/Authentication.jsx";
 
-const useSucursales = () => {
+const useSucursales = (includeInactivos = false) => {
     return useQuery({
-        queryKey: ['sucursales-activas'],
+        queryKey: [includeInactivos ? 'sucursales-todas' : 'sucursales-activas'],
         queryFn: async () => {
             const resource = new Resource();
-            let filtros = [];
-            filtros['activo'] = true;
-            return await resource.getEntities('sucursal', ['usuariosCajas'], {'activo': true}, 'sucursales.nombre');
+            let filtros = null;
+            if(!includeInactivos){
+                filtros = {'activo': true};
+            }
+
+            return await resource.getEntities('sucursal', ['usuariosCajas'], filtros, 'sucursales.nombre');
         },
         enabled: true,
         select: (data) => data,

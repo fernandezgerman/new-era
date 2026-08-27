@@ -52,12 +52,12 @@ const ShowNumbers = ({precioCosto, precioVenta, compraDetalle, cantidad}) => {
         <div>*/}
             <div>
                 <Label>Costo bruto </Label>
-                <span >{processNumber(compraDetalle.precio, '2', false, '$')}</span>
+                <span >{processNumber(compraDetalle?.precio, '2', false, '$')}</span>
             </div>
             <FontAwesomeIcon className={'mt-3.5 mx-2'} icon={faPlus}/>
             <div>
                 <Label>Impuestos: </Label>
-                <span >{processNumber(precioCosto - compraDetalle.precio, '2', false, '$')}</span>
+                <span >{processNumber(precioCosto - compraDetalle?.precio, '2', false, '$')}</span>
             </div>
             <FontAwesomeIcon className={'mt-4 mx-2'} icon={faEquals}/>
             <div>
@@ -80,16 +80,18 @@ const ShowNumbers2 = ({precioCosto, precioVenta, compraDetalle, cantidad, ventaS
             Costo unitario:
         </div>
         <div className={'flex col-span-2 justify-end'}>
-            <div>
-                <Label>Costo bruto </Label>
-                <span >{processNumber(compraDetalle.precio, '2', false, '$')}</span>
-            </div>
-            <FontAwesomeIcon className={'mt-3.5 mx-2'} icon={faPlus}/>
-            <div>
-                <Label>Impuestos: </Label>
-                <span >{processNumber(precioCosto - compraDetalle.precio, '2', false, '$')}</span>
-            </div>
-            <FontAwesomeIcon className={'mt-4 mx-2'} icon={faEquals}/>
+            {compraDetalle && (<>
+                <div>
+                    <Label>Costo bruto </Label>
+                    <span >{processNumber(compraDetalle?.precio ?? 0, '2', false, '$')}</span>
+                </div>
+                <FontAwesomeIcon className={'mt-3.5 mx-2'} icon={faPlus}/>
+                <div>
+                    <Label>Impuestos: </Label>
+                    <span >{processNumber(precioCosto - compraDetalle?.precio ?? 0, '2', false, '$')}</span>
+                </div>
+                <FontAwesomeIcon className={'mt-4 mx-2'} icon={faEquals}/>
+            </>)}
             <div>
                 <Label>Costo final </Label>
                 <span className={'font-bold'}>{processNumber(precioCosto, '2', false, '$')}</span>
@@ -123,6 +125,7 @@ const ShowNumbers2 = ({precioCosto, precioVenta, compraDetalle, cantidad, ventaS
 }
 const ShowCompraDetails = ({compraDetalle}) => {
 
+    if(!compraDetalle) return;
     const handleClick = () => {
         window.open('principal.php?pagina=prmteditfaccmp&idCompra='+compraDetalle.compra.id, "_blank", "width=1000,height=1200");
     };
@@ -241,9 +244,9 @@ export const VerDetalleVentaSucursalModal = ({idVentaSucursal, setIdVentaSucursa
                     <ShowNumbers2
                         ventaSucursal={ventaSucursal}
                         precioVenta={ventaSucursal.preciounitario}
-                        precioCosto={ventaSucursal.extra.compra_detalle.costo_con_impuestos}
+                        precioCosto={ventaSucursal.extra?.compra_detalle?.costo_con_impuestos ?? ventaSucursal.costosucursal}
                         cantidad={ventaSucursal.cantidad}
-                        compraDetalle={ventaSucursal.extra.compra_detalle}
+                        compraDetalle={ventaSucursal.extra?.compra_detalle}
                     />
 
                     <Hr/>
@@ -252,7 +255,7 @@ export const VerDetalleVentaSucursalModal = ({idVentaSucursal, setIdVentaSucursa
                         <Label>Criterio:</Label>
                         <CriterioComponent criterio={ventaSucursal.costosucursalcriterio}/>
                     </div>
-                    {ventaSucursal.extra.compra_detalle &&
+                    {ventaSucursal.extra?.compra_detalle &&
                         <ShowCompraDetails compraDetalle={ventaSucursal.extra.compra_detalle}/>}
 
                 </>

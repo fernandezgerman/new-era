@@ -8,6 +8,10 @@ const simplifyNumber = (value, decimals = 1) => {
     if(value > 1000000) {
         text = (value / 1000000).toFixed(decimals) + ' M';
     }
+    if(value < 1000)
+    {
+        return (value).toFixed(decimals);
+    }
     return text;
 
 };
