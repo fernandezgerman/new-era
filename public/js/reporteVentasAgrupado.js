@@ -522,7 +522,7 @@ function ordenarRubrosPorImporteGanancia(subreporte){
 }
 function enviarSolicitudParaVerCostoVenta(idVentaSucursal)
 {
-    console.log('Enviando mensaje');
+
     const mensaje = {
         tipo: 'IFRAME_EVENT',
         accion: 'MOSTRAR_DETALLE_DE_VENTASUCURSAL',

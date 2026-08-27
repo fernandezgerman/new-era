@@ -13,7 +13,6 @@ export const DetalleVentaSucursalLegacyParametterCatcher = () => {
 
     const manejarMensajeDesdeIframe = useCallback((event) => {
 
-        console.log('event in catcher', event);
         if (event.origin !== baseUrl){
             console.log('origin no coincide pra el mensaje: ', event.origin, baseUrl);
             return;
