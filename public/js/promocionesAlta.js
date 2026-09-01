@@ -1,20 +1,20 @@
 function seleccionVigencia($val){
-	
+
 	if ($val=="semanal")
 	{
 		$("#divVigenciaPuntual").prop('disabled',true);
 		$("#divVigenciaSemanal").prop('disabled',false);
 		$('#divVigenciaPuntual').addClass('divBuscandoInformacion');
 		$('#divVigenciaSemanal').removeClass('divBuscandoInformacion');
-		
-		
+
+
 	}else{
 		$("#divVigenciaSemanal").prop('disabled',true);
 		$("#divVigenciaPuntual").prop('disabled',false);
 		$('#divVigenciaSemanal').addClass('divBuscandoInformacion');
-		$('#divVigenciaPuntual').removeClass('divBuscandoInformacion');			
+		$('#divVigenciaPuntual').removeClass('divBuscandoInformacion');
 	}
-	
+
 }
 function seleccionarTodos(){
 
@@ -24,7 +24,7 @@ function seleccionarTodos(){
 			$("#rubro"+i).prop("checked", "checked");
 		}else{
 			$("#rubro"+i).prop("checked", "");
-		}			
+		}
 	}
 }
 function enviar(){
@@ -35,7 +35,7 @@ function enviar(){
 }
 function datosValidos()
 {
-	
+
 	if ($('#inpDescripcion').val()==""){
 		alert('Debe ingresar una descripcion.');
 		return false;
@@ -44,11 +44,11 @@ function datosValidos()
 		if ($('#inpCantidadCompra').val()==""){
 			alert('Debe ingresar una cantidad minima de compra.');
 			return false;
-		}	
+		}
 		if ($('#inpCantidadRegalo').val()==""){
 			alert('Debe ingresar una cantidad de regalo.');
 			return false;
-		}	
+		}
 	}
 	$horario = $('input:radio[name=horarioVigencia]:checked').val();
 	if (!$horario){
@@ -56,7 +56,7 @@ function datosValidos()
 		return false;
 	}
 	$vigencia = $('input:radio[name=tipoVigencia]:checked').val();
-	
+
 	if (!$vigencia){
 		alert("Debe seleccionar un tipo de vigencia");
 		return false;
@@ -67,15 +67,15 @@ function datosValidos()
 				if ($('input[id=dia'+i+']').filter(':checked').val())
 				{
 					$sel = true;
-				}			
+				}
 			}
-			
+
 			if(!$sel){
 				alert('Debe seleccionar un dia de la semana');
 				return false;
 			}
 		}else{
-			
+
 			if ($("#inpFechaVigencia").val()==""){
 				alert('Debe ingresar una fecha.');
 				return false;
@@ -84,12 +84,12 @@ function datosValidos()
 	}
 	$selR = false;
 	for(i=0; i < $('#inpTotalRubros').val(); i++){
-		
+
 		if ($('input[name=rubro'+i+']').filter(':checked').val())
 		{
 			$selR = true;
-		}			
-	}	
+		}
+	}
 	/*if(!$selR){
 		alert('Debe seleccionar un rubro');
 		return false;
@@ -106,8 +106,8 @@ function datosValidos()
 			}
 		}
 	}
-	
-	
+
+
 	if($('input:radio[name=horarioVigencia]:checked').val()=='HORA_PUNTUAL'){
 		if($('#inpHoraDesde').val()=='' || $('#inpHoraDesde').val() > 23 ||  isNaN(parseFloat($('#inpHoraDesde').val()) ) ){
 			alert('La hora de comienzo no es valida.');
@@ -118,7 +118,7 @@ function datosValidos()
 			alert('La cantidad de horas de promocion no es valida.');
 			$('#inpHoraCantidad').focus();
 			return;
-		}		
+		}
 	}
 
 	return true;
@@ -126,7 +126,7 @@ function datosValidos()
 function seleccionaTipoDePromocion(){
 	tot = $('#inpTotalRubros').val();
 	if($('#inpTipoPromocion').val()=="PROMO_PORCENTAJE"){
-		$('#porCada').hide();		
+		$('#porCada').hide();
 		for(i=0;i<tot;i++){
 			$('#porcentaje'+i).show();
 		}
@@ -144,25 +144,25 @@ function seleccionaTipoDePromocion(){
 	}
 }
 $(document).ready(function() {
-	seleccionaTipoDePromocion();		
+	seleccionaTipoDePromocion();
 });
 
 function seleccionVigenciaPorHora($val){
-	
+
 	if ($val=="LAS_24_HS")
 	{
 		$('#divVigenciaPorHora').addClass('divBuscandoInformacion');
-		
+
 	}else{
-		
-		$('#divVigenciaPorHora').removeClass('divBuscandoInformacion');			
+
+		$('#divVigenciaPorHora').removeClass('divBuscandoInformacion');
 	}
-	
+
 }
 function seleccionDeSucursal(indice){
-	
+
 	sel = $('#inpSucursalId'+indice).is(':checked');
-	
+
 	if (sel){
 		if($('#inpValorOriginalSucursalId'+indice).val()==1 ){
 			$( "#contenedorSucursal"+indice ).removeClass("promoSucursalModificada");
@@ -178,6 +178,20 @@ function seleccionDeSucursal(indice){
 		}else{
 			$( "#contenedorSucursal"+indice ).removeClass("promoSucursalModificada");
 			$( "#contenedorSucursal"+indice ).addClass("promoSucursalNoSeleccionada");
-		}		
-	}	
+		}
+	}
+}
+
+function editarArticulosPromocion(promocionId)
+{
+    const mensaje = {
+        tipo: 'IFRAME_EVENT',
+        accion: 'EDITAR_ARTICULOS_DE_PROMOCION',
+        payload: {
+            promocionId
+        }
+    };
+
+    const baseUrl = window.location.origin;
+    window.parent.postMessage(mensaje, baseUrl);
 }

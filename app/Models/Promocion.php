@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Services\Actualizaciones\Contracts\ActualizableItem;
+use App\Services\Actualizaciones\DTO\ActualizacionIdentifierDTO;
+use App\Services\Actualizaciones\Enums\CodigoMotivoActualizacion;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Promocion extends BaseModel
+class Promocion  extends BaseModel implements ActualizableItem
 {
     /**
      * The table associated with the model.
@@ -109,5 +112,13 @@ class Promocion extends BaseModel
     public function ventas()
     {
         return $this->hasMany(PromocionVenta::class, 'idpromocion');
+    }
+
+    public function getIdentificadoresActualizacion(): ActualizacionIdentifierDTO
+    {
+        return new ActualizacionIdentifierDTO(
+            CodigoMotivoActualizacion::GET_PROMOCIONES,
+            $this->id
+        );
     }
 }

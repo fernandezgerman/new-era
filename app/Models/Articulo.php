@@ -72,6 +72,11 @@ class Articulo extends BaseModel implements ActualizableItem
         return $this->belongsTo(Rubro::class, 'idrubro');
     }
 
+    public function listaDetalles()
+    {
+        return $this->hasMany(ListaDetalle::class, 'idarticulo');
+    }
+
     public function historicoCostos(): HasMany
     {
         return $this->hasMany(ArticuloCostoHistorico::class, 'idarticulo');

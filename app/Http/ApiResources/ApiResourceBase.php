@@ -349,11 +349,17 @@ class ApiResourceBase extends AbstractApiHandler
             'menoroigual' => '<=',
             'mayoroigual' => '>=',
             'in' => 'in',
+            'like' => 'like',
             default => '=',
         };
 
         if ($operador === 'in') {
             $query->whereIn($key, $value['valor'] ?? []);
+            return;
+        }
+
+        if ($operador === 'like') {
+            $query->where($key, 'like', ('%'.($value['valor'] ?? '').'%') );
             return;
         }
 

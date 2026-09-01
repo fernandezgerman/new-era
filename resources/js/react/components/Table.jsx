@@ -1,8 +1,25 @@
 import React from "react";
-import {get} from "lodash";
 import {DivCenterContentHyV} from "@/components/Containers/DivCenterContentHyV.jsx";
 import useSystemTheme from "@/utils/useSystemTheme.jsx";
 
+const CreateRow = ({row, className, index, destacarColumnasPares, darkMode}) => {
+    return <tr className={className}>
+        {row.map((cell) => (
+            <td key={cell?.key ?? cell.id}
+                colSpan={cell.colSpan ?? 1}
+                rowSpan={cell.rowSpan ?? undefined}
+                className={
+                    " font-normal leading-normal text-sm " +
+                    (destacarColumnasPares && (index % 2 !== 0) ? (darkMode ? ' bg-gray-800 ' : ' bg-gray-200 ') : '') +
+                    (cell?.onClick ? '  cursor-pointer' : '') +
+                    (cell.className ?? '')}>
+                {cell.onClick && <button onClick={cell?.onClick}
+                                         className={' w-full text-left'}>{cell.content}</button>}
+                {!(cell?.onClick) && <>{cell.content}</>}
+            </td>
+        ))}
+    </tr>
+}
 
 export const Table = ({
                           header = [],
@@ -17,25 +34,6 @@ export const Table = ({
 
     const darkMode = useSystemTheme();
     const isTableEmpty = !(data?.length > 0);
-
-    const CreateRow = ({row, key, className, index}) => {
-        return <tr key={key} className={className}>
-            {row.map((cell) => (
-                <td key={cell?.key ?? cell.id ?? cell?.content}
-                    colSpan={cell.colSpan ?? 1}
-                    rowSpan={cell.rowSpan ?? undefined}
-                    className={
-                        " font-normal leading-normal text-sm " +
-                        (destacarColumnasPares && (index % 2 !== 0) ? (darkMode ? ' bg-gray-800 ' : ' bg-gray-200 ') : '') +
-                        (cell?.onClick ? '  cursor-pointer' : '') +
-                        (cell.className ?? '')}>
-                    {cell.onClick && <button onClick={cell?.onClick}
-                                             className={' w-full text-left'}>{cell.content}</button>}
-                    {!(cell?.onClick) && <>{cell.content}</>}
-                </td>
-            ))}
-        </tr>
-    }
 
     return <div className={containerClassName}>
         {top}
@@ -60,7 +58,16 @@ export const Table = ({
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((row, index) => <CreateRow className={row.className} row={row?.content ?? row} key={row?.key ?? row?.id ?? index} index={index}/>)}
+                {data.map((row, index) => (
+                    <CreateRow
+                        className={row.className}
+                        row={row?.content ?? row}
+                        key={row?.key ?? row?.id ?? index}
+                        index={index}
+                        destacarColumnasPares={destacarColumnasPares}
+                        darkMode={darkMode}
+                    />
+                ))}
                 </tbody>
             </table>
         }

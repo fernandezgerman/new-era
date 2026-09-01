@@ -14,7 +14,8 @@ export const CustomModal = ({
                                 cancelButtonVisible = true,
                                 loading,
                                 childrenClass = '',
-    className
+                                childrenClassContainer = '',
+                                className
                             }) => {
 
     const size = () => {
@@ -37,7 +38,7 @@ export const CustomModal = ({
         <div className={'relative'}>
             <H2>{titulo}</H2>
             {copete && (<div className={'mt-5'}>{copete}</div>)}
-            <div className={'max-h-[calc(100vh-250px)] overflow-y-auto z-999 pl-3'} >
+            <div className={'max-h-[calc(100vh-250px)] overflow-y-auto z-999 pl-3 ' + childrenClassContainer} >
                 <div className={'mt-8 relative h-full ' + childrenClass}>
                     {children}
                 </div>

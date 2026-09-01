@@ -15,6 +15,7 @@ import {ShowSucursalAlertasLiquidacion} from "@/widgets/InicioSucursalAlertas/Sh
 import {
     DetalleVentaSucursalLegacyParametterCatcher
 } from "@/widgets/DetalleVentaSucursal/DetalleVentaSucursalLegacyParametterCatcher.jsx";
+import {EditarArticuloPromocion} from "@/widgets/EditarArticuloPromocion/index.jsx";
 
 export const LegacyFrame = ({iframeHrefs, children}) => {
     const iframeRef = React.useRef(null);
@@ -81,6 +82,7 @@ export const LegacyFrame = ({iframeHrefs, children}) => {
             <LegacyParametterArticulosPreciosCatcher />
             <LegacyParametterMPResumenCajaCatcher />
             <LegacyParametterCatcher Component={ShowSucursalAlertasLiquidacion} accionKey={'INICIO_SUCURSAL_ALERTAS_LIQUIDACION'} />
+            <LegacyParametterCatcher Component={EditarArticuloPromocion} accionKey={'EDITAR_ARTICULOS_DE_PROMOCION'} />
 
 
             {/* Hidden form to post parameters into the iframe when available */}
