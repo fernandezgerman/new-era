@@ -12,6 +12,7 @@ import {
     isRecordChanged,
     isRecordNew,
 } from './editarArticuloPromocionUtils.jsx';
+import {processNumber} from "@/utils/numbers.jsx";
 
 const changedRowClass = ' bg-blue-600! text-white! [&_input]:bg-blue-500! [&_input]:text-white! [&_input]:border-blue-400!';
 const newRowClass = ' bg-green-600! text-white! [&_input]:bg-green-500! [&_input]:text-white! [&_input]:border-green-400!';
@@ -32,14 +33,14 @@ const getRowClassName = (record, edits) => {
 
 const getCellClassName = (destacarColumnasPares, darkMode, index, highlighted) => {
     if (highlighted) {
-        return 'font-normal leading-normal text-sm p-1';
+        return 'font-normal leading-normal text-sm ';
     }
 
     const zebraClass = destacarColumnasPares && (index % 2 !== 0)
         ? (darkMode ? ' bg-gray-800 ' : ' bg-gray-200 ')
         : '';
 
-    return 'font-normal leading-normal text-sm p-1 ' + zebraClass;
+    return 'font-normal leading-normal text-sm  ' + zebraClass;
 };
 
 const PromocionArticuloFila = React.memo(({
@@ -57,42 +58,53 @@ const PromocionArticuloFila = React.memo(({
     const rowClassName = getRowClassName(record, edits);
 
     return (
-        <tr className={rowClassName}>
-            <td className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
-                {getArticuloLabel(record)}
-            </td>
-            <td className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
-                <Input
-                    key={`${record.id}-cantidad-${inputResetKey}`}
-                    ref={(element) => registerCantidadInputRef(record.id, element)}
-                    type={'cantidad'}
-                    selectOnFocus={true}
-                    value={values.cantidad ?? ''}
-                    setValue={(nextValue) => onFieldChange(record.id, 'cantidad', nextValue)}
-                    className={'mb-0! mr-2'}
-                    inputClassName={'h-8! text-sm!'}
-                />
-            </td>
-            <td className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
-                <Input
-                    key={`${record.id}-precio-${inputResetKey}`}
-                    type={'pesos'}
-                    selectOnFocus={true}
-                    value={values.precio ?? ''}
-                    setValue={(nextValue) => onFieldChange(record.id, 'precio', nextValue)}
-                    className={'mb-0! mr-2'}
-                    inputClassName={'h-8! text-sm!'}
-                />
-            </td>
-            <td className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
-                <Checkbox
-                    value={Boolean(values.activo)}
-                    onChange={(checked) => onFieldChange(record.id, 'activo', checked)}
-                    className={'mb-0!'}
-                    checkboxClassName={highlighted ? ' accent-white ' : ''}
-                />
-            </td>
-        </tr>
+        <>
+            <tr className={rowClassName}>
+                <td rowSpan={2} className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
+                    {getArticuloLabel(record)}
+                </td>
+                <td className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
+                    <Input
+                        key={`${record.id}-cantidad-${inputResetKey}`}
+                        ref={(element) => registerCantidadInputRef(record.id, element)}
+                        type={'cantidad'}
+                        selectOnFocus={true}
+                        value={values.cantidad ?? ''}
+                        setValue={(nextValue) => onFieldChange(record.id, 'cantidad', nextValue)}
+                        maxCharacters={4}
+                        className={'mb-0! mr-2 w-20 '}
+                        inputClassName={'h-8! text-sm!'}
+                    />
+                </td>
+                <td className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
+                    <Input
+                        key={`${record.id}-precio-${inputResetKey}`}
+                        type={'pesos'}
+                        selectOnFocus={true}
+                        value={values.precio ?? ''}
+                        maxCharacters={10}
+                        setValue={(nextValue) => onFieldChange(record.id, 'precio', nextValue)}
+                        className={'mb-0! mr-2 w-32 pt-1'}
+                        inputClassName={'h-8! text-sm!'}
+                    />
+
+                </td>
+                <td className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted)}>
+                    <Checkbox
+                        value={Boolean(values.activo)}
+                        onChange={(checked) => onFieldChange(record.id, 'activo', checked)}
+                        className={'mb-0! pt-1'}
+                        checkboxClassName={highlighted ? ' accent-white ' : ''}
+                    />
+                </td>
+            </tr>
+            <tr className={rowClassName}>
+                <td colSpan={1} className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted) + ' h-auto! p-0!'} ></td>
+                <td colSpan={2} className={getCellClassName(destacarColumnasPares, darkMode, index, highlighted) + ' h-auto! p-0!'}>
+                    <span className={'text-xxs'}>Costo: {processNumber(record.articulo?.compra_detalle?.costo_con_impuestos ?? record.articulo.costo,2, false, '$')}</span>
+                </td>
+            </tr>
+        </>
     );
 });
 
@@ -159,9 +171,9 @@ export const EditarArticuloPromocionTabla = ({
 
     if (!isLoading && records.length === 0) {
         return (
-            <DivCenterContentHyV className={'w-full p-6 text-slate-600 dark:text-slate-400'}>
+            <div className={'w-full p-6 text-slate-600 dark:text-slate-400 min-h-40 '}>
                 No hay artículos activos en esta promoción.
-            </DivCenterContentHyV>
+            </div>
         );
     }
 

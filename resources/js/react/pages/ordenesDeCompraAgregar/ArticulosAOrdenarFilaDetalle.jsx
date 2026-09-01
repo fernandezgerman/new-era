@@ -238,7 +238,7 @@ export const ArticulosAOrdenarFilaDetalle = ({item, onSelectProveedor}) => {
                     </div>
                 </div>
 
-                <div className={'mt-4'}>
+                {/* <div className={'mt-4'}>
                     <Label className={'mb-2! pl-0! text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400'}>
                         Ultimas compras por sucursal
                     </Label>
@@ -258,7 +258,7 @@ export const ArticulosAOrdenarFilaDetalle = ({item, onSelectProveedor}) => {
                         data={listasPreciosTableData}
                         emptyText={'Sin listas de precios registradas'}
                     />
-                </div>
+                </div> */}
             </AlternativeCard>
         </ErrorBoundary>
     );

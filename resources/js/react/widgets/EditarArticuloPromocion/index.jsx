@@ -75,7 +75,7 @@ export const EditarArticuloPromocion = ({payload}) => {
                 const resource = new Resource();
                 const data = await resource.getEntities(
                     'promocionArticulo',
-                    ['articulo'],
+                    ['articulo.compraDetalle'],
                     {
                         idpromocion: idPromocion,
                         activo: 1,

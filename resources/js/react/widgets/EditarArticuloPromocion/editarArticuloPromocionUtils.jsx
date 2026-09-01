@@ -8,6 +8,7 @@ export const SORT_KEYS = {
     ARTICULO: 'articulo',
     CANTIDAD: 'cantidad',
     PRECIO: 'precio',
+    EXISTENCIA: 'Existencia',
     ACTIVO: 'activo',
 };
 
