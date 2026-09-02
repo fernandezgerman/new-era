@@ -130,7 +130,7 @@ export const buildGastosTablaRows = (rows, muestraVariacion, options = {}) => {
         const bloqueImpar = grupoStripeBloqueIdx % 2 === 1;
         const celdaStripe = bloqueImpar
             ? ' bg-slate-50 text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-200 '
-            : ' bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-300 ';
+            : ' bg-white dark:ne-dark-body text-slate-900 dark:bg-slate-950 dark:text-slate-300 ';
 
         const nextRow = idx < list.length - 1 ? list[idx + 1] : null;
         const grupoVariacionKey = incluirSucursal

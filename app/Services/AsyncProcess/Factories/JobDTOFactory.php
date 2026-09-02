@@ -6,6 +6,7 @@ use App\Services\AsyncProcess\DTOs\JobDTO;
 use App\Services\AsyncProcess\Enums\AvailableAsyncProcess;
 use App\Services\AsyncProcess\Exceptions\AsyncProcessNotExistException;
 use App\Services\AsyncProcess\Interfaces\AsyncProcessDTOInterface;
+use App\Services\ComprasDudosas\ComprasDudosasManager;
 use App\Services\MediosDeCobro\ModosDeCobroManager;
 use App\Services\ProcesamientoDeCostos\ProcesamientoDeCostosManager;
 use App\Services\Test\TestManager;
@@ -16,22 +17,25 @@ class JobDTOFactory
     public static function make(AsyncProcessDTOInterface $asyncProcessDTO): JobDTO
     {
         $service = match ($asyncProcessDTO->getAsyncProcessName()->value) {
-            /** PROCESAMIENTO DE COSTOS */
+            /** PROCESAMIENTO DE COMPRAS */
             AvailableAsyncProcess::PROCESAR_COMPRA->value => ProcesamientoDeCostosManager::class,
             AvailableAsyncProcess::ACTUALIZAR_REFERENCIAS_COSTOS->value => ProcesamientoDeCostosManager::class,
             AvailableAsyncProcess::ACTUALIZAR_REFERENCIAS_COSTOS_POR_DETALLES->value => ProcesamientoDeCostosManager::class,
             AvailableAsyncProcess::TEST->value => TestManager::class,
+            AvailableAsyncProcess::ANALIZAR_COMPRAS_DUDOSAS->value => ComprasDudosasManager::class,
             /** MERCARDO PAGO */
             AvailableAsyncProcess::MERCARDO_PAGO_PROCESAR_EVENTO->value => ModosDeCobroManager::class,
             AvailableAsyncProcess::PROCESAR_VENTA_SUCURSAL->value => VentasManager::class,
+
             default => throw new AsyncProcessNotExistException('No existe le proceso que desea ingresar en la cola'),
         };
 
         $method = match ($asyncProcessDTO->getAsyncProcessName()->value) {
-            /** PROCESAMIENTO DE COSTOS */
+            /** PROCESAMIENTO DE COMPRAS */
             AvailableAsyncProcess::PROCESAR_COMPRA->value => 'procesarCostosDeCompra',
             AvailableAsyncProcess::ACTUALIZAR_REFERENCIAS_COSTOS->value => 'actualizarReferenciaDeCostos',
             AvailableAsyncProcess::ACTUALIZAR_REFERENCIAS_COSTOS_POR_DETALLES->value => 'actualizarReferenciaDeCostoscompraDetallesIds',
+            AvailableAsyncProcess::ANALIZAR_COMPRAS_DUDOSAS->value => 'procesarCompraDudosa',
             /** MERCARDO PAGO */
             AvailableAsyncProcess::MERCARDO_PAGO_PROCESAR_EVENTO->value => 'processEvent',
             AvailableAsyncProcess::PROCESAR_VENTA_SUCURSAL->value => 'procesarVentaSucursal',
