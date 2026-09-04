@@ -85,7 +85,7 @@ class CajaManager
     public function CheckCajaCongruence(Caja $caja, bool $update = false): array
     {
         $messages = [];
-        $offset = 10;
+        $offset = 200;
         $updated = false;
 
         // totalpagos: sum all "totalpago" from model "Pago" where pagos.idsucursalcaja = cajas.idsucursal, pagos.idusuariocaja = cajas and pagos.numerocaja = caja.numero
