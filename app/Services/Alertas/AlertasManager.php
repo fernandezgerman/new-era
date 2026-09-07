@@ -5,6 +5,7 @@ namespace App\Services\Alertas;
 use App\Models\Alerta;
 use App\Models\MovimientoCaja;
 use App\Models\Sucursal;
+use App\Models\TransferenciaStock;
 use App\Models\User;
 use App\Services\Cache\CacheManager;
 use App\Services\Cache\Enums\CacheExpire;
@@ -75,7 +76,16 @@ class AlertasManager extends CacheManager
                     })
                     ->where('id', '>', $minMovimientoId)
                     ->where('idestado', MovimientoCajaEstados::PENDIENTE->value)
-                    ->get()
+                    ->get(),
+            'transferenciasStock' => TransferenciaStock::query()
+                ->with('sucursalOrigen', 'sucursalDestino', 'estado', 'usuario', 'motivo', 'detalles', 'firmas.usuario')
+                ->where(function ($query) use ($sucursal) {
+                    $query->where(function ($query) use ($sucursal) {
+                        $query->whereNot('idsucursalorigen', $sucursal->id)
+                            ->where('idsucursaldestino', $sucursal->id);
+                    });
+                })->whereIn('idestado', [1, 9, 8])
+                ->get()
         ];
     }
 }

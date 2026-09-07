@@ -12,8 +12,11 @@ export const MovimientoDeCaja = ({movimiento}) => {
     if (!movimiento) return null;
     return (
         <Card childrenClassName={'pt-0'}>
-            <div className={'flex justify-between w-full font-bold text-xl'}>
-                <div>{movimiento?.motivo?.descripcion}</div>
+            <div className={'flex justify-between w-full text-xl'}>
+                <div>
+                    <span className={'font-bold'}> TRANSFERENCIA DE DINERO </span><br/>
+                    <div className={'text-xs'}> ({movimiento?.motivo?.descripcion})</div>
+                </div>
                 <div>{processDate(moment(movimiento.fechahoramovimiento), false)}</div>
             </div>
             <Hr/>

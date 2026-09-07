@@ -8,6 +8,7 @@ import {processDate} from "@/utils/dates.jsx";
 import moment from "moment";
 import {PageHeader} from "@/components/H.jsx";
 import {MovimientoDeCaja} from "@/widgets/MovimientoDeCaja/index.jsx";
+import {TransferenciasStock} from "@/widgets/TransferenciasStock/index.jsx";
 import {map} from 'lodash';
 
 
@@ -15,6 +16,7 @@ const AlertaRender = ({movimientos, tipo})=> {
 
     return <>
     {tipo === 'movimientosCaja' && movimientos && movimientos?.map((movimiento) => <MovimientoDeCaja movimiento={movimiento}/>)}
+    {tipo === 'transferenciasStock' && movimientos && movimientos?.map((transferencia) => <TransferenciasStock transferencia={transferencia}/>)}
     </>;
 }
 export const ShowSucursalAlertasLiquidacion = ({payload}) => {
