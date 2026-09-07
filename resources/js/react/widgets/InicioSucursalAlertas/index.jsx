@@ -48,7 +48,7 @@ export const InicioSucursalAlertas = ({idSucursal}) => {
         <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            backgroundColor: tieneAlertas ? '#ed8b8b' : 'black',
+            backgroundColor: tieneAlertas ? 'orange' : 'black',
 
             height: '30px'
         }} onClick={onClick}>
