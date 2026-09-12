@@ -60,8 +60,8 @@ class Kernel extends ConsoleKernel
             ->hourlyAt(55)->name('cronPorHora')->withoutOverlapping();
 
         // 4 times a day (9:10, 13:10, 17:10, 21:10)
-        // 10 past at 9,13,17,21 - cronNotificacionesGanancias.php
-        $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))
+        // 10 past at 9,11,13,17,21 - cronNotificacionesGanancias.php
+        $schedule->command('reporte:ganancias-por-hora')
             ->cron('10 9,11,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
 
         // Daily
