@@ -62,7 +62,7 @@ class Kernel extends ConsoleKernel
         // 4 times a day (9:10, 13:10, 17:10, 21:10)
         // 10 past at 9,13,17,21 - cronNotificacionesGanancias.php
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronNotificacionesGanancias.php')))
-            ->cron('10 9,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
+            ->cron('10 9,11,13,17,21 * * *')->name('cronNotificacionesGanancias')->withoutOverlapping();
 
         // Daily
         $schedule->call(new SaveIncludeDataIntoFile(base_path('mtihweb/cronDiario.php')))
